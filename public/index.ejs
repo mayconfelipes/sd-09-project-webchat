@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebChat</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+  <section>
+    <h1>WebChat</h1>
+    <div>
+      <h2>Usuários Conectados</h2>
+      <ul id="onlineUser">
+      </ul>
+    </div>
+    <div>
+      <h2>Dados do Usuário</h2>
+      <form id="nickname">
+        <input type="text" id="fieldnickname" data-testid="nickname-box" />
+        <button type="submit" data-testid="nickname-button"> Adicionar Apelido
+        </button>
+      </form>
+    </div>
+    <div>
+      <h3>Enviar Mensagens</h3>
+      <form id="sendmessage">
+        <input type="text" id="fieldsendmessage" data-testid="message-box"/>
+        <button type="submit" data-testid="send-button">Enviar</button>
+      </form>
+    </div>
+    <div>
+      <h3>Chat</h3>
+      <ul id="chat">
+        <% historicMessages.forEach(( el )=> { %>
+          <li data-testid="message">
+            <%= el.timestamp %> - <%= el.nickname %>: <%= el.message %>
+          </li>
+          <% }) %>
+        <!-- <li data-testid="message">Mensagens!!!</li> -->
+      </ul>
+    </div>
+  </section>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>
