@@ -25,7 +25,7 @@
       const ul = document.getElementById('messages');
       const li = document.createElement('li');
       li.setAttribute('data-testid', 'message')
-      li.innerHTML = `<strong data-testid="online-user">${formDate} - ${message.nickname}: </strong> ${message.chatMessage}`;
+      li.innerHTML = `<strong data-testid="online-user">${message.date} - ${message.nickname}: </strong> ${message.chatMessage}`;
       ul.appendChild(li);
     }
 
@@ -70,7 +70,7 @@
       event.preventDefault();
       const nickname = document.getElementById('userName');
       const chatMessage = document.getElementById('message');
-        console.log(formDate);
+   
       if(nickname.value.length  && chatMessage.value.length) {
         const messageObject = {
           nickname: nickname.value,
