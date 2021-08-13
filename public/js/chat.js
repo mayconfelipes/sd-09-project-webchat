@@ -58,3 +58,9 @@ formMessage.addEventListener('submit', (e) => {
 socket.on('message', (message) => {
   createListMessage(message);
 });
+
+socket.on('history', (test) => {
+  test.forEach(({ message }) => {
+    createListMessage(message);
+  });
+});

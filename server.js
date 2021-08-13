@@ -17,6 +17,7 @@ const io = require('socket.io')(http, {
 const router = require('./routes/RouteChat');
 
 require('./sockets/chat')(io);
+require('./sockets/messageHistory')(io);
 
 app.use(express.static(path.join(__dirname, '/public')));
 
