@@ -1,0 +1,89 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 18px;
+}
+
+body {
+  background-color: rgb(44, 44, 44);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1%;
+}
+
+h1 {
+  font-size: 2rem;
+  align-self: center;
+  color: orange;
+  margin-top: 0.5rem;
+}
+
+.user-info-container form {
+  display: flex;
+  width: 25vw;
+  margin-top: 4rem;
+}
+
+main {
+  display: flex;
+  height: 80vh;
+  margin: 0.5rem 0;
+  justify-content: space-between;
+}
+
+.user-container {
+  border: 1px solid rgb(32, 123, 207);
+  margin-right: 3px;
+  width: 50%;
+}
+
+.message-container {
+  border: 1px solid rgb(32, 123, 207);
+  width: 50%;
+  margin-left: 3px;
+  height: 100%;
+}
+
+.user-list, .message-list {
+  list-style: none;
+  color: aliceblue;
+  padding: 0.5rem;
+}
+
+li {
+  padding: 0.5rem;
+  background-color: rgb(43, 78, 190);
+  font-size: 1.3rem;
+  border-radius: 0.5rem;
+}
+
+footer form {
+  width: 100%;
+  height: 5vh;
+  display: flex;
+}
+
+button {
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+  height: 100%;
+  border: none;
+  outline: none;
+  background-color: rgb(26, 189, 40);
+  margin-left: 3px;
+  flex-basis: 10%;
+}
+
+input {
+  padding: 0.5rem;
+  border-radius: 0.2rem;
+  outline: none;
+  border: none;
+  margin-right: 3px;
+  height: 100%;
+  flex-basis: 90%;
+}
