@@ -1,5 +1,10 @@
+const crypto = require('crypto');
+
 module.exports = (io) => io.on('connection', (socket) => {
-  console.log(socket.id);
+  const firstNick = crypto.randomBytes(8).toString('hex');
+  socket.emit('myNickname', firstNick);
+  socket.broadcast.emit('nickname', { nickname: firstNick, id: socket.id });
+
   socket.on('message', ({ chatMessage, nickname }) => {
     const timestamps = new Date().toLocaleString('pt-br').replace(/\//g, '-');
     const message = `${timestamps} - ${nickname}: ${chatMessage}`;
@@ -7,6 +12,7 @@ module.exports = (io) => io.on('connection', (socket) => {
   });
 
   socket.on('nickname', (nickname) => {
-    io.emit('nickname', nickname);
+    socket.emit('myNickname', nickname);
+    socket.broadcast.emit('nickname', { nickname, id: socket.id });
   });
 });

@@ -8,15 +8,17 @@
     <section class="chat-container">
       <sidebar class="user-sidbar">
         <form action="http://localhost/ping" method="get" id="formNickname">
-          <input type="text" id="nicknameInput" />
-          <input type="submit" id="btnNickname" value="Salvar">
+          <input type="text" id="nicknameInput" data-testid="nickname-box" />
+          <button type="submit" id="btnNickname" data-testid="nickname-button">Salvar</button>
         </form>
+        <h3 id="myNickname" data-testid="online-user" class="my-nickname"></h3>
         <ul id="users" class="nickname-container"></ul>
       </sidebar>
       <ul id="messages" class="messages"></ul>
     </section>
     <form action="" class="form-message" id="formMessages">
-      <input id="messageInput" autocomplete="off" /><button>Send</button>
+      <input id="messageInput" data-testid="message-box" autocomplete="off" />
+      <button data-testid="send-button">Send</button>
     </form>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
     <script src='./js/chat.js'></script>
