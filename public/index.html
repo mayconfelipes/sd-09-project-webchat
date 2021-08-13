@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webchat</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <form id="chat">
+    <input data-testid="nickname-box" id="userName" type="text" name="userName" placeholder="Insira seu nickname">
+    <button data-testid="nickname-button" type="submit">Salvar</button>
+    <ul id="messages" class="messages"></ul>
+    <input data-testid="message-box" id="message" type="text" name="message" placeholder="Digite uma nova mensagem">
+    <button data-testid="send-button" type="submit">Enviar</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript">
+    const socket = io('http://localhost:3000/');
+
+    const renderMessage = (message) => {
+      const ul = document.getElementById('messages');
+      const li = document.createElement('li');
+      li.setAttribute('data-testid', 'message')
+      li.innerHTML = `<strong data-testid="online-user">${message.nickname}: </strong> ${message.chatMessage}`;
+      ul.appendChild(li);
+    }
+
+    socket.on('previousMessage', (messages) => {
+      messages.forEach(renderMessage);
+    });
+
+    socket.on('receivedMessage', (message) => {
+      renderMessage(message);
+    });
+
+    const form = document.getElementById('chat');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const nickname = document.getElementById('userName');
+      const chatMessage = document.getElementById('message');
+
+      if(nickname.value.length  && chatMessage.value.length) {
+        const messageObject = {
+          nickname: nickname.value,
+          chatMessage: chatMessage.value
+        };
+
+        renderMessage(messageObject);
+        socket.emit('message', messageObject);
+      }
+    });
+  </script>
+</body>
+</html>
