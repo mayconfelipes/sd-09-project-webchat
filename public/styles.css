@@ -44,3 +44,12 @@ button {
   padding: 20px;
   list-style-type: none;
 }
+
+.nickName {
+  width: 600px;
+  height: 200px;
+  margin: 20px 0;
+  border: 1px solid #ddd;
+  padding: 20px;
+  list-style-type: none;
+}

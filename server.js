@@ -1,8 +1,21 @@
 const express = require('express');
 const path = require('path');
+const randomstring = require('randomstring');
 
 const app = express();
 const http = require('http').createServer(app);
+
+const date = new Date();
+
+const dateFormat = ({ nickname, chatMessage }) => {
+  const formDate = `${date.toLocaleDateString().replace(/\//g, '-')} 
+  ${date.toLocaleTimeString()}`;
+  return {
+    formDate,
+    nickname, 
+    chatMessage,
+  };
+};
 
 const io = require('socket.io')(http, {
   cors: {
@@ -27,10 +40,12 @@ io.on('connection', (socket) => {
 
   socket.emit('previousMessage', messages);
 
+  socket.emit('randomNickName', randomstring.generate(16));
+
   socket.on('message', (data) => {
     console.log(data);
     messages.push(data);
-    socket.broadcast.emit('receivedMessage', data);
+    io.emit('message', JSON.stringify(dateFormat(data)));
   });
 });
 

@@ -10,7 +10,8 @@
 <body>
   <form id="chat">
     <input data-testid="nickname-box" id="userName" type="text" name="userName" placeholder="Insira seu nickname">
-    <button data-testid="nickname-button" type="submit">Salvar</button>
+    <button id="save-button" data-testid="nickname-button" type="submit">Salvar</button>
+    <ul id="nickName" class="nickName"></ul>
     <ul id="messages" class="messages"></ul>
     <input data-testid="message-box" id="message" type="text" name="message" placeholder="Digite uma nova mensagem">
     <button data-testid="send-button" type="submit">Enviar</button>
@@ -19,21 +20,49 @@
   <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript">
     const socket = io('http://localhost:3000/');
-
+ 
     const renderMessage = (message) => {
       const ul = document.getElementById('messages');
       const li = document.createElement('li');
       li.setAttribute('data-testid', 'message')
-      li.innerHTML = `<strong data-testid="online-user">${message.nickname}: </strong> ${message.chatMessage}`;
+      li.innerHTML = `<strong data-testid="online-user">${formDate} - ${message.nickname}: </strong> ${message.chatMessage}`;
       ul.appendChild(li);
     }
+
+    const renderNickName = (nickName) => {
+      const ul = document.getElementById('nickName');
+      const li = document.createElement('li');
+      li.innerText = nickName;
+      li.setAttribute('data-testid', 'online-user');
+      ul.appendChild(li);
+    }
+
+    // const button = document.getElementById('save-button');
+    // button.addEventListener('click', (event) => {
+    //   event.preventDefault();
+    //   const userName = document.getElementById('userName').value;
+    //   const ul = document.getElementById('nickName');
+    //   const li = document.createElement('li');
+    //   li.innerText = userName;
+    //   li.setAttribute('data-testid', 'online-user');
+    //   ul.appendChild(li);
+    // });
+
+    socket.on('randomNickName', (nickName) => {
+      const name = document.getElementById('userName');
+      name.value = nickName;
+      renderNickName(nickName);
+    });
 
     socket.on('previousMessage', (messages) => {
       messages.forEach(renderMessage);
     });
 
-    socket.on('receivedMessage', (message) => {
-      renderMessage(message);
+    socket.on('message', (message) => {
+      const dateRegex = /\d{1,2}-\d{1,2}-\d{4}/gm; 
+      const timeRegex = /\d{1,2}:\d{1,2}(:\d{0,2})?/gm; 
+      console.log(dateRegex.test(message))
+      renderMessage(JSON.parse(message));
     });
 
     const form = document.getElementById('chat');
@@ -41,14 +70,13 @@
       event.preventDefault();
       const nickname = document.getElementById('userName');
       const chatMessage = document.getElementById('message');
-
+        console.log(formDate);
       if(nickname.value.length  && chatMessage.value.length) {
         const messageObject = {
           nickname: nickname.value,
-          chatMessage: chatMessage.value
+          chatMessage: chatMessage.value,
         };
 
-        renderMessage(messageObject);
         socket.emit('message', messageObject);
       }
     });
