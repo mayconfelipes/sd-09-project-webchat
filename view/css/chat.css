@@ -1,0 +1,88 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font: 13px Helvetica, Arial;
+}
+
+.chat-container {
+  display: flex;
+  gap: 2rem;
+  border: 1px solid #000;
+  height: 100vh;
+}
+
+.user-sidbar {
+  padding: 2rem;
+  width: 30%;
+  text-align: center;
+  box-shadow: 3px 0 9px 1px rgba(0, 0, 0, 0.2);
+}
+
+.nickname-container {
+  margin-top: 2rem;
+  list-style: none;
+  text-align: center;
+}
+
+.nickname-container li {
+  align-items: center;
+  display: flex;
+  font-size: 1.5rem;
+  gap: 20px;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.nickname-container li::after {
+  background-color: rgb(9, 158, 71);
+  border-radius: 0.5rem;
+  content: 'online';
+  color: white;
+  font-size: 1rem;
+  display: block;
+  margin: 0;
+  padding: 0.2rem;
+}
+
+
+.form-message {
+  background: #000;
+  padding: 3px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.form-message input {
+  border: 0;
+  padding: 10px;
+  width: 90%;
+  margin-right: 0.5%;
+}
+
+.form-message button {
+  width: 9%;
+  background: rgb(130, 224, 255);
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.messages {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 70%;
+}
+
+.messages li {
+  padding: 5px 10px;
+}
+
+.messages li:nth-child(odd) {
+  background: #eee;
+}

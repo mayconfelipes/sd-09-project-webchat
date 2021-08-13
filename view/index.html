@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO - trybe</title>
+    <link rel="stylesheet" href="./css/chat.css">
+  </head>
+  <body>
+    <section class="chat-container">
+      <sidebar class="user-sidbar">
+        <form action="http://localhost/ping" method="get" id="formNickname">
+          <input type="text" id="nicknameInput" />
+          <input type="submit" id="btnNickname" value="Salvar">
+        </form>
+        <ul id="users" class="nickname-container"></ul>
+      </sidebar>
+      <ul id="messages" class="messages"></ul>
+    </section>
+    <form action="" class="form-message" id="formMessages">
+      <input id="messageInput" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+    <script src='./js/chat.js'></script>
+  </body>
+</html>
