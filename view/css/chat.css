@@ -27,7 +27,7 @@ body {
   text-align: center;
 }
 
-.nickname-container li, .my-nickname {
+.nickname-container li , .my-nickname {
   align-items: center;
   display: flex;
   font-size: 1.5rem;
