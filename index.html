@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<meta charset="utf-8" />
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+	<title>WebChat -Trybe</title>
+	<link href="/public/css/style.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+	<header>
+		<h1>WebChat - Trybe</h1>
+	</header>
+	<section>
+		<aside>
+			<div>
+				<form id='formNickName'>
+					<input type="text" name="" id="nickNameInput" data-testid="nickname-box" placeholder="Insira seu Nick">
+					<button data-testid="nickname-button">Salvar</button>
+				</form>
+			</div>
+			<div>
+				<ul id="nickUser">
+					
+					
+				</ul>
+			</div>
+		</aside>
+
+		<article>
+			<div id="campoMensagens">
+				<ul id="messages">
+
+
+
+				</ul>
+			</div>
+			<div id='sendMensage'>
+				<form id='formMessage'>
+					<input type="text" name="" id="messageInput" data-testid="message-box" placeholder="Insira sua Mensagem">
+					<button data-testid="send-button">Enviar</button>
+				</form>
+			</div>
+		</article>
+	</section>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		const socket = window.io();
+		let nickname = '';
+/* -----------------------------------MENSAGENS E NICKDEFAULT ------------------------------*/
+		
+		const formMessage = document.querySelector('#formMessage');
+		const inputMessage = document.querySelector('#messageInput');
+		const messagesUl = document.querySelector('#messages');
+		const createMessage = (message) => {
+			
+			const li = document.createElement('li');
+			li.setAttribute("data-testid", 'message')
+			li.innerText = message;
+			messagesUl.appendChild(li);
+		};
+		formMessage.addEventListener('submit', (e) => {
+			e.preventDefault();
+			socket.emit('message', { chatMessage: inputMessage.value, nickname });
+			inputMessage.value = '';
+			return false;
+		});
+/* -----------------------------------ATUALIZANDO NICKNAME ------------------------------*/
+
+		const formNickName = document.querySelector('#formNickName');
+        const inputNickName = document.querySelector('#nickNameInput')
+
+		const nickUl = document.getElementById('nickUser');
+		const createNick = (nick) => {
+
+			const li = document.createElement('li');
+			li.setAttribute("data-testid", 'online-user')
+			li.innerText = nick;
+			nickUl.appendChild(li)
+	
+		};
+		formNickName.addEventListener('submit', (e) => {
+            e.preventDefault();
+            nickname = inputNickName.value;
+            localStorage.setItem("nick", nickname);
+            socket.emit('updateNick',nickname)
+            //createNick(nickname);
+            inputNickName.value = '';
+        });
+
+		socket.on('historyChat',(result)=>{
+			result.forEach((item)=>{
+				const li = document.createElement('li');
+				console.log(item)
+				li.innerText = `${item.timestamp} ${item.nickname}: ${item.message}`
+				
+				li.setAttribute("data-testid", 'message')
+				messagesUl.appendChild(li);
+			})
+			
+		})
+
+		socket.on('message', (message) => createMessage(message));
+
+		socket.on('defaultNickName', (defaultNick) => {
+			nickname = defaultNick
+			createNick(nickname)
+		});
+		socket.on('listUsers',(list)=>{
+			nickUl.innerHTML = ''
+			createNick(nickname)
+			 const newList= list.filter((item)=>item.nickname !== nickname );
+			 newList.forEach(element => {
+			createNick(element.nickname)	
+			});
+			
+		})
+	</script>
+
+</body>
+
+</html>
