@@ -7,25 +7,32 @@
     <title>WebChat - Trybe</title>
   </head>
   <body>
+    <ul id="users"></ul>
     <form class="form-nickname-input" action="">
       <input
         class="nickname-input"
+        data-testid="nickname-box"
         id="nickname-input"
         type="text"
         placeholder="Nickname"
       />
-      <button type="submit" id="send-nickname">Send</button>
+      <button data-testid="nickname-button" type="submit" id="send-nickname">
+        Send
+      </button>
     </form>
     <form class="form-message-input" action="">
       <input
         class="message-input"
+        data-testid="message-box"
         id="message-input"
         type="text"
         placeholder="Message"
       />
-      <button type="submit" id="send-message">Send</button>
+      <button data-testid="send-button" type="submit" id="send-message">
+        Send
+      </button>
     </form>
-    <ul id="messages"></ul>
+    <ul data-testid="message-box" id="messages"></ul>
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/chat.js"></script>
   </body>
