@@ -47,13 +47,13 @@
         </div>
         <div class='users'>
           <ul id="userList">
-
+            <li id="onlineUser" data-testid="online-user"></li>
           </ul>
         </div>
       </aside>
       <section class='messages'>
         <ul class="message-list">
-
+          
         </ul>
       </section>
     </div>
@@ -69,15 +69,20 @@
     const socket = io();
     let nickname = (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)).slice(-16);
     localStorage.setItem('nickname', nickname);
+
+    const ulUsers = document.getElementById('userList');
+    let user = document.getElementById('onlineUser');
+    user.innerText = nickname;    
+
     const sendButton = document.getElementById('sendMessage');
     const sendNickname= document.getElementById('add-nickname')
     const listMessages = document.querySelector(".message-list");
 
-
-
     sendNickname.addEventListener('click', () => {
       nickname = document.getElementById('text-nickname').value;
       localStorage.setItem('nickname', nickname);
+      let rename = document.getElementById('onlineUser');
+      rename.innerText = nickname;  
     })
 
     sendButton.addEventListener('click', () => {

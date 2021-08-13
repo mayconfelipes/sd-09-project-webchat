@@ -7,11 +7,13 @@ const app = express();
 const socketServer = require('http').createServer(app);
 // const io = new Server(socketServer);
 
+app.use(cors());
+
 const io = require('socket.io')(socketServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST'],
-  }
+  },
 });
 
 require('./socket/chat')(io);

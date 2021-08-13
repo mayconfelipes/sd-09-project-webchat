@@ -3,6 +3,6 @@ body {
 }
 
 .users-list {
-  border: 1px solid black;
   background-color: blueviolet;
+  border: 1px solid black;
 }
