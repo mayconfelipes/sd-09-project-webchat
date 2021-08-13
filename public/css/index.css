@@ -76,6 +76,7 @@ button {
   background-color: rgb(26, 189, 40);
   margin-left: 3px;
   flex-basis: 10%;
+  cursor: pointer;
 }
 
 input {
