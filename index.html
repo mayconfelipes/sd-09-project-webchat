@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebChat - Trybe</title>
+  </head>
+  <body>
+    <form class="form-nickname-input" action="">
+      <input
+        class="nickname-input"
+        id="nickname-input"
+        type="text"
+        placeholder="Nickname"
+      />
+      <button type="submit" id="send-nickname">Send</button>
+    </form>
+    <form class="form-message-input" action="">
+      <input
+        class="message-input"
+        id="message-input"
+        type="text"
+        placeholder="Message"
+      />
+      <button type="submit" id="send-message">Send</button>
+    </form>
+    <ul id="messages"></ul>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./js/chat.js"></script>
+  </body>
+</html>
