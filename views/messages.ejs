@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Web Chat</title>
+  </head>
+  <body>
+    <h1>Web Chat</h1>
+    <ul id="list">
+    </ul>
+    <input name="chat" type="text" id="message" />
+    <button id="submitButton">Enviar</button>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = window.io('http://localhost:3000');
+
+      const createList = (message) => {
+        const ul = document.getElementById('list');
+        if (!ul) return;
+
+        const li = document.createElement('li');
+        const liText = document.createTextNode(message.message);
+
+        li.appendChild(liText);
+        ul.appendChild(li);
+      };
+
+      const submitButton = document.querySelector('#submitButton');
+      submitButton.addEventListener('click', () => {
+        const nickname = 'Jhon';
+        const chatMessage = document.querySelector('#message').value;
+        socket.emit('message', { chatMessage, nickname });
+      })
+
+      socket.on('retorno', (allMessages) => {
+        console.log(allMessages);
+        allMessages.forEach(createList)
+      });
+    </script>
+  </body>
+</html>
