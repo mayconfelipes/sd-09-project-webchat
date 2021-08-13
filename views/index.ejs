@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./styles/styles.css" />
+    <title>MVC Test</title>
+  </head>
+  <body>
+    <div id="page-auth">
+      <aside>
+        <h2>Usuarios conectados</h2>
+        <ul id="users"></ul>
+      </aside>
+      <main>
+        <div className="main-content">
+          <input
+            type="text"
+            name=""
+            id="name"
+            placeholder="introduce your nickname"
+          />
+          <div id="chatbox"></div>
+          <form action="">
+            <input type="text" name="" id="message" />
+            <Button id="send-btn">Send</Button>
+          </form>
+        </div>
+      </main>
+    </div>
+    <script src="./js/script.js"></script>
+  </body>
+</html>
