@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebChat</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+  <h1>Webchat</h1>
+  <h3>Ola, <span data-testid="online-user" id="user-nickname"></span></h3>
+  <section>
+    <span>Defina um apelido:</span>
+    <input data-testid="nickname-box" id="nickname-box" />
+    <button data-testid="nickname-button" id="nickname-button">Alterar</button>
+  </section>
+  <main class="chat-window">
+    <ul id="messages-list"></ul>
+    <form id="form" action="">
+      <input id="input" data-testid="message-box" autocomplete="off" />
+      <button data-testid="send-button">Enviar</button>
+    </form>
+  </main>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="client.js"></script> <!--JS com manipulacao do Socket-->
+</body>
+
+</html>

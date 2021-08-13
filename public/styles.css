@@ -1,0 +1,61 @@
+body {
+  margin: 0;
+  padding-bottom: 3rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.chat-window {
+  border: 3px solid black;
+  display: flex;
+  flex-flow: column;
+  margin: 50px;
+}
+
+#form {
+  background: rgba(0, 0, 0, 0.15);
+  padding: 0.25rem;
+  display: flex;
+  flex: 1 0 auto;
+  height: 3rem;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+}
+
+#input {
+  border: none;
+  padding: 0 1rem;
+  flex-grow: 1;
+  border-radius: 2rem;
+  margin: 0.25rem;
+}
+
+#input:focus {
+  outline: none;
+}
+
+#form>button {
+  background: #333;
+  border: none;
+  padding: 0 1rem;
+  margin: 0.25rem;
+  border-radius: 3px;
+  outline: none;
+  color: #fff;
+}
+
+#messages-list {
+  background-color: darkgrey;
+  list-style-type: none;
+  margin: 0;
+  min-height: 50vh;
+  padding: 0;
+}
+
+#messages-list>li {
+  background: lightslategray;
+  padding: 0.5rem 1rem;
+}
+
+#messages-list>li:nth-child(odd) {
+  background: #efefef;
+}
