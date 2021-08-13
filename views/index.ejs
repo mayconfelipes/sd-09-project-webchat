@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <link rel="stylesheet" type="text/css" href="./css/style.css"> -->
+  <style>
+    aside {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 25rem;
+    }
+
+    li {
+      list-style-type: none;
+      margin-bottom: 0.5rem;
+    }
+
+    .web-chat {
+      height: 80vh;
+      display: flex;
+    }
+
+    .users {
+      border: 1px solid black;
+      flex-grow: 1;
+    }
+
+    .messages {
+      border: 1px solid black;
+      width: 100%;
+    }
+  </style>
+  <title>Web charset</title>
+</head>
+<body>
+  <div class="home-container">
+    <div class="web-chat">
+      <aside>
+        <div>
+          <input id="text-nickname" data-testid="nickname-box" type="text" placeholder="insira seu nick name"/>
+          <button type="submit" id="add-nickname" data-testid="nickname-button" >
+            Salvar
+          </button>
+        </div>
+        <div class='users'>
+          <ul id="userList">
+
+          </ul>
+        </div>
+      </aside>
+      <section class='messages'>
+        <ul class="message-list">
+
+        </ul>
+      </section>
+    </div>
+    <form>
+      <input type="text" id="text-message" data-testid="message-box" placeholder="Digite uma nova mensagem aqui">
+      <button type="reset" id="sendMessage" data-testid="send-button">
+        Enviar
+      </button>
+    </form>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    let nickname = (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)).slice(-16);
+    localStorage.setItem('nickname', nickname);
+    const sendButton = document.getElementById('sendMessage');
+    const sendNickname= document.getElementById('add-nickname')
+    const listMessages = document.querySelector(".message-list");
+
+
+
+    sendNickname.addEventListener('click', () => {
+      nickname = document.getElementById('text-nickname').value;
+      localStorage.setItem('nickname', nickname);
+    })
+
+    sendButton.addEventListener('click', () => {
+      if (nickname) {
+        const chatMessage = document.getElementById('text-message').value
+        socket.emit('message', { chatMessage, nickname })
+      } else {
+        console.log('Error: "nickname is required"');
+      }
+    })
+
+    socket.on('message', (message) => {
+      let item = document.createElement('li');
+      item.innerText = message;
+      item.setAttribute('data-testid', 'message');
+      listMessages.appendChild(item);
+      // window.scrollTo(0, document.body.scrollHeight);
+    })
+
+  </script>
+</body>
+</html>
