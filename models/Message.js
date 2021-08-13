@@ -5,6 +5,8 @@ const create = (message, nickname, timestamp) => {
     db.collection('messages').insertOne({ message, nickname, timestamp }));
 };
 
+// teste
+
 const getAll = () => connection().then((db) => db.collection('messages').find({}).toArray());
 
 module.exports = {
