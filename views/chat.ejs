@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO - trybe</title>
+    <link rel="stylesheet" href="./chat.css">
+  </head>
+  <body>
+    <section class="login">
+      <input id="newName" autocomplete="off" placeholder="Insira seu nickname"/><button id="new-name-button">Salvar</button>
+      <ul class="users"></ul>
+    </section>
+    <section class="chat">
+      <ul id="messages"></ul>
+      <form action="">
+        <input id="messageInput" autocomplete="off" /><button id="send-button">Enviar</button>
+      </form>
+    </section>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src='./chat.js'></script>
+  </body>
+</html>
