@@ -1,4 +1,4 @@
-html, body {
+html , body {
   height: 100%;
 }
 
@@ -8,7 +8,7 @@ html, body {
   padding: 0;
 }
 
-#chat {
+.chat {
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -25,10 +25,10 @@ input {
 }
 
 button {
-  color: #FFF;
   background: #069;
+  color: #fff;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 700;
   height: 50px;
   line-height: 50px;
   margin-top: 10px;
