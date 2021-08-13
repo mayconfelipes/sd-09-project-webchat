@@ -11,18 +11,11 @@
 <body>
   <button id='pingButton'>PING</button>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
+  <ul id='messages'></ul>
 
-    const button = document.querySelector('#pingButton');
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script src="http://localhost:3000/client/script.js"></script>
 
-    button.addEventListener('click', (e) => {
-      socket.emit('ping');
-      return false;
-    });
-
-  </script>
 </body>
 
 </html>

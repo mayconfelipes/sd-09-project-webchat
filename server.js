@@ -10,16 +10,23 @@ const io = require('socket.io')(http, {
   }
 });
 
+app.use(express.static(__dirname));
+
 io.on('connection', (socket) => {
+  // socket.emit('ola', 'Mensagem enviada via socket.emit para MIM');
+  // socket.broadcast.emit('ola', 'Mensagem enviada via socket.broadcast.emit para TODOS, menos EU');
+  io.emit('ola', 'Mensagem enviada via oi.emit para TODOS');
   console.log(`Usuário conectado. ID: ${socket.id} `);
 
   socket.on('ping', () => {
     console.log(`${socket.id} emitiu um ping!`);
+    socket.emit('pong', `PONG ##!`);
+    socket.broadcast.emit('pong', `${socket.id} enviou um ping ##!`);
   });
 });
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/client/index.html');
 });
 
 const PORT = process.env.PORT || 3000;
