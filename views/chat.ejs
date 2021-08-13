@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Msn</title>
+</head>
+
+<body>
+    <div>
+        <input type="text" id="nickName" placeholder="Nickname">
+        <button type="button" id="btn-save">Salvar</button>
+    </div>
+    <div class="main">
+        <ul>
+            <h3>Online</h3>
+            <li>teste</li>
+        </ul>
+        <div id="chat"></div>
+    </div>
+    <div class="msg">
+        <input type="text" id="input-msg">
+        <button type="button" id="send-msg">Enviar</button>
+    </div>
+
+    <script src='/socket.io/socket.io.js'></script>
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js'></script> -->
+    <!-- <script src='sockets/chatFront.js'></script> -->
+
+    <script>
+        const socket = window.io();
+        const ulChat = document.querySelector('#chat');
+        const chatMessage = document.querySelector('#input-msg');
+
+
+        function sendNewMessage() {
+            const msgValue = chatMessage.value
+            socket.emit('message', msgValue)
+        }
+        const btnSendMessage = document.querySelector('#send-msg');
+        
+        socket.on('updateMsg', (menssage) => {
+            const p = document.createElement('p');
+            p.innerText = menssage;
+            ulChat.appendChild(p);
+            chatMessage.value = '';
+        })
+
+        btnSendMessage.addEventListener('click', () => {
+            sendNewMessage();
+        })
+        
+    </script>
+</body>
+
+</html>
