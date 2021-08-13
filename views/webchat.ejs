@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marcelo Campos - WebChat</title>
+</head>
+<body>
+  <h1>WebChat</h1>
+  <main>
+    <section>
+      <form action="" id="nickname-form">
+        <input
+          id="nickname-input"
+          autocomplete="off"
+          data-testid="nickname-box"
+        />
+        <button type='submit' data-testid="nickname-button">Change Nickname</button>
+      </form>
+      <div>
+        <ul id="users-container">
+        </ul>
+      </div>
+    </section>
+    <section id="chat-container">
+      <ul id="messages">
+      </ul>
+    </section>
+    <section>
+      <form action="" id='message-form'>
+        <input
+          id="input-message"
+          autocomplete="off"
+          data-testid="message-box"
+        />
+        <button type='submit' data-testid="send-button">Send Message</button>
+      </form>
+    </section>
+  </main>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = window.io();
+
+    socket.emit('login');
+
+    const messageInput = document.getElementById('input-message');
+    const messagesContainer = document.getElementById('messages');
+    const usersContainer = document.getElementById('users-container');
+    const nickNameInput = document.getElementById('nickname-input');
+
+    let nickname;
+
+    document.getElementById('message-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      socket.emit('message', {
+        chatMessage: messageInput.value,
+        nickname,
+      });
+      messageInput.value = '';
+    });
+
+    document.getElementById('nickname-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newNickname = nickNameInput.value;
+      nickname = newNickname;
+      socket.emit('changeNickname', nickname);
+    });
+
+    const createMessage = (message) => {
+      const newLi = document.createElement('li');
+      newLi.innerText = message;
+      newLi.setAttribute('data-testid', 'message');
+      messagesContainer.appendChild(newLi);
+    };
+
+    const setUser = (nickname) => {
+      const newLi = document.createElement('li');
+      newLi.innerText = nickname;
+      newLi.setAttribute('data-testid', 'online-user');
+      usersContainer.insertBefore(newLi, newLi.nextElementSibling);
+    }
+
+    socket.on('message', (message) => createMessage(message));
+
+    socket.on('login', (userNickname) => {
+      nickname = userNickname;
+    });
+
+    socket.on('sendAllUsers', (users) => {
+      usersContainer.innerHTML = '';
+      const nicknames = users.map((user) => user.nickname);
+      nicknames.map(setUser);
+    });
+
+    socket.on('oldMessages', (messages) => messages.map(createMessage));
+
+  </script>
+</body>
+</html>
