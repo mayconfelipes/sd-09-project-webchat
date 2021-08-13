@@ -1,14 +1,12 @@
 #page-auth {
-  display: flex;
   align-items: stretch;
   animation: fade linear 0.2s;
+  display: flex;
   height: 100vh;
 }
 #page-auth aside {
-  flex: 10;
-  background: var(--color-purple);
-  color: var(--color-white);
   display: flex;
+  flex: 10;
   flex-direction: column;
   justify-content: center;
   padding: 120px 80px;
@@ -23,35 +21,26 @@
   font-size: 24px;
   line-height: 32px;
   margin-top: 16px;
-  color: var(--color-low-white);
 }
 #page-auth main {
-  flex: 18;
-  padding: 0 32px;
-  display: flex;
   align-items: center;
-  justify-content: center;
-}
-#page-auth .main-content {
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 320px;
-  align-items: stretch;
-  text-align: center;
+  flex: 18;
+  justify-content: center;
+  padding: 0 32px;
 }
 
 #chatbox {
-  width: 500px;
-  height: 200px;
-  overflow: scroll;
   border: solid 1px #c6c6c6;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  height: 200px;
+  overflow: scroll;
+  width: 500px;
 }
 
 #name {
-  width: 100%;
   border: solid 1px #c6c6c6;
+  width: 100%;
 }
