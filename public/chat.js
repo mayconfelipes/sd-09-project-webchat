@@ -6,7 +6,7 @@ const usersUl = document.querySelector('.users');
 // const nickname = document.querySelector('.users');
 sendButton.addEventListener('click', (e) => {
   e.preventDefault();
-  socket.emit('clientMessage', { chatMessage: inputMessage.value, 
+  socket.emit('message', { chatMessage: inputMessage.value, 
     nickname: usersUl.firstChild.innerText });
   inputMessage.value = '';
   return false;
@@ -24,5 +24,5 @@ const createUser = (id) => {
   usersUl.appendChild(li);
 };
 
-socket.on('serverMessage', (message) => createMessage(message));
+socket.on('message', (message) => createMessage(message));
 socket.on('newUser', ({ id }) => createUser(id));

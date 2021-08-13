@@ -18,13 +18,13 @@ const io = require('socket.io')(socketIoServer, {
 
 io.on('connection', (socket) => {
   io.emit('newUser', { id: socket.id });
-  socket.on('clientMessage', ({ chatMessage, nickname }) => {
+  socket.on('message', ({ chatMessage, nickname }) => {
     console.log(`Mensagem ${chatMessage} do ${nickname}`);
     const date = new Date();
     const finalDate = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`; 
     const finalTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
     const finalMessage = `${finalTime} ${finalDate} - ${nickname} ${chatMessage}`;
-    io.emit('serverMessage', finalMessage);
+    io.emit('message', finalMessage);
   });
 });
 
