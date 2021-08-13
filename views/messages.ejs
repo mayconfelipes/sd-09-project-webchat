@@ -6,9 +6,37 @@
   <body>
     <h1>Web Chat</h1>
     <ul id="list">
+      <% allMessages.forEach(message=> { %>
+        <li>
+          <%= message.message %>
+        </li>
+      <%})%>
     </ul>
-    <input name="chat" type="text" id="message" />
-    <button id="submitButton">Enviar</button>
+    <input
+    name="chat"
+    type="text"
+    id="nickname-box"
+    data-testid="nickname-box"
+    />
+    <button
+      id="send-button"
+      id="nickname-button"
+      data-testid="nickname-button"
+    >
+      Alterar nome
+    </button>
+    <input
+      name="chat"
+      type="text"
+      id="message-box"
+      data-testid="message-box"
+      />
+    <button
+      id="send-button"
+      data-testid="send-button"
+    >
+      Enviar
+    </button>
     <script src="/socket.io/socket.io.js"></script>
     <script>
       const socket = window.io('http://localhost:3000');
@@ -18,22 +46,22 @@
         if (!ul) return;
 
         const li = document.createElement('li');
-        const liText = document.createTextNode(message.message);
+        const liText = document.createTextNode(message);
+        li.set
 
         li.appendChild(liText);
         ul.appendChild(li);
       };
 
-      const submitButton = document.querySelector('#submitButton');
+      const submitButton = document.querySelector('#send-button');
       submitButton.addEventListener('click', () => {
         const nickname = 'Jhon';
-        const chatMessage = document.querySelector('#message').value;
+        const chatMessage = document.querySelector('#message-box').value;
         socket.emit('message', { chatMessage, nickname });
       })
 
-      socket.on('retorno', (allMessages) => {
-        console.log(allMessages);
-        allMessages.forEach(createList)
+      socket.on('message', (message) => {
+        createList(message);
       });
     </script>
   </body>

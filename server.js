@@ -19,9 +19,8 @@ require('./sockets/message')(io);
 
 const models = require('./models');
 
-const allMessages = models.getAllMessages();
-
-app.get('/', (_req, res) => {
+app.get('/', async (_req, res) => {
+  const allMessages = await models.getAllMessages();
   res.render('messages', { allMessages });
 });
 
