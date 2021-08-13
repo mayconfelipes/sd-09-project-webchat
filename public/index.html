@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<head>
+  <title>Sockets.io- Projeto WebChat Turma 9</title>
+</head>
+
+<body>
+  <div>
+    <form id='insertNick'>
+      <input
+        type="text"
+        id= 'nickname'
+        maxlength="16"
+        placeholder="Insira seu nickname"
+        data-testid="nickname-box"
+      >
+      <button type="submit" data-testid="nickname-button"> Salvar </button>
+    </form>
+    <div>
+      <p>Online Users</p>
+      <ul id='listUsers'></ul>
+    </div>
+    
+    <ul id="messages"></ul>
+
+    <form id='insertMessage'>
+      <input
+        type="text"
+        id= 'message'
+        placeholder="Insira sua mensagem"
+        data-testid="message-box"
+      >
+      <button type="submit" data-testid="send-button"> Enviar </button>
+    </form>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="./js/client.js"></script>
+</body>
+</html>
