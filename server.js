@@ -2,10 +2,9 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-// const { Server } = require('socket.io');
 const app = express();
 const socketServer = require('http').createServer(app);
-// const io = new Server(socketServer);
+const controllers = require('./controllers');
 
 app.use(cors());
 
@@ -21,10 +20,7 @@ require('./socket/chat')(io);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.get('/', (req, res) => {
-  res.status(200).render('index');
-  // res.sendFile(__dirname + '/index.html')
-});
+app.get('/', controllers.loadPage);
 
 const { PORT = 3000 } = process.env;
 

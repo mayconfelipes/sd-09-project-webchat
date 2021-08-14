@@ -13,6 +13,15 @@
       width: 25rem;
     }
 
+    ul {
+      height: 100%;
+      margin: 0;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      white-space: nowrap;
+    }
+
+
     li {
       list-style-type: none;
       margin-bottom: 0.5rem;
@@ -47,13 +56,15 @@
         </div>
         <div class='users'>
           <ul id="userList">
-            <li id="onlineUser" data-testid="online-user"></li>
+            <li id="onlineUser" class='online-user' data-testid="online-user"></li>
           </ul>
         </div>
       </aside>
       <section class='messages'>
         <ul class="message-list">
-          
+          <% messages.forEach(({ message, nickname, timestamp }) => { %>
+            <li><%= `${timestamp} - ${nickname}: ${message}` %></li>
+          <% }) %>
         </ul>
       </section>
     </div>
@@ -67,19 +78,25 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
+    
+    // let nickname = localStorage.getItem('nickname')
     let nickname = (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)).slice(-16);
     localStorage.setItem('nickname', nickname);
 
     const ulUsers = document.getElementById('userList');
     let user = document.getElementById('onlineUser');
-    user.innerText = nickname;    
+    user.innerText = nickname;
+    socket.emit('new_user', nickname);
 
     const sendButton = document.getElementById('sendMessage');
     const sendNickname= document.getElementById('add-nickname')
     const listMessages = document.querySelector(".message-list");
 
+
     sendNickname.addEventListener('click', () => {
+      const oldNickname = nickname;
       nickname = document.getElementById('text-nickname').value;
+      socket.emit('update_nickname', { oldNickname, nickname })
       localStorage.setItem('nickname', nickname);
       let rename = document.getElementById('onlineUser');
       rename.innerText = nickname;  
@@ -100,6 +117,23 @@
       item.setAttribute('data-testid', 'message');
       listMessages.appendChild(item);
       // window.scrollTo(0, document.body.scrollHeight);
+    })
+
+    socket.on('onlineUsers', (onlineUsers) => {
+      const userList = document.getElementById('userList');
+      const users = document.querySelectorAll('.online-user');
+      console.log(users)
+      users.forEach((user) => (user.id !== 'onlineUser') && userList.removeChild(user))
+      console.log(document.querySelectorAll('.online-user'))
+      onlineUsers.forEach((user) => {
+        if (user !== nickname) {
+          const li = document.createElement('li');
+          li.innerText = user;
+          li.className = 'online-user';
+          li.setAttribute('data-testid', 'online-user');
+          userList.appendChild(li);
+        }
+      })
     })
 
   </script>
