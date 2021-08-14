@@ -1,26 +1,21 @@
-const cors = require('cors');
-const path = require('path');
 const express = require('express');
-const bodyParser = require('body-parser');
+
+const app = express();
+const http = require('http').createServer(app);
 
 const PORT = process.env.PORT || 3000;
 
-const app = express();
+const io = require('socket.io')(http, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+  },
+});
 
-app.set('view engine', 'ejs'); // necessario para usar a engine(ejs)
-app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(`${__dirname}/views`));
 
-app.use(
-  cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Authorization'],
-  }),
-);
+require('./sockets/chat')(io);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.get('/', (_req, res) => res.send('Hello World!'));
-
-app.listen(PORT, () => console.log(`Express app listening on ${PORT}!`));
+http.listen(PORT, () => {
+  console.log(`Servidor ouvindo na porta ${PORT}`);
+});

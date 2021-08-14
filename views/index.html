@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+  <title>WebChat</title>
+</head>
+
+<body>
+  <h1 class="text-primary text-center my-3 font-weight-bold">Welcome to Web Chat!</h1>
+  <div class="container">
+    <form class="row g-1 p-2">
+      <div class="col-auto">
+        <input id="nickname" type="text" class="form-control" placeholder="Insira seu nickname">
+      </div>
+      <div class="col-auto">
+        <button id="save-user" type="button" class="btn btn-outline-success">Salvar</button>
+      </div>
+    </form>
+  
+    <div id="users-list">
+      <h4 class="text-secondary text-left">Users</h4>
+      <ul id="users" class="list-group"></ul>
+    </div>
+  
+    <div id="messages-list">
+      <h4 class="text-secondary text-left">Messages</h4>
+      <ul id="messages" class="list-group"></ul>
+    </div>
+  
+    <div class="fixed-bottom input-group">
+      <input id="messageInput" type="text" class="form-control" placeholder="Digite uma nova mensagem">
+      <button id="send-msg" class="btn btn-success" type="button">Enviar</button>
+    </div>
+  </div>
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script src='./js/chat.js'></script>
+</body>
+
+</html>

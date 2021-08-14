@@ -2,7 +2,7 @@ const io = require('socket.io-client');
 
 const BASE_URL = 'http://localhost:3000/';
 
-describe.only('1 - Crie um back-end para conexão simultânea de clientes e troca de mensagens em chat público', () => {
+describe('1 - Crie um back-end para conexão simultânea de clientes e troca de mensagens em chat público', () => {
   const chatMessage = 'We can only see a short distance ahead, but we can see plenty there that needs to be done.';
   const nickname = 'Alan Turing';
 
