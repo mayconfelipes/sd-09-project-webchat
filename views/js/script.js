@@ -1,5 +1,6 @@
 const inputChat = document.querySelector('#message');
-// const username = document.querySelector('#name');
+const nicknameInput = document.querySelector('#name');
+const nickBtn = document.querySelector('#send-nick');
 const sendBtn = document.querySelector('#send-btn');
 const socket = window.io('http://localhost:3000');
 const usersBox = document.querySelector('#users');
@@ -18,10 +19,11 @@ function randomStringGenerator(size) {
 }
 
 const user = randomStringGenerator(16);
+let userb = user;
 sendBtn.addEventListener('click', (e) => {
   const data = {
     chatMessage: inputChat.value,
-    nickname: user,
+    nickname: userb,
   };
   socket.emit('message', data);
   e.preventDefault();
@@ -30,14 +32,29 @@ sendBtn.addEventListener('click', (e) => {
 window.onload = () => {
   const li = document.createElement('li');
   const liContent = document.createTextNode(`${user}`);
+  li.setAttribute('data-testid', 'online-user');
   li.appendChild(liContent);
+  li.classList.add(`${user}`);
   usersBox.appendChild(li);
+
+  socket.emit('save', user);
 };
 
 socket.on('message', (data) => {
   console.log(chatBox);
   const span = document.createElement('span');
   const spanContent = document.createTextNode(`${data}`);
+  span.setAttribute('data-testid', 'message');
   span.appendChild(spanContent);
   chatBox.appendChild(span);
+});
+
+socket.on('onlineUsers', (data) => {
+  console.log(data);
+});
+
+nickBtn.addEventListener('click', () => {
+  userb = nicknameInput.value;
+  const userTag = document.querySelector(`.${user}`);
+  userTag.innerHTML = nicknameInput.value;
 });

@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
+const onlineUsers = [];
 
 const server = require('http').createServer(app);
 
@@ -31,7 +32,11 @@ io.on('connection', (socket) => {
    const timestamps = utils.formatDate();
 
   io.emit('message', `${timestamps} - ${nickname}: ${chatMessage}`);
-});
+  });
+  socket.on('save', (d) => {
+    onlineUsers.push(d);
+    io.emit('onlineUsers', onlineUsers);
+  });
 });
 
 server.listen(3000, () => console.log('Socket running on port', 3000));
