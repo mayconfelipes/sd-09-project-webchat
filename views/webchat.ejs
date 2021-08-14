@@ -10,24 +10,33 @@
 
 <body>
   <h1>Webchat</h1>
-  <h3>Ola, <span data-testid="online-user" id="user-nickname"></span></h3>
+  <h3>Ola, <span id="user-nickname"></span></h3>
   <section>
     <span>Defina um apelido:</span>
     <input data-testid="nickname-box" id="nickname-box" />
     <button data-testid="nickname-button" id="nickname-button">Alterar</button>
   </section>
-  <main class="chat-window">
-    <ul id="messages-list" class="messages-list">
-      <% messagesHistory.forEach(({ timestamp, nickname, message }) => { %>
-        <li data-testid="message">
-          <%= timestamp %> - <%= nickname %>: <%= message %>
-        </li>
-      <% }) %>
-    </ul>
-    <form id="form" class="send-message-form" action="">
-      <input id="input" class="message-input" data-testid="message-box" autocomplete="off" />
-      <button data-testid="send-button">Enviar</button>
-    </form>
+  <main class="wrapper">
+    <section class="users-window">
+      <div class="users-window-header">
+        <h3>Usuarios Online:</h3>
+      </div>
+      <ul id="users-list">
+      </ul>
+    </section>
+    <section class="chat-window">
+      <ul id="messages-list" class="messages-list">
+        <% messagesHistory.forEach(({ timestamp, nickname, message }) => { %>
+          <li data-testid="message">
+            <%= timestamp %> - <%= nickname %>: <%= message %>
+          </li>
+        <% }) %>
+      </ul>
+      <form id="form" class="send-message-form" action="">
+        <input id="input" class="message-input" data-testid="message-box" autocomplete="off" />
+        <button data-testid="send-button">Enviar</button>
+      </form>
+    </section>
   </main>
   <script src="/socket.io/socket.io.js"></script>
   <script src="client.js"></script> <!--JS com manipulacao do Socket-->

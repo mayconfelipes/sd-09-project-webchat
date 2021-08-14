@@ -4,10 +4,33 @@ body {
   padding-bottom: 3rem;
 }
 
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.users-window {
+  background: darkgrey;
+  border: 3px solid black;
+  margin: 50px;
+  width: 30rem;
+}
+
+.users-window ul {
+  list-style-type: none;
+}
+
+.users-window-header {
+  background-color: white;
+  border-bottom: 3px solid black;
+  padding: 0 15px;
+}
+
 .chat-window {
   border: 3px solid black;
   display: flex;
   flex-flow: column;
+  flex: 1 0 auto;
   margin: 50px;
 }
 
