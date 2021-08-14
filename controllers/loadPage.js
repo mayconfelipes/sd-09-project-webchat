@@ -1,4 +1,4 @@
-const { getAll } = require("../models/messages");
+const { getAll } = require('../models/messages');
 
 const onlineUsers = [];
 
@@ -10,8 +10,9 @@ const loadPage = async (req, res) => {
   } catch (error) {
     res.status(500).json({ Error: error.message });
   }
-}
+};
+
 module.exports = {
   loadPage,
   onlineUsers,
-}
+};
