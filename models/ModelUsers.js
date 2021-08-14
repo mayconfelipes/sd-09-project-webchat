@@ -27,8 +27,17 @@ const getAllUsers = async () => {
   return getAll;
 };
 
+const deleteUser = async (idSocket) => {
+  const connect = await connection();
+
+  const deletado = await connect.collection('users')
+    .deleteOne({ idSocket });
+
+};
+
 module.exports = {
   create,
   updateNickname,
   getAllUsers,
+  deleteUser,
 };

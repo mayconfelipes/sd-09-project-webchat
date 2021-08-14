@@ -9,6 +9,7 @@ const formMessage = document.querySelector('.form-message-input');
 const inputMessage = document.querySelector('#message-input');
 const messages = document.getElementById('messages');
 const users = document.getElementById('users');
+const myUser = document.getElementById('myUser');
 
 const createListUsers = (user) => {
   const li = document.createElement('li');
@@ -21,7 +22,20 @@ const createListUsers = (user) => {
 socket.on('userOn', ({ idSocket }) => {
   idSocketFront = idSocket;
   socket.emit('nickname', ({ idSocket, newNick: idSocket }));
+  // myUser.innerHTML = idSocket;
   createListUsers(idSocket);
+});
+
+socket.on('allUsers', (getUsers) => {
+  users.innerHTML = '';
+  const userFind = getUsers.filter(({ idSocket }) => idSocket === idSocketFront);
+  userFind.forEach(({ nickname: nick }) => {
+    createListUsers(nick);
+  });
+  const usersFilter = getUsers.filter(({ idSocket }) => idSocket !== idSocketFront);
+  usersFilter.forEach(({ nickname: nick }) => {
+    createListUsers(nick);
+  });
 });
 
 const createListMessage = (message) => {
@@ -42,7 +56,14 @@ formNickname.addEventListener('submit', (e) => {
 });
 
 socket.on('updateNickname', (listUser) => {
-  listUser.forEach(({ nickname: nick }) => {
+  users.innerHTML = '';
+  const userFind = listUser.filter(({ idSocket }) => idSocket === idSocketFront);
+  const userFilter = listUser.filter(({ idSocket }) => idSocket !== idSocketFront);
+  userFind.forEach(({ nickname: nick }) => {
+    createListUsers(nick);
+  });
+  
+  userFilter.forEach(({ nickname: nick }) => {
     createListUsers(nick);
   });
 });
