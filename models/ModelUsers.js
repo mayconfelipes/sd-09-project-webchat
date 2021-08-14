@@ -30,9 +30,7 @@ const getAllUsers = async () => {
 const deleteUser = async (idSocket) => {
   const connect = await connection();
 
-  const deletado = await connect.collection('users')
-    .deleteOne({ idSocket });
-
+  await connect.collection('users').deleteOne({ idSocket });
 };
 
 module.exports = {

@@ -9,7 +9,7 @@ const formMessage = document.querySelector('.form-message-input');
 const inputMessage = document.querySelector('#message-input');
 const messages = document.getElementById('messages');
 const users = document.getElementById('users');
-const myUser = document.getElementById('myUser');
+// const myUser = document.getElementById('myUser');
 
 const createListUsers = (user) => {
   const li = document.createElement('li');
