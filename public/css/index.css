@@ -46,19 +46,37 @@ main {
   width: 50%;
   margin-left: 3px;
   height: 100%;
+  overflow-y: auto;
+}
+
+.message-container::-webkit-scrollbar {
+  width: 0.7rem;
+}
+
+/* .message-container::-webkit-scrollbar-track {
+  background: orange;
+} */
+
+.message-container::-webkit-scrollbar-thumb {
+  background-color: rgb(223 227 229 / 34%);
+  border-radius: 1.1rem;
+  border: 0.2rem solid #2c2c2c;
 }
 
 .user-list, .message-list {
   list-style: none;
   color: aliceblue;
   padding: 0.5rem;
+  height: 0;
 }
 
 li {
-  padding: 0.5rem;
+  padding: 1rem;
   background-color: rgb(43, 78, 190);
   font-size: 1.3rem;
   border-radius: 0.5rem;
+  overflow-y: auto;
+  margin: 0.5rem;
 }
 
 footer form {
