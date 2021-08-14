@@ -8,10 +8,12 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <form id="chat" class="chat">
+  <form id="nicknameUser" class="chat" >
     <input data-testid="nickname-box" id="userName" type="text" name="userName" placeholder="Insira seu nickname">
     <button id="save-button" data-testid="nickname-button" type="submit">Salvar</button>
     <ul id="nickName" class="nickName"></ul>
+  </form>
+  <form id="chat" class="chat">
     <ul id="messages" class="messages"></ul>
     <input data-testid="message-box" id="message" type="text" name="message" placeholder="Digite uma nova mensagem">
     <button data-testid="send-button" type="submit">Enviar</button>
@@ -24,33 +26,52 @@
     const renderMessage = (message) => {
       const ul = document.getElementById('messages');
       const li = document.createElement('li');
-      li.setAttribute('data-testid', 'message')
-      li.innerHTML = `<strong data-testid="online-user">${message.date} - ${message.nickname}: </strong> ${message.chatMessage}`;
+      li.setAttribute('data-testid', 'message');
+      li.setAttribute('class', 'userMessage');
+      li.setAttribute('id', message._id);
+      li.innerHTML = `<strong data-testid="online-user">${message.timestamp} - ${message.nickname}: </strong> ${message.message}`;
       ul.appendChild(li);
     }
 
     const renderNickName = (nickName) => {
       const ul = document.getElementById('nickName');
       const li = document.createElement('li');
+      const input = document.getElementById('userName');
       li.innerText = nickName;
+      input.value = nickName;
       li.setAttribute('data-testid', 'online-user');
+      li.setAttribute('class', 'liUser')
       ul.appendChild(li);
     }
 
-    // const button = document.getElementById('save-button');
-    // button.addEventListener('click', (event) => {
-    //   event.preventDefault();
-    //   const userName = document.getElementById('userName').value;
-    //   const ul = document.getElementById('nickName');
-    //   const li = document.createElement('li');
-    //   li.innerText = userName;
-    //   li.setAttribute('data-testid', 'online-user');
-    //   ul.appendChild(li);
+    // const setNicName = document.getElementById('userName');
+    // const saveButton = document.getElementById('save-button');
+    // setNicName.addEventListener('click', (event) => {
+    //   event.target.value = '';
+    //   saveButton.addEventListener('click', () => {
+    //     const userMessage = document.getElementsByClassName('userMessage')
+    //     const nickName = document.getElementsByClassName('liUser');
+    //     socket.emit('editNickName', {nickName: nickName.value, message: userMessage.value})
+    //     nickName.innerText = event.target.value;
+    //   });
     // });
 
+    const saveButton = document.getElementById('nicknameUser');
+      saveButton.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const userMessage = document.getElementsByClassName('userMessage')
+        const input = document.getElementById('userName');
+        const nickName = document.getElementsByClassName('liUser');
+        const userObject = {
+          message: userMessage.value, 
+          nickName: input.value, 
+        }
+        socket.emit('editNickName', userObject)
+        nickName.innerText = event.target.value;
+      });
+
     socket.on('randomNickName', (nickName) => {
-      const name = document.getElementById('userName');
-      name.value = nickName;
+      localStorage.setItem('nickName', JSON.stringify(nickName));
       renderNickName(nickName);
     });
 
@@ -59,9 +80,6 @@
     });
 
     socket.on('message', (message) => {
-      const dateRegex = /\d{1,2}-\d{1,2}-\d{4}/gm; 
-      const timeRegex = /\d{1,2}:\d{1,2}(:\d{0,2})?/gm; 
-      console.log(dateRegex.test(message))
       renderMessage(JSON.parse(message));
     });
 

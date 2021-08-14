@@ -41,6 +41,7 @@ button {
   height: 400px;
   list-style-type: none;
   margin: 20px 0;
+  overflow-y: auto;
   padding: 20px;
   width: 600px;
 }
