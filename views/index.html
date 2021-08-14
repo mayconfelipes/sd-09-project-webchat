@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      body {
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+
+      #message-form {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.25rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        height: 3rem;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+      }
+      #message-input {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        margin: 0.25rem;
+      }
+      #message-input:focus {
+        outline: none;
+      }
+      #message-form > button {
+        background: #333;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        outline: none;
+        color: #fff;
+      }
+
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      #messages > li {
+        padding: 0.5rem 1rem;
+      }
+      #messages > li:nth-child(odd) {
+        background: #efefef;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="nickname-container">
+      <form id="nickname-form" action="">
+        <input
+          id="nickname-input"
+          data-testid="nickname-box"
+          autocomplete="off"
+        />
+        <button data-testid="nickname-button">Salvar</button>
+      </form>
+    </div>
+
+    <div id="online-users-container">
+      <ul id="online-users-list">
+      </ul>
+    </div>
+
+    <div id="messages-container">
+      <ul id="messages"></ul>
+      <form id="message-form" action="">
+        <input
+          id="message-input"
+          autocomplete="off"
+          data-testid="message-box"
+        />
+        <button data-testid="send-button">Enviar</button>
+      </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      const messageForm = document.getElementById('message-form');
+      const messageInput = document.getElementById('message-input');
+      const nicknameForm = document.getElementById('nickname-form');
+      const nicknameInput = document.getElementById('nickname-input');
+      const usersList = document.getElementById('online-users-list');
+
+      getNickname();
+
+      messageForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('entrei');
+        if (messageInput.value) {
+          const nickname = JSON.parse(localStorage.getItem('nickname')); 
+          const chatMessage = messageInput.value;
+          socket.emit('message', { chatMessage, nickname });
+          messageInput.value = '';
+        }
+      });
+
+      nicknameForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (nicknameInput.value) {
+          const nickname = changeNickname(nicknameInput.value);
+          socket.emit('updateNickname', { nickname });
+        }
+      });
+
+      socket.on('message', (message) => {
+        const item = document.createElement('li');
+        item.textContent = message;
+        item.setAttribute('data-testid', 'message');
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+
+      socket.on('updateUsers', ({ users }) => {
+        const onlineUsers = Object.values(users);
+        usersList.innerHTML = "";
+        onlineUsers.forEach((user) => {
+          addOnlineUser(user);
+        });
+      });
+
+      function changeNickname(nickname) {
+        localStorage.setItem('nickname', JSON.stringify(nickname));
+        return nickname;
+      }
+
+      function getNickname() {
+        socket.emit('newUser', (response) => {
+          changeNickname(response.nickname);
+          addOnlineUser(response.nickname);
+        });
+        
+      }
+
+      function addOnlineUser(nickname) {
+        const item = document.createElement('li');
+        item.textContent = nickname;
+        item.setAttribute('data-testid', 'online-user');
+        usersList.appendChild(item);
+      }
+    </script>
+  </body>
+</html>
