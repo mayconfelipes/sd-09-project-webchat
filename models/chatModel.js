@@ -6,8 +6,8 @@ const saveMessage = async ({ message, nickname, timestamp }) => {
 };
 
 const getMessage = async () => {
-  await connection()
-    .then((db) => db.collection('message').find({}).toArray());
+  return connection()
+    .then((db) => db.collection('messages').find({}).toArray());
 };
 
 module.exports = {

@@ -35,13 +35,24 @@ sendButton.addEventListener('click', () => {
   return false;
 });
 
-socket.on('message', (message) => {
+const createMessage = (message) => {
   const menssagesUl = document.querySelector('#messages');
   const li = document.createElement('li');
   li.innerHTML = message;
   li.setAttribute('data-testid', 'message');
 
   menssagesUl.appendChild(li);
+};
+
+socket.on('message', (message) => {
+  createMessage(message);
+});
+
+socket.on('getAllMessage', (messages) => {
+  messages.forEach(({ message, nickname: nick, timestamp }) => {
+    const msg = `${timestamp} - ${nick}: ${message}`;
+    createMessage(msg);
+  });
 });
 
 window.onbeforeunload = () => {

@@ -15,9 +15,12 @@ const createData = () => {
 };
 
 const initialList = (socket, io) => {
-  socket.on('initialList', () => {
+  socket.on('initialList', async () => {
     const newNickname = crypto.randomBytes(20).toString('hex').substr(0, 16);
+    const getAllMessage = await chatModel.getMessage();
+
     users[socket.id] = newNickname;
+    socket.emit('getAllMessage', getAllMessage);
     io.emit('updateOnline', { users, newNickname });
   });
 };
@@ -48,5 +51,5 @@ module.exports = (io) => io.on('connection', (socket) => {
   initialList(socket, io);
   saveName(socket, io);
   desconnect(socket, io);
-  menssageFunc(socket, io);  
+  menssageFunc(socket, io);
 });
