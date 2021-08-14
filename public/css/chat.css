@@ -3,16 +3,16 @@
 }
 
 .left {
-  width: 350px;
   display: flex;
   flex-direction: column;
+  width: 350px;
 }
 
 .savenick {
   display: flex;
 }
 
-#inputName {
+.inputName {
   flex-grow: 2;
 }
 
@@ -31,6 +31,6 @@
   width: 100%;
 }
 
-#inputMessage {
+.inputMessage {
   flex-grow: 2;
 }
