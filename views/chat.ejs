@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Chat</title>
+
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+    </script>
+  </head>
+  <body>
+    <main>
+      <section>
+        <div>
+          <form action="" id="nickname-form">
+            <input type="text" data-testid="nickname-box" id="nickname-box" />
+            <button type="submit" data-testid="nickname-button">Salvar</button>
+          </form>
+        </div>
+        <div>
+          <ul id="online-users"></ul>
+        </div>
+      </section>
+      <section>
+        <ul id="chat"></ul>
+      </section>
+    </main>
+    <form action="" id="message-form">
+      <input
+        type="text"
+        data-testid="message-box"
+        placeholder="Digite uma nova mensagem aqui"
+        id="message-box"
+      />
+      <button type="submit" data-testid="send-button">Enviar</button>
+    </form>
+
+    <script>
+      const nicknameForm = document.querySelector('#nickname-form');
+      const nicknameBox = document.querySelector('#nickname-box');
+      const messageForm = document.querySelector('#message-form');
+      const messageBox = document.querySelector('#message-box');
+      const chat = document.querySelector('#chat');
+
+      messageForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const chatMessage = messageBox.value;
+        const nickname = nicknameBox.value;
+
+        messageBox.value = '';
+        socket.emit('message', { chatMessage, nickname });
+
+        return false;
+      });
+
+      socket.on('message', (message) => {
+        const li = document.createElement('li');
+        li.innerText = message;
+        li.id = 'message';
+        chat.appendChild(li);
+      });
+    </script>
+  </body>
+</html>
