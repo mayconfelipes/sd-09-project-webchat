@@ -21,13 +21,11 @@ socket.on('append user', ({ id, nickname }) => { // Renderiza o usuario no front
 socket.on('get user list', (userList) => { // Renderiza a lista de usuarios no front-end
   const userWindow = document.querySelector('#users-list');
   userList.forEach((user) => {
-    // if (user.id !== document.querySelector(`#${user.id}`)) {
       const userOnList = document.createElement('li');
       userOnList.setAttribute(DATA_TESTID, 'online-user');
       userOnList.id = user.id;
       userOnList.textContent = user.nickname;
       userWindow.appendChild(userOnList);
-    // }
   });
 });
 

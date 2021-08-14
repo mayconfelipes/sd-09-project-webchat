@@ -29,8 +29,8 @@ body {
 .chat-window {
   border: 3px solid black;
   display: flex;
-  flex-flow: column;
   flex: 1 0 auto;
+  flex-flow: column;
   margin: 50px;
 }
 
