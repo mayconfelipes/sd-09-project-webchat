@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
-const { format } = require('date-fns');
 require('dotenv').config();
 
 const app = express();
@@ -18,24 +17,12 @@ const io = require('socket.io')(httpServer, {
   },
 });
 
-io.on('connection', (socket) => {
-  console.log(`Usuario ${socket.id} conectado.`);
+const messagesController = require('./controllers/messages');
+const webChat = require('./sockets/webchat');
 
-  socket.on('nickname', (nickname) => {
-    io.emit('nickname', nickname);
-  });
-  
-  socket.on('message', ({ nickname, chatMessage }) => {
-    const date = format(new Date(), 'dd-MM-yyyy HH:mm:ss');
-    io.emit('message', `${date} - ${nickname}: ${chatMessage}`);
-  });
-  
-  socket.on('disconnect', () => {
-    console.log(`Usuario ${socket.id} desconectou`);
-  });
-});
+webChat(io);
 
-app.get('/', (_req, res) => res.status(200).render('webchat'));
+app.get('/', messagesController.getHistory);
 
 app.use(express.static('public')); // Habilitar CSS e JS no front
 
