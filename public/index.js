@@ -40,3 +40,18 @@ socket.on('message', (msg) => {
   message.setAttribute(DATATEST, 'message');
   messages.appendChild(message);
 });
+
+const renderMessage = (msgs) => {
+  msgs.forEach((element) => {
+    const message = document.createElement('li');
+    message.setAttribute(DATATEST, 'message');
+    message.textContent = `${element.timestamp} ${element.nickname}: ${element.message}`;
+    messages.appendChild(message);
+  });
+};
+
+socket.on('connect', () => {
+  fetch('http://localhost:3000/history')
+    .then((res) => res.json())
+    .then((chat) => renderMessage(chat));
+});

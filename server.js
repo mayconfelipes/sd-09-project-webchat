@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -15,6 +16,9 @@ const io = require('socket.io')(http, {
   },
 });
 
+const db = require('./models/messages');
+const chatControllers = require('./controllers/chatControllers');
+
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
@@ -23,10 +27,13 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   console.log(`Usuário conectado. ID: ${socket.id}`);
-  socket.on('message', ({ chatMessage, nickname }) => {
+  socket.on('message', async ({ chatMessage, nickname }) => {
     io.emit('message', `${timestamp} ${nickname}: ${chatMessage}`);
+    await db.post({ chatMessage, nickname, timestamp });
   });
 });
+
+app.get('/history', chatControllers.getAll);
 
 app.use(express.static('public'));
 

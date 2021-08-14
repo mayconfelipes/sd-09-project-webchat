@@ -45,8 +45,8 @@
 }
 
 .send-button {
-  padding: 1rem;
   text-align: center;
+  width: 5%;
 }
 
 .change-name {
@@ -62,4 +62,8 @@
 
 .change-name button {
   width: 25%;
+}
+
+.messages > li:nth-child( odd ) {
+  background: #efefef;
 }
