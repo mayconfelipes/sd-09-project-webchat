@@ -18,7 +18,11 @@ socket.on('updateOnline', ({ users, newNickname }) => {
   usersOnline.innerHTML = '';
   nickname = newNickname;
 
-  Object.values(users).forEach((user) => {
+  const firstNick = Object.keys(users).find((user) => user === socket.id.toString());
+  const otherNicks = Object.values(users).filter((user) => user !== users[firstNick]);
+
+  const userList = [users[firstNick], ...otherNicks];
+  userList.forEach((user) => {
     const li = document.createElement('li');
     li.innerHTML = user;
     li.setAttribute('data-testid', 'online-user');

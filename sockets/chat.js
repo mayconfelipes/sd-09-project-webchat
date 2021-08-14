@@ -18,7 +18,6 @@ const initialList = (socket, io) => {
   socket.on('initialList', async () => {
     const newNickname = crypto.randomBytes(20).toString('hex').substr(0, 16);
     const getAllMessage = await chatModel.getMessage();
-
     users[socket.id] = newNickname;
     socket.emit('getAllMessage', getAllMessage);
     io.emit('updateOnline', { users, newNickname });
@@ -35,7 +34,7 @@ const saveName = (socket, io) => {
 const desconnect = (socket, io) => {
   socket.on('disconnect', () => {
     delete users[socket.id];
-    io.emit('updateOnline', users);
+    io.emit('updateOnline', { users });
   });
 };
 

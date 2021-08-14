@@ -5,10 +5,8 @@ const saveMessage = async ({ message, nickname, timestamp }) => {
     .then((db) => db.collection('messages').insertOne({ message, nickname, timestamp })); 
 };
 
-const getMessage = async () => {
-  return connection()
+const getMessage = async () => connection()
     .then((db) => db.collection('messages').find({}).toArray());
-};
 
 module.exports = {
   saveMessage,
