@@ -2,6 +2,7 @@ require('dotenv').config();
 const cors = require('cors');
 const path = require('path');
 const express = require('express');
+const crypto = require('crypto');
 
 const app = express();
 
@@ -17,7 +18,8 @@ const io = require('socket.io')(socketIoServer, {
 });
 
 io.on('connection', (socket) => {
-  io.emit('newUser', { id: socket.id });
+  const id = crypto.randomBytes(8).toString('hex');
+  io.emit('newUser', { id });
   socket.on('message', ({ chatMessage, nickname }) => {
     console.log(`Mensagem ${chatMessage} do ${nickname}`);
     const date = new Date();

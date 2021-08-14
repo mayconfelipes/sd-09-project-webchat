@@ -6,13 +6,15 @@
   </head>
   <body>
     <section class="login">
-      <input id="newName" autocomplete="off" placeholder="Insira seu nickname"/><button id="new-name-button">Salvar</button>
+      <input id="nickname-box" autocomplete="off" placeholder="Insira seu nickname" data-testid="nickname-box"/>
+      <button id="nickname-button" data-testid="nickname-button">Salvar</button>
       <ul class="users"></ul>
     </section>
     <section class="chat">
       <ul id="messages"></ul>
       <form action="">
-        <input id="messageInput" autocomplete="off" /><button id="send-button">Enviar</button>
+        <input id="messageInput" autocomplete="off" data-testid="message-box"/>
+        <button data-testid="send-button" id="send-button">Enviar</button>
       </form>
     </section>
     <script src="/socket.io/socket.io.js"></script>
