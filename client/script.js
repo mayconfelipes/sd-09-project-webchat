@@ -4,7 +4,7 @@ const socket = io('http://localhost:3000');
 const button = document.querySelector('#pingButton');
 
 button.addEventListener('click', (e) => {
-  socket.emit('ping', { e });
+  socket.emit('ping');
   return false;
 });
 
@@ -17,3 +17,4 @@ const createMessage = (message) => {
 
 socket.on('ola', (mensagem) => createMessage(mensagem));
 socket.on('pong', (mensagem) => createMessage(mensagem));
+socket.on('todos', (mensagem) => createMessage(mensagem));

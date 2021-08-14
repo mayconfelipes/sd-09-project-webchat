@@ -1,0 +1,12 @@
+.users-container {
+  float: left;
+  width: 30%;
+}
+
+.messages-container {
+  float: left;
+}
+
+body {
+  background-color: rgb(200, 200, 216);
+}

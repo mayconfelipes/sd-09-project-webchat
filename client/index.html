@@ -5,17 +5,44 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project_webchat</title>
+  <link rel="stylesheet" href="../chat.css">
+  <title>WebChat</title>
 </head>
 
 <body>
-  <button id='pingButton'>PING</button>
+  <header>
+    <h2>WebChat</h2>
+  </header>
+  <main>
+    <section class="chat-section">
+      <sidebar class="users-container">
+        <form>
+          <input type="text" data-testid="nickname-box" placeholder="Nickname: " />
+          <button type="button" id="nickname-btn" data-testid="nickname-button">Save</button>
+        </form>
+        <h3>Users online:</h3>
+        <ul id="users-list"></ul>
+      </sidebar>
+      <sidebar class="messages-container">
+        <form>
+          <input type="text" data-testid="nickname-box" placeholder="Nickname: " />
+          <button type="button" id="nickname-btn" data-testid="nickname-button">Send</button>
+        </form>
+        <h3>Messages:</h3>
+        <ul id="messages-list"></ul>
+      </sidebar>
+    </section>
+    <section class="messages-section">
 
-  <ul id='messages'></ul>
 
-  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-  <script src="http://localhost:3000/client/script.js"></script>
+      <ul id='messages'></ul>
 
+    </section>
+
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="http://localhost:3000/client/script.js"></script>
+
+  </main>
 </body>
 
 </html>

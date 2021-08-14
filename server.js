@@ -15,11 +15,12 @@ app.use(express.static(__dirname));
 io.on('connection', (socket) => {
   // socket.emit('ola', 'Mensagem enviada via socket.emit para MIM');
   // socket.broadcast.emit('ola', 'Mensagem enviada via socket.broadcast.emit para TODOS, menos EU');
-  io.emit('ola', 'Mensagem enviada via oi.emit para TODOS');
+  // io.emit('ola', 'Mensagem enviada via oi.emit para TODOS');
   console.log(`Usuário conectado. ID: ${socket.id} `);
 
   socket.on('ping', () => {
     console.log(`${socket.id} emitiu um ping!`);
+    io.emit('todos', 'Mensagem enviada para TODOS via io.emit')
     socket.emit('pong', `PONG ##!`);
     socket.broadcast.emit('pong', `${socket.id} enviou um ping ##!`);
   });
