@@ -44,27 +44,14 @@
       ul.appendChild(li);
     }
 
-    // const setNicName = document.getElementById('userName');
-    // const saveButton = document.getElementById('save-button');
-    // setNicName.addEventListener('click', (event) => {
-    //   event.target.value = '';
-    //   saveButton.addEventListener('click', () => {
-    //     const userMessage = document.getElementsByClassName('userMessage')
-    //     const nickName = document.getElementsByClassName('liUser');
-    //     socket.emit('editNickName', {nickName: nickName.value, message: userMessage.value})
-    //     nickName.innerText = event.target.value;
-    //   });
-    // });
-
     const saveButton = document.getElementById('nicknameUser');
       saveButton.addEventListener('submit', (event) => {
         event.preventDefault();
-        const userMessage = document.getElementsByClassName('userMessage')
         const input = document.getElementById('userName');
         const nickName = document.getElementsByClassName('liUser');
         const userObject = {
           message: userMessage.value, 
-          nickName: input.value, 
+          nickName: input.value,
         }
         socket.emit('editNickName', userObject)
         nickName.innerText = event.target.value;
