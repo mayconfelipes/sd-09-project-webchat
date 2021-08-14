@@ -28,4 +28,6 @@ io.on('connection', (socket) => {
   });
 });
 
+app.use(express.static('public'));
+
 http.listen(3000, () => console.log('Pai ta on na porta 3000'));

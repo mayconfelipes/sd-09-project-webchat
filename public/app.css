@@ -1,0 +1,65 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.messages {
+  border: solid 1px black;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 70%;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 95vh;
+}
+
+.chat-config {
+  border: 1px black solid;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.chat-input {
+  border: none;
+  border-radius: 2rem;
+  flex-grow: 1;
+  margin: 0.25rem;
+  padding: 0 1rem;
+}
+
+.form {
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+  display: flex;
+  height: 5vh;
+  padding: 0.25rem;
+}
+
+.send-button {
+  padding: 1rem;
+  text-align: center;
+}
+
+.change-name {
+  display: flex;
+  flex-direction: row;
+  height: 5vh;
+  justify-content: space-around;
+}
+
+.change-name input {
+  width: 75%;
+}
+
+.change-name button {
+  width: 25%;
+}

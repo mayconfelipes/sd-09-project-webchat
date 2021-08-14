@@ -5,13 +5,37 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link href="./app.css" rel="stylesheet">
 </head>
 <body>
-  <h1>testando</h1>
-  <button id="ping">PING</button>
+  <div class="container">
+    <ul class="messages"></ul>
+    <div class="chat-config">
+      <form class="change-name">
+        <input
+          type="text"
+          autocomplete="off"
+          placeholder="Insira seu nickname"
+          class="name-input"
+          data-testid="nickname-box"
+        />
+          <button class="name-button" data-testid="nickname-button">
+            Salvar
+          </button>
+      </form>
+      <p class="user-list" data-testid="online-user"></p>
+    </div>
+  </div>
+  <form class="form">
+    <input
+      type="text"
+      placeholder="Digite uma nova mensagem aqui"
+      class="chat-input"
+      data-testid="message-box"
+    />
+    <button data-testid="send-button" class="send-button">Enviar</button>
+  </form>
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-  </script>
+  <script src="index.js"></script>
 </body>
 </html>
