@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projeto Chat</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <form id="chat">
+    <div class="top-itens">
+    <input type="text" name="username" placeholder="Digite um nick" id="input-nick">
+    <button data-testid="send-button">Salvar</button>
+  </div>
+    <div class="horizon">
+    <div class="nick" id="nicks" data-testid="online-user"></div>
+    <div class="messages" id="mess" data-testid="message-box"></div>
+  </div>
+  <div class="botom-itens">
+    <input type="text" name="message" placeholder="Digite sua mensagem" id="input-message">
+    <button data-testid="send-button">Enviar</button>
+  </div>
+  </form>
+  <script type="text/javascript">
+  
+  const socket = io('http://localhost:3000');
+  const frm = document.getElementById('chat');
+  const nicks = document.getElementById('nicks');
+  const messagebox = document.getElementById('mess');
+  const inputMess = document.getElementById('input-message');
+  
+  
+    const  renderMessage = (mess) => {
+      let newelEmente = document.createElement('div');
+      newelEmente.setAttribute('data-testid', 'message')
+      newelEmente.innerText = mess;
+      messagebox.appendChild(newelEmente);
+    }; 
+    
+    socket.on('previousmessage', (messages) =>{
+      if(messages.length >= 1){ messages.forEach(oneMessage => {
+        renderMessage(oneMessage);
+      })};
+    });
+
+    socket.on('message', (message)=>{renderMessage(message)})
+    socket.on('newnick', (nick)=>{
+      const ne = document.createElement('div');
+      ne.innerText = nick;
+      localStorage.setItem(`${nick}`, `${nick}`);
+      renderMessage(nicks.appendChild(ne))})
+
+    frm.addEventListener( 'submit', (e)=> {
+      e.preventDefault();
+    
+    const nickname = document.getElementById('input-nick').value;
+    const chatMessage = document.getElementById('input-message').value;
+    const time = new Date();
+    const timeLocal = time.toLocaleString('pt-BR').replace(' ', '/').split('/').join('-');
+    let messageObject = { nickname, chatMessage };
+    let messageText= `${timeLocal} - ${nickname}: ${chatMessage}`;
+    
+      if(nickname.length && chatMessage.length){
+      renderMessage(messageText);
+      socket.emit('message', messageObject );
+      inputMess.value = '';
+    }
+    
+ }); 
+
+  </script>
+</body>
+</html>
