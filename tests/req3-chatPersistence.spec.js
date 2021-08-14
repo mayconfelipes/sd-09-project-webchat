@@ -61,11 +61,12 @@ describe('3 - Elabore o histórico do chat para que as mensagens persistam', () 
     done();
   });
 
+  
   it('Será validado que todo o histórico de mensagens irá aparecer quando o cliente se conectar', async () => {
     const firstMessageToSend = { chatMessage: chatMessage, nickname: nickname };
     const secondMessageToSend = { chatMessage: anotherChatMessage, nickname: nickname };
     const thirdMessageToSend = { chatMessage: yetAnotherChatMessage, nickname: nickname };
-
+    
     // sends lots of messages
     client1.emit('message', firstMessageToSend);
     //typing...
@@ -74,12 +75,13 @@ describe('3 - Elabore o histórico do chat para que as mensagens persistam', () 
     //typing...
     wait(500)
     client1.emit('message', thirdMessageToSend);
-
+    
     // connects via front-end
     await page.goto(BASE_URL);
     await page.waitForSelector('[data-testid=message]');
+    console.log('depois do for it')
     await page.waitForTimeout(1000);
-
+    
     // peek the messages we sent
     const messages = await page.$$eval(dataTestid('message'), (nodes) => nodes.map((n) => n.innerText));
     expect(messages.length).toEqual(3);

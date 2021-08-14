@@ -63,7 +63,7 @@
       <section class='messages'>
         <ul class="message-list">
           <% messages.forEach(({ message, nickname, timestamp }) => { %>
-            <li><%= `${timestamp} - ${nickname}: ${message}` %></li>
+            <li data-testid="message"><%= `${timestamp} - ${nickname}: ${message}` %></li>
           <% }) %>
         </ul>
       </section>
