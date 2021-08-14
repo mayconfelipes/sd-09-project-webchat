@@ -2,7 +2,7 @@ const webChatController = require('../controllers/webChatController');
 
 const webChat = (io) => io.on('connection', async (socket) => {
   const { id } = socket;
-  // await webChatController.connectUser(id);
+
   const oldMessages = await webChatController.getSavedMessages();
 
   socket.emit('oldMessages', (oldMessages));
@@ -15,9 +15,7 @@ const webChat = (io) => io.on('connection', async (socket) => {
   socket.on('message', async ({ chatMessage, nickname }) => webChatController
     .saveMessage({ message: chatMessage, nickname, io }));
 
-  socket.on('usersList', () => {
-    webChatController.getUserList(id, io);
-  });
+  socket.on('usersList', () => webChatController.getUserList(id, io));
 
   socket.on('disconnect', () => webChatController.disconnectUser(id, io));
 });
