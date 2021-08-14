@@ -1,0 +1,36 @@
+.up {
+  display: flex;
+}
+
+.left {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.savenick {
+  display: flex;
+}
+
+#inputName {
+  flex-grow: 2;
+}
+
+.users {
+  border: 1px solid black;
+  flex-grow: 2;
+}
+
+.right {
+  border: 1px solid black;
+  width: 100%;
+}
+
+.down {
+  display: flex;
+  width: 100%;
+}
+
+#inputMessage {
+  flex-grow: 2;
+}
