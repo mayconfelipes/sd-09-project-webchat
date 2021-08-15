@@ -167,7 +167,11 @@
       };
       const addMessageToList = (msgObj) => {
         const { message, nickname, timestamp } = msgObj;
-        const stringMessage = `${timestamp} - ${nickname}: ${message}`;
+        const dateConverted = new Date(timestamp);
+        const date = `${dateConverted.getDate()}-${dateConverted.getMonth() + 1}-${dateConverted.getFullYear()}`;
+        const hours = `${dateConverted.getHours()}:${dateConverted.getMinutes()}:${dateConverted.getSeconds()}`;
+        const datetime = `${date} ${hours}`;
+        const stringMessage = `${datetime} - ${nickname}: ${message}`;
         const messageObj = createUserLiElement('', stringMessage, 'message');
         listMessages.appendChild(messageObj);
       };

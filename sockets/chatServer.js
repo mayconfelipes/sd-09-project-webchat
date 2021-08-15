@@ -3,7 +3,7 @@ const UsersModel = require('../models/UsersModel');
 const MessagesModel = require('../models/MessagesModel');
 
 const constructMessageMongoObj = ({ nickname, message }) => {
-  const timestamp = new Date(Date.now());
+  const timestamp = new Date();
   const objMsg = { message, nickname, timestamp };
   return objMsg;
 };

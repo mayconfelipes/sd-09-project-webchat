@@ -21,7 +21,7 @@ const deleteOneUser = async (userID) => {
 const updateOneUser = async (id, name) => {
   const user = await connection()
     .then((db) => db.collection('users').updateOne(
-      { id },
+      { _id: id },
       { $set: { name } },
       { upsert: true },
     ))
