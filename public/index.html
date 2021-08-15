@@ -129,9 +129,6 @@
       <section class="messagesContainer">
         <ul class="messageList">
           <h3 class="title2">Mensagens do chat</h3>
-          <li>oi</li>
-          <li>Kolée</li>
-          <li>td na boa?</li>
         </ul>
       </section>
       <div class="inputMessageContainer">
@@ -165,18 +162,8 @@
         li.setAttribute('data-testid', testid);
         return li;
       };
-      const addMessageToList = (msgObj) => {
-        const { message, nickname, timestamp } = msgObj;
-        const dateConverted = new Date(timestamp);
-        const date = `${dateConverted.getDate()}-${dateConverted.getMonth() + 1}-${dateConverted.getFullYear()}`;
-        const hours = `${dateConverted.getHours()}:${dateConverted.getMinutes()}:${dateConverted.getSeconds()}`;
-        const datetime = `${date} ${hours}`;
-        const stringMessage = `${datetime} - ${nickname}: ${message}`;
+      const addMessageToList = (stringMessage) => {
         const messageObj = createUserLiElement('', stringMessage, 'message');
-        listMessages.appendChild(messageObj);
-      };
-      const addGlobalMessageToList = (message) => {
-        const messageObj = createUserLiElement('', message, 'global-message');
         listMessages.appendChild(messageObj);
       };
 
@@ -210,13 +197,13 @@
         userElement.innerText = name;
       });
 
-      socket.on('resolveMessageSend', (messageMongoObj) => {
-        addMessageToList(messageMongoObj);
+      socket.on('message', (message) => {
+        addMessageToList(message);
       });
 
       socket.on('resolveMessagesList', (messagesArray) => {
-        messagesArray.forEach((messageMongoObj) => {
-          addMessageToList(messageMongoObj);
+        messagesArray.forEach((message) => {
+          addMessageToList(message);
         });
       });
 
@@ -234,8 +221,8 @@
       }
 
       function sendMessage() {
-        const message = inputMessage.value;
-        socket.emit('requestMessageSend', { id: sessionID, nickname, message });
+        const chatMessage = inputMessage.value;
+        socket.emit('message', { chatMessage, nickname });
         inputMessage.value = '';
       }
 

@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const io = require('socket.io')(http, { 
   cors: {
@@ -14,8 +14,8 @@ const io = require('socket.io')(http, {
 
 require('./sockets/chatServer')(io);
 
-app.use('/public', express.static('public'));
-http.listen(3000, () => { console.log(`Rodando na porta: ${PORT}`); });
-
+app.use(express.static(`${__dirname}/public`));
 // unica rota para aplicação 'CHAT-SinglePageApp'
-app.get('/', (_req, res) => { res.sendFile(`${__dirname}/public/index.html`, { news: 'NEWS' }); });
+app.get('/', (_req, res) => res.sendFile(`${__dirname}/public/index.html`));
+
+http.listen(PORT, () => { console.log(`Rodando na porta: ${PORT}`); });

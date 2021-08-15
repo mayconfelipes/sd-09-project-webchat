@@ -2,10 +2,20 @@ const randomstring = require('randomstring');
 const UsersModel = require('../models/UsersModel');
 const MessagesModel = require('../models/MessagesModel');
 
-const constructMessageMongoObj = ({ nickname, message }) => {
+const constructMessageMongoObj = ({ nickname, chatMessage }) => {
   const timestamp = new Date();
-  const objMsg = { message, nickname, timestamp };
+  const objMsg = { message: chatMessage, nickname, timestamp };
   return objMsg;
+};
+
+const constructMessage = (msgObj) => {
+  const { message, nickname, timestamp } = msgObj;
+  const newDate = new Date(timestamp);
+  const date = `${newDate.getDate()}-${newDate.getMonth() + 1}-${newDate.getFullYear()}`;
+  const hours = `${newDate.getHours()}:${newDate.getMinutes()}:${newDate.getSeconds()}`;
+  const datetime = `${date} ${hours}`;
+  const stringMessage = `${datetime} - ${nickname}: ${message}`;
+  return stringMessage;
 };
 
 const addUserToDataBase = async (socketID, userName) => {
@@ -60,12 +70,14 @@ const userUpdate = async (io, userObj) => {
 const messageSend = async (io, msgObj) => {
   const messageMongoObj = constructMessageMongoObj(msgObj);
   await messageSaveData(messageMongoObj);
-  io.emit('resolveMessageSend', messageMongoObj);
+  const message = constructMessage(messageMongoObj);
+  io.emit('message', message);
 };
 
 const retrieveMessageList = async (io) => {
   const messagesArray = await getAllMessages();
-  io.emit('resolveMessagesList', messagesArray);
+  const messages = messagesArray.map((msg) => constructMessage(msg));
+  io.emit('resolveMessagesList', messages);
 };
 
 const server = (io) => {
@@ -75,7 +87,7 @@ const server = (io) => {
     sockets.on('sendUserToOthers', (userObj) => sockets.broadcast.emit('userToBotton', userObj));
     sockets.on('disconnect', () => userDelete(sockets));
     sockets.on('requestUserChangeNick', (userObj) => userUpdate(io, userObj));
-    sockets.on('requestMessageSend', (msgObj) => messageSend(io, msgObj));
+    sockets.on('message', (msgObj) => messageSend(io, msgObj));
     sockets.on('requestMessagesList', () => retrieveMessageList(io));
   });
 };
