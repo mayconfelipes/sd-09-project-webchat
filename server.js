@@ -10,6 +10,8 @@ const bodyParser = require('body-parser').json();
 const app = require('express')();
 const server = require('http').createServer(app);
 
+const sockets = [];
+
 const io = require('socket.io')(server, {
   cors: {
     origin: 'http://localhost:3000',
@@ -30,14 +32,14 @@ app.use(
 );
 
 io.on('connection', (socket) => {
-  console.log('Alguém se conectou');
+  sockets.push(socket.id.slice(0, 16));  
 
   socket.on('message', ({ chatMessage, nickname }) => {
     io.emit('message', `${moment().format('DD-MM-yyyy LTS')} - ${nickname}: ${chatMessage}`);
   });
 });
 
-app.get('/', (_req, res) => res.render('chat'));
+app.get('/', (_req, res) => res.render('chat', { sockets }));
 
 app.get('/ping', (_req, res) => res.status(200).json({ message: 'pong' }));
 

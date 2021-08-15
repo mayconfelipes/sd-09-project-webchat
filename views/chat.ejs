@@ -9,6 +9,9 @@
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script>
       const socket = io();
+
+      if (!localStorage.getItem('users')) localStorage.setItem('users', JSON.stringify([]));
+
     </script>
   </head>
   <body>
@@ -21,7 +24,11 @@
           </form>
         </div>
         <div>
-          <ul id="online-users"></ul>
+          <ul id="online-users">
+            <% sockets.forEach((socket) => { %>
+              <li data-testid="online-user"><%= socket %></li>
+            <% }) %>
+          </ul>
         </div>
       </section>
       <section>
@@ -43,6 +50,7 @@
       const nicknameBox = document.querySelector('#nickname-box');
       const messageForm = document.querySelector('#message-form');
       const messageBox = document.querySelector('#message-box');
+      const onlineUsers = document.querySelector('#online-users');
       const chat = document.querySelector('#chat');
 
       messageForm.addEventListener('submit', (event) => {
@@ -59,8 +67,9 @@
 
       socket.on('message', (message) => {
         const li = document.createElement('li');
+
         li.innerText = message;
-        li.id = 'message';
+        li.setAttribute('data-testid', 'message');
         chat.appendChild(li);
       });
     </script>
