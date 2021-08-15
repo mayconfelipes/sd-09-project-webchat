@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+  </head>
+  <body>
+    <h3>Nickname: </h3>
+    <form id='chat'>
+      <input type="text" name="message" id="message"/>
+      <div>
+        <ul id="messages">Messages:</ul>
+      </div>
+      <button type="submit">Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>
+  </body>
+</html>
