@@ -1,10 +1,15 @@
 const randomstring = require('randomstring');
 const UsersModel = require('../models/UsersModel');
+const MessagesModel = require('../models/MessagesModel');
 
-const constructUser = (id, name) => ({ id, name });
+const constructMessageMongoObj = ({ nickname, message }) => {
+  const timestamp = new Date(Date.now());
+  const objMsg = { message, nickname, timestamp };
+  return objMsg;
+};
 
-const addUserToDataBase = async (user) => {
-  const userData = await UsersModel.addOneUser(user);
+const addUserToDataBase = async (socketID, userName) => {
+  const userData = await UsersModel.addOneUser(socketID, userName);
   return userData;
 };
 
@@ -22,15 +27,23 @@ const updateOneUser = async (id, name) => {
   await UsersModel.updateOneUser(id, name);
 };
 
+const messageSaveData = async (objectMessage) => {
+  await MessagesModel.addOneMessage(objectMessage);
+};
+
+const getAllMessages = async () => {
+  const messages = await MessagesModel.findAllMessages();
+  return messages;
+};
+
 const generateRandomName = () => randomstring.generate(16);
 
 // ALL sockets functions.
 const userConnected = async (socket) => {
   const randonName = generateRandomName();
-  const newUser = constructUser(socket.id, randonName);
-  const { id, name } = await addUserToDataBase(newUser);
+  const { _id, name } = await addUserToDataBase(socket.id, randonName);
   const arrayOfUsers = await findAllUsers();
-  socket.emit('generateUser', { id, name, arrayOfUsers });
+  socket.emit('generateUser', { id: _id, name, arrayOfUsers });
 };
 
 const userDelete = async (socket) => {
@@ -44,6 +57,17 @@ const userUpdate = async (io, userObj) => {
   io.emit('resolveUserChangeNick', userObj);
 };
 
+const messageSend = async (io, msgObj) => {
+  const messageMongoObj = constructMessageMongoObj(msgObj);
+  await messageSaveData(messageMongoObj);
+  io.emit('resolveMessageSend', messageMongoObj);
+};
+
+const retrieveMessageList = async (io) => {
+  const messagesArray = await getAllMessages();
+  io.emit('resolveMessagesList', messagesArray);
+};
+
 const server = (io) => {
   io.on('connection', (sockets) => {    
     // when user is connected "send him" to the others.
@@ -51,6 +75,8 @@ const server = (io) => {
     sockets.on('sendUserToOthers', (userObj) => sockets.broadcast.emit('userToBotton', userObj));
     sockets.on('disconnect', () => userDelete(sockets));
     sockets.on('requestUserChangeNick', (userObj) => userUpdate(io, userObj));
+    sockets.on('requestMessageSend', (msgObj) => messageSend(io, msgObj));
+    sockets.on('requestMessagesList', () => retrieveMessageList(io));
   });
 };
 

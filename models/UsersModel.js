@@ -1,9 +1,9 @@
 // messages model
 const connection = require('./connection');
 
-const addOneUser = async (userObject) => {
+const addOneUser = async (socketId, userObject) => {
   const user = await connection()
-    .then((db) => db.collection('users').insertOne(userObject));
+    .then((db) => db.collection('users').insertOne({ _id: socketId, name: userObject }));
   return user.ops[0];
 };
 
@@ -14,7 +14,7 @@ const findAllUsers = async () => {
 };
 
 const deleteOneUser = async (userID) => {
-  await connection().then((db) => db.collection('users').deleteOne({ id: userID }));
+  await connection().then((db) => db.collection('users').deleteOne({ _id: userID }));
   return '';
 };
 

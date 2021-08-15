@@ -136,7 +136,7 @@
       </section>
       <div class="inputMessageContainer">
         <input type="text" class="inputText" id="inputMessage" data-testid="message-box">
-        <button class="btn" id="btnSend" data-testid="send-button">Enviar</button>
+        <button class="btn" id="btnSend" data-testid="send-button" onclick={sendMessage()}>Enviar</button>
       </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
@@ -148,29 +148,41 @@
       const btnChange = document.querySelector('#btnChange');
       const btnSend = document.querySelector('#btnSend');
       const listUsers = document.querySelector('.usersList');
-      const listMessages = document.querySelector('.usersList');
+      const listMessages = document.querySelector('.messageList');
       const inputMessage = document.querySelector('#inputMessage');
       const inputNick = document.querySelector('#inputNick');
 
       //service functions
       let sessionID;
+      let nickname;
       const addUserToTop = (liElement) => listUsers.insertBefore(liElement, listUsers.firstChild);
       const addUserToBottom = (liElement) => listUsers.appendChild(liElement);
       const addMessageToBottom = (liElement) => listMessages.appendChild(liElement);
-      const createLiUserElement = (id, name) => {
+      const createUserLiElement = (id, content, testid) => {
         const li = document.createElement('li');
-        li.innerText = name;
         li.id = id;
-        li.setAttribute('data-testid', 'online-user');
+        li.innerText = content;
+        li.setAttribute('data-testid', testid);
         return li;
+      };
+      const addMessageToList = (msgObj) => {
+        const { message, nickname, timestamp } = msgObj;
+        const stringMessage = `${timestamp} - ${nickname}: ${message}`;
+        const messageObj = createUserLiElement('', stringMessage, 'message');
+        listMessages.appendChild(messageObj);
+      };
+      const addGlobalMessageToList = (message) => {
+        const messageObj = createUserLiElement('', message, 'global-message');
+        listMessages.appendChild(messageObj);
       };
 
       // SERVER ACTIONS -----------------------------------------------------------------
       // generate random user and add him to the top
       socket.on('generateUser', ({id, name, arrayOfUsers}) => {
         sessionID = id;
-        arrayOfUsers.forEach(({id, name}) => {
-          const userObj = createLiUserElement(id, name);
+        nickname = name;
+        arrayOfUsers.forEach(({_id, name}) => {
+          const userObj = createUserLiElement(_id, name, 'online-user');
           addUserToTop(userObj);
         });
         socket.emit('sendUserToOthers', {id, name});
@@ -178,7 +190,7 @@
 
       // send the random user created previously, to the other users.
       socket.on('userToBotton', ({id, name}) => {
-        const userObj = createLiUserElement(id, name);
+        const userObj = createUserLiElement(id, name, 'online-user');
         addUserToBottom(userObj);
       });
 
@@ -194,6 +206,16 @@
         userElement.innerText = name;
       });
 
+      socket.on('resolveMessageSend', (messageMongoObj) => {
+        addMessageToList(messageMongoObj);
+      });
+
+      socket.on('resolveMessagesList', (messagesArray) => {
+        messagesArray.forEach((messageMongoObj) => {
+          addMessageToList(messageMongoObj);
+        });
+      });
+
       // CLIENT ACTIONS -----------------------------------------------------------------
       // insert user at the beggining of list -  when app starts
       function userJoin() {
@@ -202,17 +224,29 @@
 
       // update userName when click on btnNick
       function userUpdateNick() {
+        nickname = inputNick.value;
         socket.emit('requestUserChangeNick', { id: sessionID, name: inputNick.value });
         inputNick.value = '';
       }
 
+      function sendMessage() {
+        const message = inputMessage.value;
+        socket.emit('requestMessageSend', { id: sessionID, nickname, message });
+        inputMessage.value = '';
+      }
+
+      function loadMessages() {
+        socket.emit('requestMessagesList')
+      }
+
       window.addEventListener('beforeunload', function (e) {
         e.preventDefault();
-        socket.emit('disconect');
+        socket.emit('disconnect');
       });
 
       // call all functions
       userJoin();
+      loadMessages();
     </script>
   </body>
 </html>
