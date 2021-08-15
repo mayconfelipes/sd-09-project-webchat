@@ -3,6 +3,7 @@ const http = require('http').createServer(app);
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
+const crypto = require('crypto');
 
 require('dotenv').config();
 
@@ -32,26 +33,37 @@ const currentTime = () => {
 };
 
 const guests = [];
-let indexGest = 0;          
-
+let guest;
+        
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// eslint-disable-next-line max-lines-per-function
 io.on('connection', (socket) => {
-  indexGest += 1;
-  console.log(`Guest${indexGest} conectado`);
-  console.log(guests);
-  guests.push(`Guest${indexGest}`);
-  socket.emit('user', `Guest${indexGest}`);
-  socket.broadcast.emit('newUser', `Guest${indexGest}`);
+  guest = crypto.randomBytes(8).toString('hex');
+  console.log(`${guest} conectado`);
+  guests.push(guest);
+  socket.emit('user', guest);
+  socket.emit('users', guests);
 
   socket.on('message', (message) => {
     const { nickname, chatMessage } = message;
     const completeMessage = `${currentTime()} - ${nickname}: ${chatMessage}`;
     io.emit('message', completeMessage);
+  });
+
+  socket.on('changeNikname', (nickname) => {
+    const { newNickname, oldNickname } = nickname;
+    console.log(nickname);
+    guests[guests.indexOf(oldNickname)] = newNickname;
+    socket.broadcast.emit('newUser', guests);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('usuario saiu');
   });
 });
 

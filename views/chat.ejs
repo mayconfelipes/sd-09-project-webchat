@@ -14,8 +14,12 @@
 <body>
     <h1>Web Chat</h1>
     <div>
-        <h2 id="user"></h2>
+        <h2 data-testid="online-user" id="user"></h2>
     </div>
+    <form class="form-nickname" action="">
+        <input data-testid="nickname-box" id="nickname" placeholder="Digite seu nickname" autocomplete="off">
+        <button data-testid="nickname-button" id="btn-nickname" type="button">Enviar</button>
+    </form>
     <div class="guests">
         <h3>Usuários</h3>
         <ul id="guests"></ul>
@@ -25,39 +29,48 @@
         <ul id="messages"></ul>
     </div>
     <form class="form" action="">
-        <input id="input-message" placeholder="Digite uma nova mensagem" autocomplete="off">
-        <button id="btn-send"  type="button">Enviar</button>
+        <input data-testid="message-box" id="input-message" placeholder="Digite uma nova mensagem" autocomplete="off">
+        <button data-testid="send-button" id="btn-send"  type="button">Enviar</button>
     </form>
     <script>
         let userName;
 
         const socket = io();
+        const labelUser = document.getElementById('user');
 
         const displayMessage = (message) => {
             const ulMessages = document.getElementById('messages');
             const li = document.createElement('li');
             const liMessages = document.createTextNode(message);
-
+            li.setAttribute('data-testid', 'message')
             li.appendChild(liMessages);
             ulMessages.appendChild(li);
         }
 
         socket.on('user', (user) => {
             displayMessage(`Seja bem vindo ${user}`)
-            const labelUser = document.getElementById('user');
             labelUser.textContent = user;
             userName = user;
         });
 
-        socket.on('newUser', (newUser) => {
-            displayMessage(`${newUser} entrou`)
+        socket.on('users', (users) => {
+            displayMessage(`${users[users.length - 1]} entrou`)
             const ulGests = document.getElementById('guests');
-            const li = document.createElement('li');
-            const liGuest = document.createTextNode(newUser);
+            const oldUsers = document.querySelectorAll('#usersId');
 
-            li.appendChild(liGuest);
-            ulGests.appendChild(li);
-
+            if (oldUsers) {
+                oldUsers.forEach(oldUser => oldUser.remove());
+            }
+    
+            users.forEach((user) => {
+                if (user !== userName) {
+                    const li = document.createElement('li');
+                    const liGuest = document.createTextNode(user);
+                    li.setAttribute('id', 'usersId')
+                    li.appendChild(liGuest);
+                    ulGests.appendChild(li);
+                }
+            })
         })
 
         const btnSend = document.getElementById('btn-send');
@@ -66,15 +79,32 @@
         btnSend.addEventListener('click', (event) => {
         event.preventDefault();
 
-        if (messageSend.value) {
-            socket.emit('message', {
-                chatMessage: messageSend.value,
-                nickname: userName
-            } );
-            messageSend.value = '';
-        }
+            if (messageSend.value) {
+                socket.emit('message', {
+                    chatMessage: messageSend.value,
+                    nickname: userName
+                } );
+                messageSend.value = '';
+            }
+        });
+
+        const btnNickname = document.getElementById('btn-nickname');
+        const nickName = document.getElementById('nickname');
         
-        return false;
+        btnNickname.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            if (nickname.value) {
+                labelUser.textContent = nickname.value;
+                socket.emit('changeNikname', {
+                    newNickname: nickname.value,
+                    oldNickname: userName
+                } );
+                userName = nickname.value;
+
+            }
+            
+            return false;
         });
 
         socket.on('message', (message) => {
