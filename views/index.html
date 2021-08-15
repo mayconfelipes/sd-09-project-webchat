@@ -100,7 +100,7 @@
         e.preventDefault();
         console.log('entrei');
         if (messageInput.value) {
-          const nickname = JSON.parse(localStorage.getItem('nickname')); 
+          const nickname = JSON.parse(sessionStorage.getItem('nickname')); 
           const chatMessage = messageInput.value;
           socket.emit('message', { chatMessage, nickname });
           messageInput.value = '';
@@ -132,7 +132,7 @@
       });
 
       function changeNickname(nickname) {
-        localStorage.setItem('nickname', JSON.stringify(nickname));
+        sessionStorage.setItem('nickname', JSON.stringify(nickname));
         return nickname;
       }
 
@@ -146,8 +146,15 @@
 
       function addOnlineUser(nickname) {
         const item = document.createElement('li');
-        item.textContent = nickname;
         item.setAttribute('data-testid', 'online-user');
+        item.textContent = nickname;
+
+        const currentUser = JSON.parse(sessionStorage.getItem('nickname'));
+        if(currentUser === nickname) {
+          usersList.insertBefore(item, usersList.firstChild);
+          return;
+        }
+        
         usersList.appendChild(item);
       }
     </script>
