@@ -48,5 +48,11 @@ module.exports = (io) => {
       chosenUser.nickname = newNickname;
       io.emit('sendAllUsers', onlineUsers);
     });
+
+    socket.on('disconnect', () => {
+      const index = onlineUsers.findIndex((user) => user.id === socket.id);
+      onlineUsers.splice(index, 1);
+      io.emit('sendAllUsers', onlineUsers);
+    });
   });
 };
