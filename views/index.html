@@ -101,7 +101,7 @@
         if (messageInput.value) {
           const nickname = JSON.parse(sessionStorage.getItem('nickname')); 
           const chatMessage = messageInput.value;
-          socket.emit('message', chatMessage);
+          socket.emit('message', { chatMessage });
           messageInput.value = '';
         }
       });

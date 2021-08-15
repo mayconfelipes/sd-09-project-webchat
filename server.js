@@ -33,8 +33,8 @@ io.on('connection', (socket) => {
     io.emit('updateUsers', { users });
   });
 
-  socket.on('message', (chatMessage) => MessageModel.create(chatMessage, users[socket.id])
-    .then(({ message, nickname, timestamp }) =>
+  socket.on('message', ({ chatMessage, nickname: user = users[socket.id] }) => MessageModel
+  .create(chatMessage, user).then(({ message, nickname, timestamp }) =>
       io.emit('message', `${timestamp} ${nickname} ${message}`)));
 
   socket.on('updateNickname', ({ nickname }) => {
