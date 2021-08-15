@@ -206,6 +206,11 @@
         inputNick.value = '';
       }
 
+      window.addEventListener('beforeunload', function (e) {
+        e.preventDefault();
+        socket.emit('disconect');
+      });
+
       // call all functions
       userJoin();
     </script>

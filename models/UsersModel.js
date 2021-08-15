@@ -18,8 +18,20 @@ const deleteOneUser = async (userID) => {
   return '';
 };
 
+const updateOneUser = async (id, name) => {
+  const user = await connection()
+    .then((db) => db.collection('users').updateOne(
+      { id },
+      { $set: { name } },
+      { upsert: true },
+    ))
+    .then(() => ({ id, name }));
+  return user;
+};
+
 module.exports = {
   addOneUser,
   findAllUsers,
   deleteOneUser,
+  updateOneUser,
 };
