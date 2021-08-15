@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/style.css">
+  <title>Webchat Project</title>
+</head>
+<body>
+  <div class="content">
+    <div class="user-box">
+      <ul class="user-list" data-testid="online-user"></ul>
+      <input class="nickname-box" type="text" data-testid="nickname-box" autocomplete="off" />
+      <button class="nickname-button" type="submit" data-testid="nickname-button">Salvar</button>
+      <ul class="message-list" data-testid="message-box"></ul>
+    </div>
+    <div>
+      <form class="form" action="">
+        <input class="message-box" type="text" data-testid="message-box" autocomplete="off" />
+        <button class="send-button" type="submit" data-testid="send-button">Enviar</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="./js/chat.js"></script>
+</body>
+</html>
