@@ -1,6 +1,4 @@
-const chat = (_req, res, _next) => {
-  return res.render('chat');
-};
+const chat = (_req, res, _next) => res.render('chat');
 
 module.exports = {
   chat,
