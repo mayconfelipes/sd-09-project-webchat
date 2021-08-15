@@ -23,8 +23,9 @@ let userb = user;
 sendBtn.addEventListener('click', (e) => {
   const data = {
     chatMessage: inputChat.value,
-    nick: userb,
+    nickname: userb,
   };
+
   socket.emit('message', data);
   e.preventDefault();
   inputChat.value = '';

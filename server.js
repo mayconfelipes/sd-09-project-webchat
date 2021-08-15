@@ -31,11 +31,11 @@ app.get('/', async (_request, res) => {
 
 io.on('connection', (socket) => {
   socket.on('message', async (data) => {
-   const { nick, chatMessage } = data;
+   const { nickname, chatMessage } = data;
    const timestamp = utils.formatDate();
-   await db.saveMessages({ message: chatMessage, nickname: nick, timestamps: timestamp });
+   await db.saveMessages({ message: chatMessage, nickname, timestamps: timestamp });
 
-  io.emit('message', `${timestamp} - ${nick}: ${chatMessage}`);
+  io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
   });
 
   socket.on('save', (d) => {
