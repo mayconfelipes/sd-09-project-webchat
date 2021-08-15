@@ -14,6 +14,8 @@ const io = require('socket.io')(server, {
   },
 });
 
+const db = require('./models/webchat');
+
 const utils = require('./utils');
 
 app.set('view engine', 'ejs');
@@ -23,16 +25,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'views')));
 
 app.get('/', async (_request, res) => {
-  res.render('index');
+  const chatData = await db.getHistory();
+  res.render('index', { chatData });
 });
 
 io.on('connection', (socket) => {
-  socket.on('message', (data) => {
-   const { nickname, chatMessage } = data;
-   const timestamps = utils.formatDate();
+  socket.on('message', async (data) => {
+   const { nick, chatMessage } = data;
+   const timestamp = utils.formatDate();
+   await db.saveMessages({ message: chatMessage, nickname: nick, timestamps: timestamp });
 
-  io.emit('message', `${timestamps} - ${nickname}: ${chatMessage}`);
+  io.emit('message', `${timestamp} - ${nick}: ${chatMessage}`);
   });
+
   socket.on('save', (d) => {
     onlineUsers.push(d);
     io.emit('onlineUsers', onlineUsers);

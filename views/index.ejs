@@ -22,7 +22,14 @@
       </aside>
       <main>
         <div className="main-content">
-          <div id="chatbox" class="chatbox"></div>
+          <div id="chatbox" class="chatbox">
+            <% chatData.forEach((post) => { %>
+            <span data-testid="message"
+              ><%= post.timestamps %> - <%= post.nickname %>: <%= post.message
+              %></span
+            >
+            <% }) %>
+          </div>
           <form action="">
             <input type="text" name="" id="message" data-testid="message-box" />
             <Button id="send-btn" data-testid="send-button">Send</Button>

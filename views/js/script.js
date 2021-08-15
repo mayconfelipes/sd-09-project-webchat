@@ -23,10 +23,11 @@ let userb = user;
 sendBtn.addEventListener('click', (e) => {
   const data = {
     chatMessage: inputChat.value,
-    nickname: userb,
+    nick: userb,
   };
   socket.emit('message', data);
   e.preventDefault();
+  inputChat.value = '';
 });
 
 window.onload = () => {
@@ -57,4 +58,5 @@ nickBtn.addEventListener('click', () => {
   userb = nicknameInput.value;
   const userTag = document.querySelector(`.${user}`);
   userTag.innerHTML = nicknameInput.value;
+  nicknameInput.value = '';
 });
