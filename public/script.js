@@ -6,7 +6,7 @@ const sendBtn = document.querySelector('#send-btn');
 const messagesUl = document.querySelector('#messages-list');
 const usersUl = document.querySelector('#users-list');
 
-const nickname = null;
+let nickname = null;
 
 sendBtn.addEventListener('click', () => {
   const messageInput = document.querySelector('#message-input').value;
@@ -20,7 +20,7 @@ sendBtn.addEventListener('click', () => {
 
 nicknameBtn.addEventListener('click', () => {
   const nicknameInput = document.querySelector('#nickname-input').value;
-  console.log('nickname ===##===', nicknameInput);
+  nickname = nicknameInput;
   socket.emit('nickname', nicknameInput);
 
   return false;
