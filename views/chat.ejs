@@ -26,7 +26,7 @@
         <div>
           <ul id="online-users">
             <% sockets.forEach((socket) => { %>
-              <li data-testid="online-user"><%= socket %></li>
+              <li data-testid="online-user"><%= socket.id %></li>
             <% }) %>
           </ul>
         </div>
@@ -64,6 +64,13 @@
 
         return false;
       });
+
+      socket.on('login', (id) => {
+        const li = document.createElement('li');
+
+        li.innerText = id;
+        onlineUsers.appendChild(li);
+      })
 
       socket.on('message', (message) => {
         const li = document.createElement('li');

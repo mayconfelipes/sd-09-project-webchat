@@ -5,6 +5,7 @@ const { PORT = 3000 } = process.env;
 const path = require('path');
 const cors = require('cors');
 const moment = require('moment');
+const { indexOf } = require('lodash');
 
 const bodyParser = require('body-parser').json();
 const app = require('express')();
@@ -32,7 +33,13 @@ app.use(
 );
 
 io.on('connection', (socket) => {
-  sockets.push(socket.id.slice(0, 16));  
+  sockets.push(socket);
+
+  io.emit('login', socket.id);
+
+  socket.on('disconnect', () => {
+    sockets.splice(indexOf(socket), 1);
+  });
 
   socket.on('message', ({ chatMessage, nickname }) => {
     io.emit('message', `${moment().format('DD-MM-yyyy LTS')} - ${nickname}: ${chatMessage}`);
