@@ -6,6 +6,7 @@ const socket = window.io('http://localhost:3000');
 const usersBox = document.querySelector('#users');
 const chatBox = document.querySelector('#chatbox');
 const testid = 'data-testid';
+
 // https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
 
 function randomStringGenerator(size) {
@@ -34,7 +35,7 @@ sendBtn.addEventListener('click', (e) => {
 window.onload = () => {
   const li = document.createElement('li');
   const liContent = document.createTextNode(`${user}`);
-  li.setAttribute(testid, 'online-user');
+  li.setAttribute(testid, testid);
   li.appendChild(liContent);
   li.classList.add(`${user}`);
   usersBox.appendChild(li);
@@ -66,7 +67,7 @@ socket.on('onlineUsers', (data) => {
       }
         const li = document.createElement('li');
         const liContent = document.createTextNode(`${element.nickname}`);
-        li.setAttribute('data-testid', 'online-user');
+        li.setAttribute(testid, 'online-user');
         li.appendChild(liContent);
         usersBox.appendChild(li);
     });
