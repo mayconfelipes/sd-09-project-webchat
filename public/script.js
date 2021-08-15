@@ -1,5 +1,4 @@
-// const socket = io();
-const socket = io('http://localhost:3000');
+const socket = window.io();
 
 const nicknameBtn = document.querySelector('#nickname-btn');
 const sendBtn = document.querySelector('#send-btn');
@@ -7,18 +6,7 @@ const sendBtn = document.querySelector('#send-btn');
 const messagesUl = document.querySelector('#messages-list');
 const usersUl = document.querySelector('#users-list');
 
-let nickname = null;
-
-const createMessage = () => {
-  const messageInput = document.querySelector('#message-input').value;
-  const li = document.createElement('li');
-
-  li.innerText = messageInput;
-  li.setAttribute('data-testid', 'message');
-  messagesUl.appendChild(li);
-
-  return false;
-};
+const nickname = null;
 
 sendBtn.addEventListener('click', () => {
   const messageInput = document.querySelector('#message-input').value;
@@ -38,8 +26,7 @@ nicknameBtn.addEventListener('click', () => {
   return false;
 });
 
-//Retornos
-
+// Retornos
 socket.on('message', (message) => {
   const messageLI = document.createElement('li');
   messageLI.innerHTML = message;
@@ -55,5 +42,3 @@ socket.on('updateList', (users) => {
     usersUl.appendChild(userLi);
   });
 });
-
-
