@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
+
+        section {
+          height: 80vh;
+          justify-items: center;
+          width: 49%;
+          margin-bottom: 10px;
+        }
+
+        ul {
+          list-style-type: none;
+          overflow: hidden;
+        }
+
+        .allChatContainer {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          margin: auto;
+          width: 85%;
+        }
+
+        .btn {
+          width: 20%;
+        }
+
+        .inputText {
+          width: 80%;
+        }
+
+        .inputMessageContainer {
+          align-items: center;
+          background-color: rgb(197, 132, 132);
+          display: flex;
+          justify-content: center;
+          width: 100%;
+        }
+
+        .messageList{
+          height: 100%;
+        }
+
+        .messagesContainer {
+          background-color: rgba(110, 155, 66, 0.3);
+          border: 1px solid rgba(110, 155, 66, 0.6);
+          padding: 20px;
+        }
+
+        .nickContainer {
+          border-bottom: 1px solid rgba(110, 155, 66, 0.6);
+          display: flex;
+          flex-wrap: wrap;
+          padding: 20px;
+          width: 100%;
+        }
+
+        .usersControl {
+          background-color: rgba(110, 155, 66, 0.3);
+          border: 1px solid rgba(110, 155, 66, 0.6);
+        }
+
+        .title {
+          align-items: center;
+          display: flex;
+          justify-content: center;
+          height: 10vh;
+          width: 100%;
+        }
+
+        .title2 {
+          padding: 0 0 10px 0;
+          width: 100%;
+        }
+
+        .title3 {
+          margin: 20px 0 0 20px;
+          width: 100%;
+        }
+
+        .usersContainer {
+          
+          padding: 20px;
+        }
+
+        @media only screen and (max-width: 660px) {
+          section {
+            height: auto;
+            width: 100%;
+          }
+          
+          .allChatContainer {
+            flex-flow: column wrap;
+            align-items: center;
+          }
+
+          .messageList {
+            height: 55vh;
+          }
+        }
+    </style>
+    <title>TrybeTube</title>
+  </head>
+  <body>
+    <div class="allChatContainer">
+      <h1 class="title">Trybe CHAT></h1>
+
+      <section class="usersControl">
+        <h3 class="title3">Entrar no chat</h3>
+        <div class="nickContainer">
+          <input type="text" class="inputText" id="inputNick">
+          <button class="btn" id="btnJoin">Enviar</button>
+        </div>
+
+        <div class="usersContainer">
+          <h3 class="title2">Usuários Online</h3>
+          <ul class="usersList">
+          </ul>
+        </div>
+      </section>
+
+      <section class="messagesContainer">
+        <ul class="messageList">
+          <h3 class="title2">Mensagens do chat</h3>
+          <li>oi</li>
+          <li>Kolée</li>
+          <li>td na boa?</li>
+        </ul>
+      </section>
+      <div class="inputMessageContainer">
+        <input type="text" class="inputText" id="inputMessage">
+        <button class="btn" id="btnSend">Enviar</button>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = window.io();
+    </script>
+    <script>
+      //elements to be changed 
+      const btnJoin = document.querySelector('#btnJoin');
+      const btnSend = document.querySelector('#btnSend');
+      const listUsers = document.querySelector('.usersList');
+      const listMessages = document.querySelector('.usersList');
+      const inputMessage = document.querySelector('#inputMessage');
+      const inputNick = document.querySelector('#inputNick');
+
+
+      //service functions
+      let sessionID;
+      const generateRandomName = () => randomstring.generate(12);
+      const addUserToTop = (liElement) => listUsers.insertBefore(liElement, listUsers.firstChild);
+      const addUserToBottom = (liElement) => listUsers.appendChild(liElement);
+      const addMessageToBottom = (liElement) => listMessages.appendChild(liElement);
+      const createLiUserElement = (id) => {
+        const li = document.createElement('li');
+        li.innerText = id;
+        li.id = id;
+        li.setAttribute('data-testid', 'online-user');
+        return li;
+      };
+
+      // Server actions
+      // generate random user and add him to the top
+      socket.on('generateUser', (id) => {
+        sessionID = id;
+        const userObj = createLiUserElement(id);
+        addUserToTop(userObj);
+        socket.emit('sendUserToOthers', sessionID)
+      });
+
+      // send the random user created previously, to the other users.
+      socket.on('userToBotton', (id) => {
+        const userObj = createLiUserElement(id);
+        addUserToBottom(userObj);
+      });
+
+      // remove the user when he leaves the chat.
+      socket.on('userDisconnected', (id) => {
+        const userElement = document.querySelector(`#${id}`);
+        userElement.remove();
+      });
+
+
+      // Client actions
+      // insert user at the beggining of list -  when app starts
+      function userJoin() {
+        socket.emit('userConnected');
+      }
+      
+      // function userUpdateName() {
+      //   btnJoin.addEventListener('click', (e) => {
+      //     const input = e.target.previousElementSibling;
+      //     const obj = { nickname: input.value };
+      //     socket.emit('someoneIn', obj);
+          
+      //     // inserir usuario no inicio da lista.
+      //     const newLiElement = createLiUserElement(input.value)
+      //     usersList.insertBefore(newLiElement, usersList.firstChild)
+
+      //     input.value = '';
+      //   })
+      // };
+
+      function userSendMsg() {
+        // CRIAR event listener no botao '#btnSend'; que pega o nome do usuario e envia pro back JUNTO com a mensagem
+        // No back, construir as funcoes de "pegar hora" e construir a mensagem que será retornada:
+
+        // EX:
+        //   function getDate() {
+        //   const date = new Date(Date.now())
+        //   return(date.toLocaleString('pt-BR'));
+        //   // saida string: '13/08/2021 19:07:27'
+        // }
+
+        // function createLiMessage(nickname,chatMessage) {
+        //   return `${getDate()} ${nickname} ${chatMessage}`;
+        // }
+      }
+      
+
+      // call all functions
+      userJoin();
+      userSendMsg();
+
+
+
+      // const likeCounter = () => {
+      //   buttons.forEach((btn) =>
+      //     btn.addEventListener("click", (e) => {
+      //       let count = e.target.parentNode.lastChild.innerText;
+      //       count++;
+      //       e.target.parentNode.lastChild.innerText = count;
+      //       let eventId = e.target.parentNode.lastChild.id;
+      //       const obj = { [eventId]: count }
+      //       socket.emit('increaseCounter', obj);
+      //     })
+      //   );
+      // };
+      // likeCounter();
+    </script>
+  </body>
+</html>
