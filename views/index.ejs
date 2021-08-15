@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Chat</title>
+    <link rel="stylesheet" href="./css/index.css" type="text/css">
+  </head>
+  <body>
+    <section class="chat-grid">
+      <form class="nickname-form">
+        <input type="text" name="nick" id="nick" class="nickname-input" placeholder="Digite o seu nickname">
+        <button class="submit-button" type="submit">Salvar</button>
+      </form>
+      <ul class="users-list">
+
+      </ul>
+      <ul class="messages-container">
+
+      </ul>
+      <form class="send-message-form">
+        <input type="text" name="send" id="send" class="send-message-input" placeholder="Escreva sua mensagem">
+        <button class="submit-button" type="submit">Enviar</button>
+      </form>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+    <script src="./js/messages.js"></script>
+  </body>
+</html>
