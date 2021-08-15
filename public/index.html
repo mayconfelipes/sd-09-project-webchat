@@ -114,21 +114,18 @@
   <body>
     <div class="allChatContainer">
       <h1 class="title">Trybe CHAT></h1>
-
       <section class="usersControl">
         <h3 class="title3">Entrar no chat</h3>
         <div class="nickContainer">
           <input type="text" class="inputText" id="inputNick">
           <button class="btn" id="btnJoin">Enviar</button>
         </div>
-
         <div class="usersContainer">
           <h3 class="title2">Usuários Online</h3>
           <ul class="usersList">
           </ul>
         </div>
       </section>
-
       <section class="messagesContainer">
         <ul class="messageList">
           <h3 class="title2">Mensagens do chat</h3>
@@ -155,10 +152,8 @@
       const inputMessage = document.querySelector('#inputMessage');
       const inputNick = document.querySelector('#inputNick');
 
-
       //service functions
       let sessionID;
-      const generateRandomName = () => randomstring.generate(12);
       const addUserToTop = (liElement) => listUsers.insertBefore(liElement, listUsers.firstChild);
       const addUserToBottom = (liElement) => listUsers.appendChild(liElement);
       const addMessageToBottom = (liElement) => listMessages.appendChild(liElement);
@@ -191,63 +186,14 @@
         userElement.remove();
       });
 
-
       // Client actions
       // insert user at the beggining of list -  when app starts
       function userJoin() {
         socket.emit('userConnected');
       }
-      
-      // function userUpdateName() {
-      //   btnJoin.addEventListener('click', (e) => {
-      //     const input = e.target.previousElementSibling;
-      //     const obj = { nickname: input.value };
-      //     socket.emit('someoneIn', obj);
-          
-      //     // inserir usuario no inicio da lista.
-      //     const newLiElement = createLiUserElement(input.value)
-      //     usersList.insertBefore(newLiElement, usersList.firstChild)
-
-      //     input.value = '';
-      //   })
-      // };
-
-      function userSendMsg() {
-        // CRIAR event listener no botao '#btnSend'; que pega o nome do usuario e envia pro back JUNTO com a mensagem
-        // No back, construir as funcoes de "pegar hora" e construir a mensagem que será retornada:
-
-        // EX:
-        //   function getDate() {
-        //   const date = new Date(Date.now())
-        //   return(date.toLocaleString('pt-BR'));
-        //   // saida string: '13/08/2021 19:07:27'
-        // }
-
-        // function createLiMessage(nickname,chatMessage) {
-        //   return `${getDate()} ${nickname} ${chatMessage}`;
-        // }
-      }
-      
 
       // call all functions
       userJoin();
-      userSendMsg();
-
-
-
-      // const likeCounter = () => {
-      //   buttons.forEach((btn) =>
-      //     btn.addEventListener("click", (e) => {
-      //       let count = e.target.parentNode.lastChild.innerText;
-      //       count++;
-      //       e.target.parentNode.lastChild.innerText = count;
-      //       let eventId = e.target.parentNode.lastChild.id;
-      //       const obj = { [eventId]: count }
-      //       socket.emit('increaseCounter', obj);
-      //     })
-      //   );
-      // };
-      // likeCounter();
     </script>
   </body>
 </html>
