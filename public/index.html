@@ -109,7 +109,7 @@
           }
         }
     </style>
-    <title>TrybeTube</title>
+    <title>Trybe Chat</title>
   </head>
   <body>
     <div class="allChatContainer">
@@ -117,8 +117,8 @@
       <section class="usersControl">
         <h3 class="title3">Entrar no chat</h3>
         <div class="nickContainer">
-          <input type="text" class="inputText" id="inputNick">
-          <button class="btn" id="btnJoin">Enviar</button>
+          <input type="text" class="inputText" id="inputNick" data-testid="nickname-box">
+          <button class="btn" id="btnChange" data-testid="nickname-button" onclick={userUpdateNick()}>Enviar</button>
         </div>
         <div class="usersContainer">
           <h3 class="title2">Usuários Online</h3>
@@ -135,8 +135,8 @@
         </ul>
       </section>
       <div class="inputMessageContainer">
-        <input type="text" class="inputText" id="inputMessage">
-        <button class="btn" id="btnSend">Enviar</button>
+        <input type="text" class="inputText" id="inputMessage" data-testid="message-box">
+        <button class="btn" id="btnSend" data-testid="send-button">Enviar</button>
       </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
@@ -145,7 +145,7 @@
     </script>
     <script>
       //elements to be changed 
-      const btnJoin = document.querySelector('#btnJoin');
+      const btnChange = document.querySelector('#btnChange');
       const btnSend = document.querySelector('#btnSend');
       const listUsers = document.querySelector('.usersList');
       const listMessages = document.querySelector('.usersList');
@@ -157,39 +157,53 @@
       const addUserToTop = (liElement) => listUsers.insertBefore(liElement, listUsers.firstChild);
       const addUserToBottom = (liElement) => listUsers.appendChild(liElement);
       const addMessageToBottom = (liElement) => listMessages.appendChild(liElement);
-      const createLiUserElement = (id) => {
+      const createLiUserElement = (id, name) => {
         const li = document.createElement('li');
-        li.innerText = id;
+        li.innerText = name;
         li.id = id;
         li.setAttribute('data-testid', 'online-user');
         return li;
       };
 
-      // Server actions
+      // SERVER ACTIONS -----------------------------------------------------------------
       // generate random user and add him to the top
-      socket.on('generateUser', (id) => {
+      socket.on('generateUser', ({id, name, arrayOfUsers}) => {
         sessionID = id;
-        const userObj = createLiUserElement(id);
-        addUserToTop(userObj);
-        socket.emit('sendUserToOthers', sessionID)
+        arrayOfUsers.forEach(({id, name}) => {
+          const userObj = createLiUserElement(id, name);
+          addUserToTop(userObj);
+        });
+        socket.emit('sendUserToOthers', {id, name});
       });
 
       // send the random user created previously, to the other users.
-      socket.on('userToBotton', (id) => {
-        const userObj = createLiUserElement(id);
+      socket.on('userToBotton', ({id, name}) => {
+        const userObj = createLiUserElement(id, name);
         addUserToBottom(userObj);
       });
 
       // remove the user when he leaves the chat.
       socket.on('userDisconnected', (id) => {
-        const userElement = document.querySelector(`#${id}`);
-        userElement.remove();
+        const userElement = document.getElementById(id);
+        if (userElement) userElement.remove();
       });
 
-      // Client actions
+      // change the name of the user.
+      socket.on('resolveUserChangeNick', ({ id, name }) => {
+        const userElement = document.getElementById(id);
+        userElement.innerText = name;
+      });
+
+      // CLIENT ACTIONS -----------------------------------------------------------------
       // insert user at the beggining of list -  when app starts
       function userJoin() {
         socket.emit('userConnected');
+      }
+
+      // update userName when click on btnNick
+      function userUpdateNick() {
+        socket.emit('requestUserChangeNick', { id: sessionID, name: inputNick.value });
+        inputNick.value = '';
       }
 
       // call all functions
