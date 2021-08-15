@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../chat.css">
+  <link rel="stylesheet" href="./chat.css">
   <title>WebChat</title>
 </head>
 
@@ -17,7 +17,7 @@
     <section class="chat-section">
       <sidebar class="users-container">
         <form>
-          <input type="text" data-testid="nickname-box" placeholder="Nickname: " />
+          <input id="nickname-input" type="text" data-testid="nickname-box" placeholder="Nickname: " />
           <button type="button" id="nickname-btn" data-testid="nickname-button">Save</button>
         </form>
         <h3>Users online:</h3>
@@ -25,7 +25,7 @@
       </sidebar>
       <sidebar class="messages-container">
         <form>
-          <input type="text" data-testid="nickname-box" placeholder="Nickname: " />
+          <input id="message-input" type="text" data-testid="message-box" placeholder="Message: " />
           <button type="button" id="send-btn" data-testid="send-button">Send</button>
         </form>
         <h3>Messages:</h3>
@@ -33,7 +33,7 @@
       </sidebar>
     </section>
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script src="http://localhost:3000/client/script.js"></script>
+    <script src="script.js"></script>
 
   </main>
 </body>
