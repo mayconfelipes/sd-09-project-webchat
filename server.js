@@ -29,18 +29,37 @@ app.get('/', async (_request, res) => {
   res.render('index', { chatData });
 });
 
-io.on('connection', (socket) => {
+function sendAndSaveMessage(socket) {
   socket.on('message', async (data) => {
-   const { nickname, chatMessage } = data;
-   const timestamp = utils.formatDate();
-   await db.saveMessages({ message: chatMessage, nickname, timestamps: timestamp });
+    const { nickname, chatMessage } = data;
+    const timestamp = utils.formatDate();
+    await db.saveMessages({ message: chatMessage, nickname, timestamps: timestamp });
+ 
+   io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
+   });
+}
 
-  io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
-  });
+io.on('connection', (socket) => {
+  sendAndSaveMessage(socket);
 
   socket.on('save', (d) => {
-    onlineUsers.push(d);
+    onlineUsers.splice(onlineUsers.length, 0, { nickname: d, id: socket.id });
+    console.log(onlineUsers);
     io.emit('onlineUsers', onlineUsers);
+  });
+
+  socket.on('updateUser', (u) => {
+    const index = onlineUsers.findIndex((user) => user.id === socket.id);
+    onlineUsers[index].nickname = u;
+    io.emit('onlineUsers', onlineUsers);
+    console.log(onlineUsers);
+  });
+
+  socket.on('disconnect', () => {
+    const index = onlineUsers.findIndex((user) => user.id === socket.id);
+    onlineUsers.splice(index, 1);
+    io.emit('onlineUsers', onlineUsers);
+    console.log(onlineUsers);
   });
 });
 
