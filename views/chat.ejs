@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Chat</title>
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script> -->
+    
 </head>
 
    
@@ -29,7 +31,7 @@
     <script>
         let userName;
 
-        const socket = window.io("http://localhost:3000");
+        const socket = io();
 
         const displayMessage = (message) => {
             const ulMessages = document.getElementById('messages');
