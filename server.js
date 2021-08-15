@@ -16,7 +16,18 @@ const io = require('socket.io')(socketIoServer, {
 });
 
 const chatController = require('./controller/chat');
-const messagesController = require('./controller/messages');
+
+const currentTime = () => {
+  const data = new Date();
+  const d = String(data.getDate()).padStart(2, '0');
+  const m = String(data.getMonth()).padStart(2, '0');
+  const a = String(data.getFullYear());
+  const h = String(data.getHours());
+  const mi = String(data.getMinutes()).padStart(2, '0');
+  const s = String(data.getSeconds()).padStart(2, '0');
+
+  return `${d}-${m}-${a} ${h}:${mi}:${s}`;
+};
 
 const guests = [];
 let indexGest = 0;          
@@ -40,19 +51,19 @@ app.use(
 io.on('connection', (socket) => {
   indexGest += 1;
   console.log(`Guest${indexGest} conectado`);
+  console.log(guests);
   guests.push(`Guest${indexGest}`);
+  socket.emit('user', `Guest${indexGest}`);
+  socket.broadcast.emit('newUser', `Guest${indexGest}`);
+
+  socket.on('message', (message) => {
+    const { nickname, chatMessage } = message;
+    const completeMessage = `${currentTime()} - ${nickname}: ${chatMessage}`;
+    io.emit('message', completeMessage);
+  });
 });
-
-// io.on('disconnect', (socket) => {
-
-// });
 
 app.get('/', chatController.chat);
-
-app.post('/messages', (req, res, _next) => {
-  io.emit('notification', req.body);
-  res.status(200).json({ message: 'Notícia adicionada' });
-});
 
 app.listen(PORT, () => [
   console.log(`Servidor online na porta ${PORT}`),

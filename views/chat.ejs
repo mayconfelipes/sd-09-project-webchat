@@ -5,35 +5,80 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Chat</title>
-    <script src="http://localhost:3001/socket.io/socket.io.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 </head>
 
    
 <body>
     <h1>Web Chat</h1>
+    <div>
+        <h2 id="user"></h2>
+    </div>
     <div class="guests">
+        <h3>Usuários</h3>
         <ul id="guests"></ul>
     </div>
     <div class="messages">
+        <h3>Mensagens</h3>
         <ul id="messages"></ul>
     </div>
+    <form class="form" action="">
+        <input id="input-message" placeholder="Digite uma nova mensagem" autocomplete="off">
+        <button id="btn-send"  type="button">Enviar</button>
+    </form>
     <script>
-        const socket = window.io("http://localhost:3001");
+        let userName;
 
-        socket.on('notification', (message) => {
-            const ulGuest = document.getElementById('guests');
+        const socket = window.io("http://localhost:3000");
+
+        const displayMessage = (message) => {
             const ulMessages = document.getElementById('messages');
-
-            if (!ulMessages) return;
-
-            const { nickname, chatMessage } = message;
             const li = document.createElement('li');
-            const liMessages = document.createTextNode(chatMessage);
+            const liMessages = document.createTextNode(message);
 
             li.appendChild(liMessages);
             ulMessages.appendChild(li);
+        }
+
+        socket.on('user', (user) => {
+            displayMessage(`Seja bem vindo ${user}`)
+            const labelUser = document.getElementById('user');
+            labelUser.textContent = user;
+            userName = user;
+        });
+
+        socket.on('newUser', (newUser) => {
+            displayMessage(`${newUser} entrou`)
+            const ulGests = document.getElementById('guests');
+            const li = document.createElement('li');
+            const liGuest = document.createTextNode(newUser);
+
+            li.appendChild(liGuest);
+            ulGests.appendChild(li);
 
         })
+
+        const btnSend = document.getElementById('btn-send');
+        const messageSend = document.getElementById('input-message');
+
+        btnSend.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        if (messageSend.value) {
+            socket.emit('message', {
+                chatMessage: messageSend.value,
+                nickname: userName
+            } );
+            messageSend.value = '';
+        }
+        
+        return false;
+        });
+
+        socket.on('message', (message) => {
+            displayMessage(message);
+        
+        });
     </script>
 </body>
 </html>
