@@ -40,7 +40,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-
 io.on('connection', (socket) => {
   guest = crypto.randomBytes(8).toString('hex');
   console.log(`${guest} conectado`);
