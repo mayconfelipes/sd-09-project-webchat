@@ -22,6 +22,8 @@ describe('1 - Crie um back-end para conexão simultânea de clientes e troca de 
     client2 = io.connect(BASE_URL, { reconnection: false });
     client3 = io.connect(BASE_URL, { reconnection: false });
 
+    console.log('aqui');
+
     client1.emit('message', { chatMessage, nickname });
 
     client1.on('message', (message) => {

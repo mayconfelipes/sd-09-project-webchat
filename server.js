@@ -13,9 +13,9 @@ app.get('/', (_req, res) => {
   res.sendFile('index.html'); 
 });
 
-io.on('connection', async (socket) => {
+io.on('connection', (socket) => {
   const time = formatData();
-  socket.on('serverMessage', ({ chatMessage, nickname }) => {
+  socket.on('message', ({ chatMessage, nickname }) => {
     console.log(nickname.length);
     console.log(`${time} -${nickname}: ${chatMessage}`);
     io.emit('message', `${time} - ${nickname}: ${chatMessage}`);
