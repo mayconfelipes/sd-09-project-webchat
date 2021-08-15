@@ -1,0 +1,36 @@
+const moment = require('moment');
+const chatModel = require('../models/chat');
+
+let connectedUsers = [];
+
+const createUser = (socket) => ({
+  nickname: (socket.id).split('').splice(0, 16).join(''),
+  id: socket.id,
+  namedNick: null,
+});
+
+module.exports = (io) => io.on('connection', (socket) => {
+  const user = createUser(socket);
+
+  io.emit('connection', { user, connectedUsers, socketId: socket.id });
+
+  connectedUsers.push(user);
+
+  socket.on('newNick', ({ nickname, socketId }) => {
+    user.namedNick = nickname;
+    io.emit('newNick', { nickname, socketId });
+  });
+
+  socket.on('message', async ({ chatMessage, nickname }) => {
+    const date = moment().format('DD-MM-YYYY hh:mm:ss A');
+    await chatModel.addMessage({ message: chatMessage, nickname, timestamp: date });
+    io.emit('message', `${date} - ${nickname}: ${chatMessage}`);
+  });
+
+  socket.on('disconnect', () => {
+    const userToRemove = connectedUsers.find(({ id }) => id === socket.id);
+    const otherUsers = connectedUsers.filter(({ id }) => id !== socket.id);
+    connectedUsers = [...otherUsers];
+    socket.broadcast.emit('userDisconnect', userToRemove);
+  });
+});

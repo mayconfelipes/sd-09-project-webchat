@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebChat</title>
+</head>
+<body>
+  <h1>WebChat - Trybe</h1>
+  <main style="display: flex;">
+    <div class="user-container">
+      <form action="" id="user-form">
+        <input
+          id="user-input"
+          autocomplete="off"
+          data-testid="nickname-box"
+          placeholder="Digite aqui seu nickname"
+        />
+        <button data-testid="nickname-button">Atualizar</button>
+      </form>
+      <ul id="users-ul"></ul>
+    </div>
+    <div class="message-container">
+      <ul id="messages-ul">
+        <% messages.forEach(({ message, nickname, timestamp }) => { %>
+          <li><span data-testid="message"><%= `${timestamp} - ${nickname}: ${message}` %></span></li>
+        <% }) %>
+      </ul>
+      <form action="" id="message-form">
+        <input
+        id="message-input"
+        autocomplete="off"
+        data-testid="message-box"
+        placeholder="Digite uma nova mensagem aqui"
+        />
+        <button data-testid="send-button">Enviar</button>
+      </form>
+    </div>
+  </main>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const createLi = (ulId, innerText, testId, id = '') => {
+      const ul = document.querySelector(`#${ulId}`);
+      const li = document.createElement('li');
+      li.id = innerText;
+      li.innerHTML = `<span id="${id}" data-testid="${testId}">${innerText}</span>`;
+      ul.appendChild(li);
+    };
+
+    const updateNick = (newNick, id) => {
+      const userTag = document.getElementById(id);
+      userTag.innerText = newNick;
+    };
+
+    socket.on('connection', ({ user, connectedUsers, socketId }) => {
+      const nick = user.namedNick || user.nickname;
+      createLi('users-ul', nick, 'online-user', socketId);
+      if (socketId === socket.id) {
+        connectedUsers.forEach(({ nickname, id, namedNick }) => createLi('users-ul', namedNick || nickname, 'online-user', id));
+      }
+    });
+
+    const userForm = document.querySelector('#user-form');
+    const userInput = document.querySelector('#user-input');
+    userForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newNickObj = {
+        nickname: userInput.value,
+        socketId: socket.id,
+      }
+      socket.emit('newNick', newNickObj);
+      userInput.value = '';
+    });
+
+    socket.on('newNick', ({nickname, socketId}) => updateNick(nickname, socketId));
+
+    const messageForm = document.querySelector('#message-form');
+    const messageInput = document.querySelector('#message-input');
+    messageForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const userNick = document.querySelector(`#${socket.id}`);
+
+      const dateOptions = { hour12: true };
+
+      const messageObj = {
+        chatMessage: messageInput.value,
+        nickname: userNick ? userNick.innerText : (socket.id).split('').splice(0, 16).join(''),
+      };
+
+      socket.emit('message', messageObj);
+      messageInput.value = '';
+    });
+
+    socket.on('message', (message) => createLi('messages-ul', message, 'message'));
+
+    socket.on('userDisconnect', ({ nickname }) => {
+      const userUl = document.querySelector('#users-ul');
+      const li = document.getElementById(nickname);
+      userUl.removeChild(li);
+    });
+
+    window.onbeforeunload = () => {
+      socket.disconnect();
+    };
+
+  </script>
+</body>
+</html>
