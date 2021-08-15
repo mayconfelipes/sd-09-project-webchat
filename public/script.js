@@ -30,6 +30,7 @@ nicknameBtn.addEventListener('click', () => {
 socket.on('message', (message) => {
   const messageLI = document.createElement('li');
   messageLI.innerHTML = message;
+  messageLI.setAttribute('data-testid', 'message');
   messagesUl.appendChild(messageLI);
 });
 
