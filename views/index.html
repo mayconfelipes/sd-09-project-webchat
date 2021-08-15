@@ -94,15 +94,14 @@
       const nicknameInput = document.getElementById('nickname-input');
       const usersList = document.getElementById('online-users-list');
 
-      getNickname();
+      initSession();
 
       messageForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        console.log('entrei');
         if (messageInput.value) {
           const nickname = JSON.parse(sessionStorage.getItem('nickname')); 
           const chatMessage = messageInput.value;
-          socket.emit('message', { chatMessage, nickname });
+          socket.emit('message', chatMessage);
           messageInput.value = '';
         }
       });
@@ -131,17 +130,29 @@
         });
       });
 
+      socket.on('messagesArchive', ({ messages:recievedMessages }) => {
+        
+      });
+
       function changeNickname(nickname) {
         sessionStorage.setItem('nickname', JSON.stringify(nickname));
         return nickname;
       }
 
-      function getNickname() {
+      function initSession() {
         socket.emit('newUser', (response) => {
-          changeNickname(response.nickname);
-          addOnlineUser(response.nickname);
-        });
-        
+          const { nickname, messageHistory } = response;
+          changeNickname(nickname);
+          addOnlineUser(nickname);
+
+          messageHistory.forEach((element) => {
+          const { message, nickname, timestamp } = element;
+          const item = document.createElement('li');
+          item.textContent = `${timestamp} ${nickname} ${message}`;
+          item.setAttribute('data-testid', 'message');
+          messages.appendChild(item);
+        })
+        }); 
       }
 
       function addOnlineUser(nickname) {

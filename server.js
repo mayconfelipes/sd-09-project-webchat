@@ -1,9 +1,6 @@
 require('dotenv').config();
-
-const crypto = require('crypto');
 const path = require('path');
 const express = require('express');
-const { format } = require('date-fns');
 
 const app = express();
 const http = require('http').createServer(app);
@@ -15,16 +12,20 @@ const io = require('socket.io')(http, {
     methods: ['GET', 'POST'],
   } });
 
+const MessageModel = require('./models/message');
+const UserModel = require('./models/user');
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/views/index.html'));
 });
 
 io.on('connection', (socket) => {
   socket.on('newUser', (callback) => {
-    const nickname = crypto.randomUUID().substring(0, 16);
-    users[socket.id] = nickname;
-    callback({ nickname });
-    io.emit('updateUsers', { users });
+    MessageModel.findAll().then((messageHistory) => {
+      users[socket.id] = UserModel.generateNickname();
+      callback({ nickname: users[socket.id], messageHistory });
+      io.emit('updateUsers', { users });
+    });
   });
 
   socket.on('disconnect', () => {
@@ -32,10 +33,9 @@ io.on('connection', (socket) => {
     io.emit('updateUsers', { users });
   });
 
-  socket.on('message', ({ chatMessage, nickname }) => {
-    const date = format(new Date(), 'dd-MM-yyy hh:mm:ss a');
-    io.emit('message', `${date} ${nickname} ${chatMessage}`);
-  });
+  socket.on('message', (chatMessage) => MessageModel.create(chatMessage, users[socket.id])
+    .then(({ message, nickname, timestamp }) =>
+      io.emit('message', `${timestamp} ${nickname} ${message}`)));
 
   socket.on('updateNickname', ({ nickname }) => {
     users[socket.id] = nickname;
