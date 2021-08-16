@@ -9,7 +9,7 @@
 </head>
 <body>
   <form id="nicknameUser" class="chat" >
-    <input data-testid="nickname-box" id="userName" type="text" name="userName" placeholder="Insira seu nickname">
+    <input data-testid="nickname-box" id="userName" type="text" name="userName" placeholder="Altere seu nickname">
     <button id="save-button" data-testid="nickname-button" type="submit">Salvar</button>
     <ul id="nickName" class="nickName"></ul>
   </form>
@@ -22,46 +22,62 @@
   <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript">
     const socket = io('http://localhost:3000/');
- 
+
     const renderMessage = (message) => {
       const ul = document.getElementById('messages');
       const li = document.createElement('li');
       li.setAttribute('data-testid', 'message');
       li.setAttribute('class', 'userMessage');
       li.setAttribute('id', message._id);
-      li.innerHTML = `<strong data-testid="online-user">${message.timestamp} - ${message.nickname}: </strong> ${message.message}`;
+      li.innerHTML = `<strong>${message.timestamp} - ${message.nickname}: </strong> ${message.message}`;
       ul.appendChild(li);
     }
 
+    let userName = null;
+    let newUserName = null;
     const renderNickName = (nickName) => {
+      
       const ul = document.getElementById('nickName');
       const li = document.createElement('li');
-      const input = document.getElementById('userName');
-      li.innerText = nickName;
-      input.value = nickName;
-      li.setAttribute('data-testid', 'online-user');
-      li.setAttribute('class', 'liUser')
-      ul.appendChild(li);
+      if (li.innerText !== nickName) {
+        li.setAttribute('id', nickName);
+        li.innerText = nickName;
+        li.setAttribute('data-testid', 'online-user');
+        ul.appendChild(li);
+        if (newUserName !== nickName) {
+        }
+      }
+
     }
 
     const saveButton = document.getElementById('nicknameUser');
       saveButton.addEventListener('submit', (event) => {
         event.preventDefault();
         const input = document.getElementById('userName');
-        const nickName = document.getElementsByClassName('liUser');
-        const userObject = {
-          message: userMessage.value, 
-          nickName: input.value,
-        }
-        socket.emit('editNickName', userObject)
-        nickName.innerText = event.target.value;
+        const name = input.value;
+        socket.emit('editName', name);
+        input.value = '';
       });
 
-    socket.on('randomNickName', (nickName) => {
-      localStorage.setItem('nickName', JSON.stringify(nickName));
-      renderNickName(nickName);
+    socket.on('editName', ({newName, nickName}) => {
+      newUserName = newName;
+      const liName = document.getElementById(`${nickName}`);
+      if (newName.length) liName.innerText = newName;
+      socket.emit('allUsers', newName);
     });
 
+
+    socket.on('allUsers', (name) => {
+      const items = name.filter((n) => n !== userName && n);
+
+      items.forEach((item) => {
+        const li = document.getElementById(item);
+        if (!li) {
+          renderNickName(item);
+        }
+      });
+    });
+    
     socket.on('previousMessage', (messages) => {
       messages.forEach(renderMessage);
     });
@@ -70,21 +86,38 @@
       renderMessage(JSON.parse(message));
     });
 
+    socket.on('disconnection', ( userId ) => {
+        const ul = document.getElementById('nickName');
+        const liUserName = document.getElementById(userId);
+        if (liUserName) ul.removeChild(liUserName);
+      });
+
     const form = document.getElementById('chat');
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      const nickname = document.getElementById('userName');
+      const ul = document.getElementById('nickName');
+      const liId = ul.children[0].id;
+      const nickname = document.getElementById(liId);
       const chatMessage = document.getElementById('message');
-   
-      if(nickname.value.length  && chatMessage.value.length) {
+      if(nickname.innerText.length  && chatMessage.value.length) {
         const messageObject = {
-          nickname: nickname.value,
+          nickname: nickname.innerText,
           chatMessage: chatMessage.value,
         };
 
         socket.emit('message', messageObject);
       }
     });
+
+    socket.on('randomNickName', (nickName) => {
+        userName = nickName;
+        renderNickName(JSON.parse(nickName));
+      });
+
+    window.onload = () => {
+        socket.emit('allUsers');
+    }
+
   </script>
 </body>
 </html>
