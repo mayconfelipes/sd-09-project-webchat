@@ -39,8 +39,8 @@ module.exports = (io) => {
 
         socket.on('message', async ({ chatMessage, nickname }) => {
             const timestamp = moment().format('DD-MM-yyyy HH:mm:ss');
-            await Message.create({ message: chatMessage, nickname, timestamp });
             io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
+            await Message.create({ message: chatMessage, nickname, timestamp });
         });
 
         socket.on('updatenick', (nickname) => {
