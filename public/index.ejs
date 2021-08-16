@@ -7,7 +7,7 @@
   <title>Trybe Chat</title>
 </head>
 <body>
-  <form action="" method="POST">
+  <form>
     <label for="nickname-box">Enter your nickname:</label>
     <input type="text" id="nickname-box" data-testid="nickname-box" autocomplete="off">
     <button type="submit" id="nickname-button" data-testid="nickname-button">Enter chatroom</button>
@@ -17,13 +17,17 @@
     <ul id="users-list"></ul>
   </div>
   <div>
-    <ul id="message-list"></ul>
+    <ul id="message-list">
+      <% messages.forEach(({ message, nickname, timestamp }) => { %>
+        <li data-testid="message"><%= `${timestamp} - ${nickname}: ${message}` %></li>
+      <% }); %>
+    </ul>
   </div>
-  <div>
+  <form>
     <input type="text" placeholder="Type your message..." id="message-box" data-testid="message-box" autocomplete="off">
-    <button id="send-button" data-testid="send-button">Send</button>
-  </div>
+    <button type="submit" id="send-button" data-testid="send-button">Send</button>
+  </form>
   <script src="/socket.io/socket.io.js"></script>
-  <script src="./scripts/chat.js"></script>
+  <script type="text/javascript" src="./scripts/chat.js"></script>
 </body>
 </html>

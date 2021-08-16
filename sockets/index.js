@@ -1,6 +1,8 @@
 const { randomBytes } = require('crypto');
 const moment = require('moment');
 
+const Message = require('../models/Message');
+
 const users = {};
 
 const addUser = (id, nickname) => {
@@ -16,23 +18,23 @@ module.exports = (io) => io.on(
   'connection',
   async (socket) => {
     socket.on('updateUsersList', (nickname = '') => {
-      console.log(nickname);
-      addUser(socket.id, nickname);
+        addUser(socket.id, nickname);
         io.emit('updateUsersList', users);
       });
 
-    socket.on('message', ({ chatMessage, nickname = 'anonymous' }) => {
-        const date = moment().format('DD-MM-yyyy HH:mm:ss');
+    socket.on('message', async ({ chatMessage, nickname = 'anonymous' }) => {
+        const timestamp = moment().format('DD-MM-yyyy HH:mm:ss');
 
-        const message = `${date} - ${nickname}: ${chatMessage}`;
-        io.emit('message', message);
+        const message = new Message({ message: chatMessage, nickname, timestamp });
+        message.create();
+
+        const formatedMessage = `${timestamp} - ${nickname}: ${chatMessage}`;
+        io.emit('message', formatedMessage);
       });
 
     socket.on('disconnect', async () => {
       delete users[socket.id];
       io.emit('updateUsersList', users);
-
-      console.log(`User ${socket.id} disconnected`);
     });
   },
 );

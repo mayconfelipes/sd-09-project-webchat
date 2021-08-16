@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const path = require('path');
 
 const app = express();
 const http = require('http').createServer(app);
@@ -15,12 +16,21 @@ const io = require('socket.io')(http, {
 });
 
 const sockets = require('./sockets');
+const Message = require('./models/Message');
 
 sockets(io);
 
-app.use(express.static(`${__dirname}/public`));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'public'));
 
-app.get('/', (_req, res) => res.sendFile(`${__dirname}/public/index.html`));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', async (_req, res) => {
+  const message = new Message({});
+  const messages = await message.getAll();
+
+  res.render('index', { messages });
+});
 
 http.listen(
   PORT,

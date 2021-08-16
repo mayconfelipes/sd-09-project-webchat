@@ -12,7 +12,8 @@ nicaknameButton.addEventListener('click', (e) => {
   nicknameBox.value = '';
 });
 
-sendButton.addEventListener('click', () => {
+sendButton.addEventListener('click', (e) => {
+  e.preventDefault();
   const messageBox = document.querySelector('#message-box');
   const nickname = localStorage.getItem(socket.id);
   socket.emit('message', { chatMessage: messageBox.value, nickname });
