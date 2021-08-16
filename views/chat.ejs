@@ -25,24 +25,6 @@
     <script>
       const socket = io('http://localhost:3000');
 
-      // const userForm = document.querySelector('#regUserForm');
-      // const inputUserName = document.querySelector('#userNameInput');
-
-      // userForm.addEventListener('submit', (e) => {
-      //   e.preventDefault();
-      //   socket.emit('editUserName', inputUserName.value);
-      //   inputUserName.value = '';
-      //   return false;
-      // });
-
-      // const editUserName = (userName) => {
-      //   const userList = document.querySelector('#messages');
-      //   const userListLi = document.querySelectorAll('userName');
-      //   console.log(userListLi)
-      //   const userNameToEdit = userListLi.for()
-      //   userNameToEdit.innerText = userName;
-      // }
-
       // Referência: https://www.webtutorial.com.br/funcao-para-gerar-uma-string-aleatoria-random-com-caracteres-especificos-em-javascript/
       const generateUserName = (length) => {
         let randomString = '';
@@ -99,6 +81,8 @@
       socket.on('message', (message) => {
         createMessage(message);
       });
+
+
 
     </script>
   </body>

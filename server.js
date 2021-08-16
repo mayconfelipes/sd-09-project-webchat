@@ -3,6 +3,12 @@ const http = require('http').createServer(app);
 const cors = require('cors');
 const moment = require('moment');
 
+moment.updateLocale('en', {
+  longDateFormat: {
+      L: 'MM-DD-YYYY',
+  },
+});
+
 const io = require('socket.io')(http, {
   cors: {
     origin: 'http://localhost:3000',
