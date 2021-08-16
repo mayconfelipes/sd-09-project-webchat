@@ -1,0 +1,88 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.containerMain {
+  border: solid red;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+.subContainerMain {
+  display: flex;
+  flex: 1;
+}
+
+.containerLogin {
+  border: solid yellow;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  width: 40%;
+}
+
+.inputNickname {
+  border: solid red;
+  padding: 20px;
+  font-size: 30px;
+  flex: 1;
+}
+
+.btnSave {
+  background-color: rgb(33, 64, 202);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 30px;
+  height: 60px;
+  margin-left: 40px;
+  width: 200px;
+}
+
+.formUserLogin {
+  align-items: center;
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.containerUsers {
+  border: solid blue;
+  flex: 1;
+  padding: 30px;
+}
+
+.containerMessages {
+  border: solid pink;
+  flex: 1;
+  padding: 30px;
+}
+
+.formSendMessage {
+  align-items: center;
+  border: solid blue;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 40px;
+}
+
+.inputMessage {
+  border: none;
+  flex: 1;
+  font-size: 30px;
+  padding: 20px;
+  width: 500px;
+}
+
+.btnSend {
+  background-color: rgb(33, 64, 202);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 30px;
+  height: 60px;
+  margin-left: 40px;
+  width: 200px;
+}

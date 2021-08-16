@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WEB CHAT</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="containerMain">
+      <div class="subContainerMain">
+        <div class="containerLogin">
+          <form class="formUserLogin" action="">
+            <input
+              id="input-nickname"
+              class="inputNickname"
+              type="text"
+              autocomplete="off"
+              placeholder="Insira seu nickname"
+            />
+            <button class="btnSave">Salvar</button>
+          </form>
+          <div class="containerUsers">
+            <ul id="ulUsers"></ul>
+          </div>
+        </div>
+        <div class="containerMessages">
+          <ul id="ulMessages"></ul>
+        </div>
+      </div>
+      <form class="formSendMessage">
+        <input
+          id="input-message"
+          class="inputMessage"
+          type="text"
+          autocomplete="off"
+          placeholder="Digite uma nova mensagem aqui"
+        />
+        <button id="btn-send" class="btnSend">Enviar</button>
+      </form>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>
+  </body>
+</html>
