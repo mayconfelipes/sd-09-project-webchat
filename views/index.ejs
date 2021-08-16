@@ -7,8 +7,8 @@
   <body>
     <section class="chat-grid">
       <form class="nickname-form">
-        <input type="text" name="nick" id="nick" class="nickname-input" placeholder="Digite o seu nickname">
-        <button class="submit-button" type="submit">Salvar</button>
+        <input type="text" name="nick" id="nick" class="nickname-input" placeholder="Digite o seu nickname" data-testid="nickname-box">
+        <button class="submit-button" type="submit" data-testid="nickname-button">Salvar</button>
       </form>
       <ul class="users-list">
 
@@ -17,8 +17,8 @@
 
       </ul>
       <form class="send-message-form">
-        <input type="text" name="send" id="send" class="send-message-input" placeholder="Escreva sua mensagem">
-        <button class="submit-button" type="submit">Enviar</button>
+        <input type="text" name="send" id="send" class="send-message-input" placeholder="Escreva sua mensagem" data-testid="message-box">
+        <button class="submit-button" type="submit" data-testid="send-button">Enviar</button>
       </form>
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>

@@ -17,6 +17,7 @@ const createMessage = (message) => {
   const messagesUl = document.querySelector('.messages-container');
   const li = document.createElement('li');
   li.innerText = message;
+  li.setAttribute('data-testid', 'message');
   messagesUl.appendChild(li);
 };
 

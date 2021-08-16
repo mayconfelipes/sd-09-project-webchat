@@ -10,7 +10,7 @@ body {
 .chat-grid {
   display: grid;
   gap: 20px;
-  grid-template-areas: 
+  grid-template-areas:
     "area1 area1 area3 area3 area3"
     "area2 area2 area3 area3 area3"
     "area2 area2 area3 area3 area3"
@@ -28,67 +28,68 @@ body {
 
 .nickname-form {
   align-items: center;
-  justify-content: center;
   display: grid;
   grid-area: area1;
   grid-template-columns: 1fr 140px;
   grid-template-rows: 100%;
-  width: 100%;
   height: 100%;
+  justify-content: center;
   padding: 40px;
+  width: 100%;
 }
 
 .users-list {
   border: 2px solid grey;
   border-radius: 20px;
   grid-area: area2;
-  padding: 40px;
-  width: 100%;
   height: 100%;
   margin: 0;
+  padding: 40px;
+  width: 100%;
 }
 
 .messages-container {
   border: 2px solid grey;
   border-radius: 20px;
   grid-area: area3;
+  height: 100%;
   margin: 0;
   padding: 40px;
   width: 100%;
-  height: 100%;
 }
 
 .send-message-form {
   align-items: center;
-  justify-content: center;
   display: grid;
   grid-area: area4;
   grid-template-columns: 1fr 140px;
   grid-template-rows: 100%;
-  width: 100%;
   height: 100%;
+  justify-content: center;
   padding: 40px;
+  width: 100%;
 }
 
 .submit-button {
+  background-color: dodgerblue;
   border: none;
   border-radius: 40px;
-  background-color: dodgerblue;
   color: white;
-  text-align: center;
   height: 25px;
-  width: 100px;
   margin: 0 20px;
+  text-align: center;
+  width: 100px;
 }
 
-.send-message-input, .nickname-input {
+.send-message-input,
+.nickname-input {
   border: 2px solid grey;
   border-radius: 20px;
   padding: 10px;
 }
 
 li::marker {
+  color: grey;
   content: ">>  ";
   font-weight: bold;
-  color: grey;
 }
