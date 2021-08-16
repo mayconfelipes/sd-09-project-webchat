@@ -25,7 +25,7 @@ http.listen(3000, () => {
 
 // Emitindo e recebendo eventos
 io.on('connection', (socket) => {
-  console.log(`Alguém entrou na sala ${socket.id}`);
+  io.emit('connection', socket.id);
 
   // recebendo
   socket.on('clientMessage', (data) => {

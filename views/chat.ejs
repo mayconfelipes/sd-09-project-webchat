@@ -10,7 +10,7 @@
   <body>
     <form action="" id="regUserForm">
       <input type="text" id="userInfo" placeholder="Digite seu nome">
-      <button>Entrar</button>
+      <button>Editar nome de usuário</button>
     </form>
 
     <ul id="users"></ul>
@@ -25,7 +25,14 @@
     <script>
       const socket = io('http://localhost:3000');
 
-      socket.on('connection');
+      socket.on('connection', (user) => {
+
+        const userList = document.querySelector('#users');
+        const userListLi = document.createElement('li');
+
+        userListLi.innerText = `${user} entrou na sala.`;
+        userList.appendChild(userListLi);
+      });
 
       const form = document.querySelector('#messageForm');
       const inputMessage = document.querySelector('#messageInput');
@@ -47,7 +54,7 @@
 
       socket.on('clientMessage', (message) => {
         createMessage(message);
-      })
+      });
     </script>
   </body>
 </html>
