@@ -24,7 +24,13 @@
   <main class="user-message-container">
     <!-- display flex column -->
     <section class="user-container">
-      <ul class="user-list"></ul>
+      <ul class="user-list">
+        <% userList.length && userList.forEach((user) => { %>
+          <li data-testid="online-user" data-key=<%= user.userId %> >
+            <%= user.nickname %> 
+          </li>
+        <%}) %>
+      </ul>
     </section>
     
     <!-- display flex column -->

@@ -1,16 +1,15 @@
 // Faça seu código aqui
 const express = require('express');
 const path = require('path');
-const moment = require('moment');
 const { name } = require('faker');
-
-const currentTime = moment().format('DD-MM-YYYY h:mm:ss');
 
 const app = express();
 
 const socketIoServer = require('http').createServer(app);
 
 const io = require('socket.io')(socketIoServer);
+
+let userList = [];
 
 const generateRandomName = () => {
   let randomName;
@@ -27,17 +26,28 @@ const generateRandomName = () => {
 io.on('connection', (socket) => {
   const newRandomName = generateRandomName();
 
-  io.emit('connection', { randomName: newRandomName, userId: `${socket.id}` });
+  userList.push({ nickname: newRandomName, userId: `${socket.id}` });
 
-  socket.on('newUser', (userName) => {
-    io.emit('replaceUsername', { userName, userId: `${socket.id}` });
+  io.emit('connection', userList);
+
+  console.log(userList);
+
+  socket.emit('nickname', newRandomName);
+
+  socket.on('changeNickname', (newNickname) => {
+    socket.emit('nickname', newNickname);
+
+    userList = userList.map(({ userId, nickname }) => (
+      userId === socket.id
+        ? { nickname: newNickname, userId }
+        : { userId, nickname }
+    ));
+
+    io.emit('replaceUsername', userList);
   });
 
-  socket.on('message', ({ chatMessage, nickname }) => {
-    io.emit(
-      'message',
-      `${currentTime} - ${nickname}: ${chatMessage}`,
-    );
+  socket.on('message', ({ chatMessage, nickname, currentTime }) => {
+    io.emit('message', `${currentTime} - ${nickname}: ${chatMessage}`);
   });
 });
 
@@ -47,7 +57,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (_, res) => {
-  res.render('index');
+  res.render('index', { userList });
 });
 
 socketIoServer.listen(3000, () => console.log('Listening on *:3000'));

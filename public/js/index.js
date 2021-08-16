@@ -5,51 +5,70 @@ const saveUserButton = document.querySelector('.post-nickname');
 const messageInput = document.querySelector('.text-message');
 const sendMessageButton = document.querySelector('.post-message');
 
-const addNewUser = ({ userName, userId }) => {
-  const userList = document.querySelector('.user-list');
+const addNewUser = (userList) => {
+  const userListElement = document.querySelector('.user-list');
 
-  const newUserElement = document.createElement('li');
-  newUserElement.innerText = userName;
-  newUserElement.dataset.testid = 'online-user';
-  newUserElement.dataset.key = userId;
+  userListElement.innerHTML = null;
+  userList.forEach((user) => {
+    const newUserElement = document.createElement('li');
+    newUserElement.innerText = user.nickname;
+    newUserElement.dataset.testid = 'online-user';
+    newUserElement.dataset.key = user.userId;
 
-  userList.appendChild(newUserElement);
+    userListElement.appendChild(newUserElement);
+  });
 };
 
 saveUserButton.addEventListener('click', (e) => {
   e.preventDefault();
 
-  const newUser = userInput.value;
+  const newNickname = userInput.value;
 
-  socket.emit('newUser', newUser);
+  socket.emit('changeNickname', newNickname);
 
   userInput.value = '';
   return false;
 });
 
-let currentUser;
+let updateNickname;
 
-const replaceUsername = ({ userName, userId }) => {
-  const user = document.querySelector(`[data-key=${userId}]`);
-  user.innerText = userName;
-  currentUser = userName;
-};
-
-socket.on('connection', ({ randomName: userName, userId }) => {
-  addNewUser({ userName, userId });
-  currentUser = userName;
+socket.on('connection', (userList) => {
+  addNewUser(userList);
+  if (!updateNickname) updateNickname = userList[userList.length - 1].nickname;
 });
 
-socket.on('replaceUsername', replaceUsername);
+socket.on('nickname', (nickname) => {
+  updateNickname = nickname;
+});
+
+socket.on('replaceUsername', (userList) => {
+  addNewUser(userList);
+});
+
+const currentDate = () => {
+  const date = new Date();
+
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  const hour = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+
+  return { day, month, year, hour, minutes, seconds };
+};
 
 sendMessageButton.addEventListener('click', (e) => {
   e.preventDefault();
 
   const chatMessage = messageInput.value;
 
+  const { day, month, year, hour, minutes, seconds } = currentDate();
+
   const messageObj = {
     chatMessage,
-    nickname: currentUser,
+    currentTime: `${day}-${month}-${year} ${hour}:${minutes}:${seconds}`,
+    nickname: updateNickname,
   };
 
   socket.emit('message', messageObj);
