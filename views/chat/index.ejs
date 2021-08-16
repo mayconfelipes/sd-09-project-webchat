@@ -42,24 +42,24 @@
   <script>
     const socket = io();
 
-    const createLi = (ulId, innerText, testId, id = '', tagId = '') => {
+    const createLi = (ulId, innerText, testId, id = '') => {
       const ul = document.querySelector(`#${ulId}`);
       const li = document.createElement('li');
-      li.id = tagId;
-      li.innerHTML = `<span id="${id}" data-testid="${testId}">${innerText}</span>`;
+      li.id = id;
+      li.innerHTML = `<span data-testid="${testId}">${innerText}</span>`;
       ul.appendChild(li);
     };
 
     const updateNick = (newNick, id) => {
       const userTag = document.getElementById(id);
-      userTag.innerText = newNick;
+      userTag.innerHTML = `<span data-testid="online-user">${newNick}</span>`;
     };
 
     socket.on('connection', ({ user, connectedUsers, socketId }) => {
       const nick = user.namedNick || user.nickname;
-      createLi('users-ul', nick, 'online-user', socketId, user.teste);
+      createLi('users-ul', nick, 'online-user', socketId);
       if (socketId === socket.id) {
-        connectedUsers.forEach(({ nickname, id, namedNick, teste }) => createLi('users-ul', namedNick || nickname, 'online-user', id, teste));
+        connectedUsers.forEach(({ nickname, id, namedNick }) => createLi('users-ul', namedNick || nickname, 'online-user', id));
       }
     });
 
@@ -94,10 +94,9 @@
 
     socket.on('message', (message) => createLi('messages-ul', message, 'message'));
 
-    socket.on('userDisconnect', ({ teste }) => {
-      console.log(teste);
+    socket.on('userDisconnect', ({ id }) => {
       const userUl = document.querySelector('#users-ul');
-      const li = document.getElementById(teste);
+      const li = document.getElementById(id);
       userUl.removeChild(li);
     });
 

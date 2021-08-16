@@ -5,7 +5,6 @@ let connectedUsers = [];
 
 const createUser = (socket) => ({
   nickname: (socket.id).split('').splice(0, 16).join(''),
-  teste: (socket.id).split('').splice(0, 16).join(''),
   id: socket.id,
   namedNick: null,
 });
