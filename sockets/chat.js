@@ -23,12 +23,12 @@ const fetchHistory = (socket, io) => {
     const chatHistory = await chatModel.fetchMessageHistory();
     const arrayUsers = Object.values(users);
     socket.emit('FetchChatHistory', chatHistory);
-    io.emit('onlineUsers', { arrayUsers, nickname: randomNickName });
+    io.emit('onlineUsers', { users, arrayUsers, nickname: randomNickName });
   });
     socket.on('disconnect', () => {
     delete users[socket.id];
     const arrayUsers = Object.values(users);
-    io.emit('onlineUsers', { arrayUsers, users });
+    io.emit('onlineUsers', { users, arrayUsers });
   });
 };
 
@@ -44,7 +44,7 @@ const changeNickname = (socket, io) => {
     socket.on('changeNick', (nickname) => {
     users[socket.id] = nickname;
     const arrayUsers = Object.values(users);
-    io.emit('onlineUsers', { users, nickname, arrayUsers });
+    io.emit('onlineUsers', { users, arrayUsers, nickname });
   });
 };
 

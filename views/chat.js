@@ -2,22 +2,22 @@ const socket = window.io();
 
 socket.emit('FetchChatHistory');
 
-let nick = '';
+let actuallyNick = '';
 
 const saveButton = document.querySelector('#form-nickname-button');
 saveButton.addEventListener('click', () => {
   const newNickName = document.querySelector('#nickname-input');
   socket.emit('changeNick', newNickName.value);
-  nick = newNickName.value;
   newNickName.value = '';
   return false; 
 });
 
-socket.on('onlineUsers', ({ arrayUsers, nickname }) => {
+socket.on('onlineUsers', ({ users, arrayUsers }) => {
   const usersOnline = document.querySelector('#users-online');
   usersOnline.innerHTML = '';
-  nick = nickname;
-  const userList = arrayUsers;
+  actuallyNick = users[socket.id];
+  const othersOnlineUsers = arrayUsers.filter((user) => user !== actuallyNick);
+  const userList = [actuallyNick, ...othersOnlineUsers];
   userList.forEach((user) => {
     const li = document.createElement('li');
     li.innerHTML = user;
@@ -28,8 +28,8 @@ socket.on('onlineUsers', ({ arrayUsers, nickname }) => {
 
 const sendButton = document.querySelector('#form-message-button');
 sendButton.addEventListener('click', () => {
-  const chatMessage = document.querySelector('#message'); 
-  socket.emit('message', { chatMessage: chatMessage.value, nickname: nick });
+  const chatMessage = document.querySelector('#message');
+  socket.emit('message', { chatMessage: chatMessage.value, nickname: actuallyNick });
 
   chatMessage.value = '';
   return false;
