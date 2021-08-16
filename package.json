@@ -2,11 +2,11 @@
   "name": "webchat",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "jest --runInBand  --detectOpenHandles --forceExit",
     "test-coverage": "jest --coverage",
-    "start": "node server.js",
+    "start": "node .",
     "debug": "nodemon server.js",
     "lint": "eslint --no-inline-config --ext .js,.jsx --no-error-on-unmatched-pattern -c .eslintrc.json .",
     "lint:styles": "stylelint **/*.css --config .stylelintrc.json --ignore-disables --allow-empty-input"
