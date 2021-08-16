@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebChat</title>
+  <link rel="stylesheet" href="./chat.css">
+</head>
+<body>
+  <div>
+    <h1>WebChat</h1>
+    <div class="form-div">
+      <form id="form-nickname">
+        <input
+          type="text"
+          placeholder="Change your Nickname"
+          id="nickname-input"
+          data-testid="nickname-box"
+        >
+        <button
+          type="button"
+          id="form-nickname-button"
+          data-testid="nickname-button"
+        >
+          Salvar
+        </button>
+      </form>
+      <h3>Usuarios Online</h3>
+      <ul id="users-online"></ul>
+      <ul id="messages">
+      </ul>
+      <form action="" id="form-message">
+        <input
+          type="text"
+          placeholder="Digite sua mensagem" 
+          class="form-message-input"
+          id="message" 
+          autocomplete="off"
+          data-testid="message-box"
+        >
+        <button 
+          type="button"
+          id="form-message-button"
+          data-testid="send-button"
+        >
+          Send
+        </button>
+      </form>
+    </div>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="./chat.js"></script>
+</body>
+</html>
