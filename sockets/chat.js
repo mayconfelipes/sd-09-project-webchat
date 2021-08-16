@@ -1,11 +1,12 @@
 const moment = require('moment');
-const ModelUsers = require('../models/ModelUsers');
 const ModelMessages = require('../models/ModelMessages');
 
-const socketUpdateNickname = async (io, { idSocket, newNick }) => {
-  await ModelUsers.updateNickname({ idSocket, nickname: newNick });
-  const getAllUsers = await ModelUsers.getAllUsers();
-  io.emit('updateNickname', getAllUsers);
+const usersSockets = [];
+
+const socketUpdateNickname = (io, { idSocket, newNick }) => {
+  const userIndex = usersSockets.findIndex(({ id }) => id === idSocket);
+  usersSockets[userIndex].nickname = newNick;
+  io.emit('updateNickname', usersSockets);
 };
 
 const savedMessageDB = async (io, { nickname, chatMessage }) => {
@@ -15,33 +16,35 @@ const savedMessageDB = async (io, { nickname, chatMessage }) => {
   io.emit('message', messageFormat);
 };
 
-const socketDisconnect = async (io) => {
-  const getAllUsers = await ModelUsers.getAllUsers();
-  io.emit('allUsers', getAllUsers);
+// Com ajuda do meu amigo Yoneda! 
+const socketDisconnect = (io, id) => {
+  const userIndex = usersSockets.findIndex((user) => user.id === id);
+  usersSockets.splice(userIndex, 1);
+  io.emit('allUsers', usersSockets);
 };
 
-module.exports = (io) => io.on('connection', async (socket) => {
+module.exports = (io) => io.on('connection', (socket) => {
   const id = socket.id.substring(0, 16);
+  // const createUser = await ModelUsers.create(id);
+  usersSockets.push({ id });
 
-  const createUser = await ModelUsers.create(id);
+  socket.emit('userOn', id);
 
-  socket.emit('userOn', createUser);
-  socket.on('nickname', async ({ idSocket, newNick }) => {
-    await ModelUsers.updateNickname({ idSocket, nickname: newNick });
-    const getAllUsers = await ModelUsers.getAllUsers();
-    io.emit('allUsers', getAllUsers);
+  socket.on('nickname', ({ id: idSocket, newNick }) => {
+    const userIndex = usersSockets.findIndex((user) => user.id === idSocket);
+    usersSockets[userIndex].nickname = newNick;
+    io.emit('allUsers', usersSockets);
   });
 
-  socket.on('updateNickname', async ({ idSocket, newNick }) => {
+  socket.on('updateNickname', ({ id: idSocket, newNick }) => {
     socketUpdateNickname(io, { idSocket, newNick });
   });
 
   socket.on('message', async ({ nickname, chatMessage }) => {
-    savedMessageDB(io, { nickname, chatMessage });
+    await savedMessageDB(io, { nickname, chatMessage });
   });
 
-  socket.on('disconnect', async () => {
-    await ModelUsers.deleteUser(createUser.idSocket);
-    await socketDisconnect(io);
+  socket.on('disconnect', () => {
+    socketDisconnect(io, id);
   });
 });

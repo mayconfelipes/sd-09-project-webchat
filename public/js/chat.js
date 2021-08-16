@@ -19,23 +19,23 @@ const createListUsers = (user) => {
   return li;
 };
 
-socket.on('userOn', ({ idSocket }) => {
-  idSocketFront = idSocket;
-  socket.emit('nickname', ({ idSocket, newNick: idSocket }));
-  my.innerHTML = idSocket;
+socket.on('userOn', (id) => {
+  idSocketFront = id;
+  nickname = id;
+  socket.emit('nickname', ({ id, newNick: id }));
+  my.innerHTML = id;
   // createListUsers(idSocket);
 });
 
 socket.on('allUsers', (getUsers) => {
   users.innerHTML = '';
 
-  const userFind = getUsers.filter(({ idSocket }) => idSocket === idSocketFront);
+  const userFind = getUsers.filter(({ id }) => id === idSocketFront);
   userFind.forEach(({ nickname: nick }) => {
     my.innerHTML = nick;
-    // createListUsers(nick);
   });
 
-  const usersFilter = getUsers.filter(({ idSocket }) => idSocket !== idSocketFront);
+  const usersFilter = getUsers.filter(({ id }) => id !== idSocketFront);
   usersFilter.forEach(({ nickname: nick }) => {
     createListUsers(nick);
   });
@@ -51,7 +51,7 @@ const createListMessage = (message) => {
 
 formNickname.addEventListener('submit', (e) => {
   e.preventDefault();
-  socket.emit('updateNickname', ({ idSocket: idSocketFront, newNick: inputNickname.value }));
+  socket.emit('updateNickname', ({ id: idSocketFront, newNick: inputNickname.value }));
   nickname = inputNickname.value;
   inputNickname.value = '';
   users.innerHTML = '';
@@ -61,13 +61,12 @@ formNickname.addEventListener('submit', (e) => {
 socket.on('updateNickname', (listUser) => {
   users.innerHTML = '';
 
-  const userFind = listUser.filter(({ idSocket }) => idSocket === idSocketFront);
+  const userFind = listUser.filter(({ id }) => id === idSocketFront);
   userFind.forEach(({ nickname: nick }) => {
     my.innerHTML = nick;
-    // createListUsers(nick);
   });
 
-  const usersFilter = listUser.filter(({ idSocket }) => idSocket !== idSocketFront);
+  const usersFilter = listUser.filter(({ id }) => id !== idSocketFront);
   usersFilter.forEach(({ nickname: nick }) => {
     createListUsers(nick);
   });
