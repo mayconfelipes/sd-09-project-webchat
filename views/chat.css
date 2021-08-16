@@ -15,7 +15,6 @@ body {
 
 #form-nickname {
   background: black;
-  bottom: 0;
   margin-right: 30%;
   padding: 3px;
   position: fixed;
@@ -23,14 +22,12 @@ body {
 }
 
 #nickname-input {
-  border: 0;
   margin-right: 0.5%;
   padding: 10px;
   width: 70%;
 }
 
 #form-nickname-button {
-  border: none;
   background: rgb(130, 224, 255);
   cursor: pointer;
   padding: 10px;
@@ -39,7 +36,6 @@ body {
 
 #form-message {
   background: black;
-  bottom: 0;
   margin-left: 35%;
   padding: 3px;
   position: fixed;
@@ -47,7 +43,6 @@ body {
 }
 
 .form-message-input {
-  border: 0;
   margin-right: 1%;
   padding: 10px;
   width: 78%;
@@ -55,22 +50,19 @@ body {
 
 #form-message-button {
   background: rgb(130, 224, 255);
-  border: none;
   cursor: pointer;
   padding: 10px;
   width: 20%;
 }
 
 #messages {
-  margin: 0;
   list-style-type: none;
-  padding: 0;
 }
 
 #messages li {
   padding: 5px 10px;
 }
 
-#messages li:nth-child(odd) {
+#messages li:nth-child( odd ) {
   background: #eee;
 }
