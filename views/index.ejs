@@ -11,12 +11,12 @@
 
 <body class="chat-container">
 
-  <h1 class="title">Bem-vindos ao WhatsApp de NevsKabuloso</h1>
+  <h1 class="title">Bem-vindos ao chat desenvolvido com socket.io</h1>
   <!-- display flex row -->
   <header class="user-info-container">
     <form action="index.html">
-      <input type="text" class="nickname" placeholder="Insira seu nome ou apelido">
-      <button class="post-nickname">Salvar</button>
+      <input type="text" class="nickname" placeholder="Insira seu nome ou apelido" data-testid="nickname-box">
+      <button class="post-nickname" data-testid="nickname-button">Salvar</button>
     </form>
   </header>
 
@@ -35,9 +35,9 @@
 
   <!-- display flex row -->
   <footer>
-    <form action="index.html">
-      <input type="text" class="text-message" placeholder="Digite uma mensagem">
-      <button class="post-message">Enviar</button>
+    <form action="/">
+      <input type="text" class="text-message" placeholder="Digite uma mensagem" data-testid="message-box">
+      <button class="post-message" data-testid="send-button">Enviar</button>
     </form>
   </footer>
 

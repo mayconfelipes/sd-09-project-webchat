@@ -5,11 +5,13 @@ const saveUserButton = document.querySelector('.post-nickname');
 const messageInput = document.querySelector('.text-message');
 const sendMessageButton = document.querySelector('.post-message');
 
-const addNewUser = (userName) => {
+const addNewUser = ({ userName, userId }) => {
   const userList = document.querySelector('.user-list');
 
   const newUserElement = document.createElement('li');
   newUserElement.innerText = userName;
+  newUserElement.dataset.testid = 'online-user';
+  newUserElement.dataset.key = userId;
 
   userList.appendChild(newUserElement);
 };
@@ -25,20 +27,32 @@ saveUserButton.addEventListener('click', (e) => {
   return false;
 });
 
-socket.on('addNewUser', addNewUser);
+let currentUser;
 
-let currentUser = '';
+const replaceUsername = ({ userName, userId }) => {
+  const user = document.querySelector(`[data-key=${userId}]`);
+  user.innerText = userName;
+  currentUser = userName;
+};
 
-socket.on('userName', (userName) => {
+socket.on('connection', ({ randomName: userName, userId }) => {
+  addNewUser({ userName, userId });
   currentUser = userName;
 });
+
+socket.on('replaceUsername', replaceUsername);
 
 sendMessageButton.addEventListener('click', (e) => {
   e.preventDefault();
 
-  const message = messageInput.value;
+  const chatMessage = messageInput.value;
 
-  socket.emit('message', { chatMessage: message, nickname: currentUser });
+  const messageObj = {
+    chatMessage,
+    nickname: currentUser,
+  };
+
+  socket.emit('message', messageObj);
 
   messageInput.value = '';
   return false;
@@ -49,7 +63,7 @@ const addNewMessage = (message) => {
 
   const newMessageElement = document.createElement('li');
   newMessageElement.innerText = message;
-
+  newMessageElement.dataset.testid = 'message';
   messageList.appendChild(newMessageElement);
 };
 
