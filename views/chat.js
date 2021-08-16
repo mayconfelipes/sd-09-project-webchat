@@ -8,7 +8,6 @@ const createRandomName = () => {
 };
 
 const createMessage = (message) => {
-  console.log(message);
   const list = document.querySelector('#messageList');
   const li = document.createElement('li');
   li.innerText = message;
@@ -23,6 +22,14 @@ const changeNickname = document.querySelector('#buttonNickname');
 const usersList = document.querySelector('#onlineList');
 usersList.innerHTML = '';
 
+const createOnline = (user) => {
+  const list = document.querySelector('#onlineList');
+  const li = document.createElement('li');
+  li.innerText = user;
+  li.setAttribute('data-testid', 'online-user');
+  list.appendChild(li);
+};
+
 const setOnline = () => {
   socket.emit('setOnline', nickname);
 };
@@ -33,13 +40,6 @@ socket.on('messageList', (messageList) => {
   messageList.forEach(({ message }) => createMessage(message));
 });
 
-const handleNickname = () => {
-  const h3 = document.querySelector('#nickname');
-  h3.innerText = nickname;
-};
-
-handleNickname();
-
 sendMessage.addEventListener('click', () => {
   const chatMessage = document.querySelector('#inputMessage').value;
   socket.emit('message', { chatMessage, nickname });
@@ -47,22 +47,15 @@ sendMessage.addEventListener('click', () => {
 
 changeNickname.addEventListener('click', () => {
   const newNickname = document.querySelector('#inputNickname').value;
-  socket.emit('changeNickname', { newNickname, nickname });
   nickname = newNickname;
-  handleNickname();
+  socket.emit('changeNickname', { newNickname, nickname });
 });
 
 socket.on('message', (message) => createMessage(message));
 
-const createOnline = (user) => {
-  const li = document.createElement('li');
-  li.innerText = user;
-  li.setAttribute('data-testid', 'online-user');
-  usersList.appendChild(li);
-};
-
 const setUsersOnline = (usersOnline) => {
   usersList.innerHTML = '';
+  createOnline(nickname);
   usersOnline.forEach(({ user }) => {
     if (user !== nickname) {
       createOnline(user);
