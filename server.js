@@ -26,7 +26,11 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 app.set('view engine', 'ejs');
 
-app.get('/', (req, res) => res.render('webchat', { users: webChatController.connectedUsers }));
+app.get('/', async (req, res) => {
+  const messages = await webChatController.getSavedMessages();
+
+  res.render('webchat', { users: webChatController.connectedUsers, messages });
+});
 
 const PORT = process.env.BACKEND_PORT || 3000;
 

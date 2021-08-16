@@ -18,17 +18,18 @@ const getUserList = (socketId, io) => {
   io.emit('usersList', (connectedUsers));
 };
 
-const changeNickname = async (newNickname, socketId, socket, io) => {
+const changeNickname = (newNickname, socketId, socket, io) => {
   const userIndex = connectedUsers.findIndex((user) => user.id === trimSocketId(socketId));
   connectedUsers[userIndex].nickname = newNickname;
   socket.emit('newNickname', (newNickname));
   io.emit('usersList', (connectedUsers));
+  console.log(connectedUsers);
 };
 
-const saveMessage = async ({ message, nickname, io }) => {
+const saveMessage = ({ message, nickname, io }) => {
   const messageTimeStamp = moment().format('DD-MM-yyyy LTS');
   const formattedMessage = `${messageTimeStamp} - ${nickname} > ${message}`;
-  await webChatModel.saveMessage({ message, nickname, messageTimeStamp });
+  webChatModel.saveMessage({ message, nickname, messageTimeStamp });
   io.emit('message', (formattedMessage));
 };
 
@@ -37,7 +38,6 @@ const getSavedMessages = async () => {
 
   const formattedMessages = messages.map(({ message, nickname, messageTimeStamp }) =>
     `${messageTimeStamp} - ${nickname} > ${message}`);
-
   return formattedMessages;
 };
 

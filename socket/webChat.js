@@ -5,9 +5,9 @@ const webChat = (io) => io.on('connection', async (socket) => {
 
   socket.emit('tempNickname', (id.slice(0, 16)));
 
-  const oldMessages = await webChatController.getSavedMessages();
+  // const oldMessages = await webChatController.getSavedMessages();
 
-  socket.emit('oldMessages', (oldMessages));
+  // socket.emit('oldMessages', (oldMessages));
 
   socket.on('changeNickname', (newNickname) => webChatController
     .changeNickname(newNickname, id, socket, io));

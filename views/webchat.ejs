@@ -23,14 +23,17 @@
       <div class='column is-one-fifth'>
         <p class='sub-title is-size-6 is-center'>Online users</p>
         <ul id='usersList'><% users.forEach((user) => {%>
-          <li data-testId='user-online'><%= user.nickname || user.id%></li>
+          <li data-testid='user-online'><%= user.nickname || user.id%></li>
         <% })%>
         </ul>
       </div>
 
       <!-- Aqui ficam as mensagems -->
       <div class='center column message-container'>
-        <ul id='messagesList'></ul>
+        <ul id='messagesList'><% messages.forEach((message) => {%>
+          <li data-testid='message'><%= message %></li>
+        <% }) %>
+        </ul>
       </div>
     </div>
     <!-- Aqui fica o layout de escrever/mandar mensagens -->
@@ -50,8 +53,8 @@
     <script>
       const socket = io();
       let nickname = '';
-
-      socket.emit('usersList');
+      const onlineList = document.getElementById('usersList');
+      socket.emit('usersList'); 
 
       socket.on('tempNickname', (tempNickname) => {
         const greetings = document.getElementById('greetings');
@@ -68,7 +71,7 @@
 
       socket.on('usersList', (usersList) => {
         const id = socket.id.slice(0, 16);
-        const onlineList = document.getElementById('usersList');
+
         onlineList.innerHTML = '';
 
         const currentUser = usersList.find((user) => user.id === id);
@@ -79,21 +82,13 @@
         sortedUserList.forEach((user) => {
           const newUser = document.createElement('li');
           newUser.innerText = user.nickname || user.id;
-          newUser.setAttribute('data-testId', 'online-user');
+          newUser.setAttribute('data-testid', 'online-user');
           onlineList.appendChild(newUser);
         });
       });
 
       const messagesList = document.getElementById('messagesList');
 
-      socket.on('oldMessages', (messages) => {
-        messages.forEach((message) =>{
-          const newMessage = document.createElement('li');
-          newMessage.innerText = message;
-          newMessage.setAttribute('data-testid', 'message');
-          messagesList.appendChild(newMessage);
-        });
-      });
 
       socket.on('message', (message) => {
         const newMessage = document.createElement('li')
@@ -117,10 +112,6 @@
         socket.emit('changeNickname', (newNickname.value));
         newNickname.value = '';
       });
-
-      // window.onload = () => {
-      //   socket.emit('usersList');
-      // };
     </script>
   </body>
 </html>
