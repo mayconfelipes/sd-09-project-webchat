@@ -16,9 +16,6 @@ const io = require('socket.io')(http, {
 
 const sockets = require('./sockets');
 
-io.on('connection', (socket) => {
-  console.log(`${socket.id} is on!`);
-});
 sockets(io);
 
 app.use(express.static(`${__dirname}/public`));
