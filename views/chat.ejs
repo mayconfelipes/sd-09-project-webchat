@@ -10,7 +10,7 @@
 
 <body>
     <div>
-        <input type="text" id="nickName" placeholder="Nickname">
+        <input type="text" id="nickname" placeholder="nickname">
         <button type="button" id="btn-save">Salvar</button>
     </div>
     <div class="main">
@@ -32,20 +32,20 @@
     <script>
         const socket = window.io();
         const ulChat = document.querySelector('#chat');
-        const chatMessage = document.querySelector('#input-msg');
-
-
+        const inputMsg = document.querySelector('#input-msg');
+        
         function sendNewMessage() {
-            const msgValue = chatMessage.value
-            socket.emit('message', msgValue)
+            const chatMessage = inputMsg.value;
+            const nickname = 'nickAqui';
+            socket.emit('message', { chatMessage, nickname })
         }
         const btnSendMessage = document.querySelector('#send-msg');
         
-        socket.on('updateMsg', (menssage) => {
+        socket.on('message', (menssage) => {
             const p = document.createElement('p');
             p.innerText = menssage;
             ulChat.appendChild(p);
-            chatMessage.value = '';
+            inputMsg.value = '';
         })
 
         btnSendMessage.addEventListener('click', () => {

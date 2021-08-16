@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const socketIO = require('socket.io');
 const { chatController } = require('./controller/chatController');
+const { formatMessage, getFullDate } = require('./utils');
 
 const app = express();
 const PORT = 3000;
@@ -20,7 +21,9 @@ const io = socketIO(server);
 io.on('connection', (socket) => {
     console.log('New connection');
 
-    socket.on('message', (msg) => {
-        io.emit('updateMsg', msg);
+    socket.on('message', ({ chatMessage, nickname }) => {
+        const date = getFullDate();
+        const messageFormated = formatMessage(date, nickname, chatMessage);
+        io.emit('message', messageFormated);
     });
 });
