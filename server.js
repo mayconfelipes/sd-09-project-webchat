@@ -26,4 +26,8 @@ io.on('connection', (socket) => {
         const messageFormated = formatMessage(date, nickname, chatMessage);
         io.emit('message', messageFormated);
     });
+
+    socket.on('updateNick', (newNick) => {
+        socket.emit('updateNick', newNick);
+    });
 });

@@ -10,19 +10,17 @@
 
 <body>
     <div>
-        <input type="text" id="nickname" placeholder="nickname">
-        <button type="button" id="btn-save">Salvar</button>
+        <input type="text" id="nickname" placeholder="nickname" data-testid="nickname-box">
+        <button type="button" id="btn-save" data-testid="nickname-button">Salvar</button>
     </div>
     <div class="main">
-        <ul>
-            <h3>Online</h3>
-            <li>teste</li>
-        </ul>
+        <h3>Online</h3>
+        <p data-testid="online-user" id="userOnline"><%=nickName%></p>
         <div id="chat"></div>
     </div>
     <div class="msg">
-        <input type="text" id="input-msg">
-        <button type="button" id="send-msg">Enviar</button>
+        <input type="text" id="input-msg" data-testid="message-box">
+        <button type="button" id="send-msg" data-testid="send-button">Enviar</button>
     </div>
 
     <script src='/socket.io/socket.io.js'></script>
@@ -30,28 +28,42 @@
     <!-- <script src='sockets/chatFront.js'></script> -->
 
     <script>
-        const socket = window.io();
+        const socket = window.io();        
         const ulChat = document.querySelector('#chat');
         const inputMsg = document.querySelector('#input-msg');
+        const btnSendMessage = document.querySelector('#send-msg');
+        const inputNick = document.querySelector('#nickname');
+        const btnSave = document.querySelector('#btn-save');
+        const userOnline = document.querySelector('#userOnline');
         
         function sendNewMessage() {
             const chatMessage = inputMsg.value;
-            const nickname = 'nickAqui';
+            const nickname = userOnline.innerText;
             socket.emit('message', { chatMessage, nickname })
         }
-        const btnSendMessage = document.querySelector('#send-msg');
         
+        function saveNewNick() {
+            const newNick = inputNick.value;
+            userOnline.innerText = newNick;
+            socket.emit('updateNick', newNick)
+            inputNick.value = '';
+        }
+
+        socket.on('updateNick', (nick) => {
+            userOnline.innerText = nick
+        })
+
         socket.on('message', (menssage) => {
             const p = document.createElement('p');
             p.innerText = menssage;
+            p.setAttribute('data-testid', 'message')
             ulChat.appendChild(p);
             inputMsg.value = '';
         })
 
-        btnSendMessage.addEventListener('click', () => {
-            sendNewMessage();
-        })
-        
+
+        btnSendMessage.addEventListener('click', sendNewMessage);
+        btnSave.addEventListener('click', saveNewNick);
     </script>
 </body>
 
