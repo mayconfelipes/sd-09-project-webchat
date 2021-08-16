@@ -5,7 +5,7 @@ const sendBtn = document.querySelector('.sendBtn');
 
 let nickname = '';
 
-socket.emit('randomNick');
+socket.emit('userStart');
 
 const createNewUser = (userName) => {
   const newUser = document.createElement('li');
@@ -35,9 +35,11 @@ addNewUserBtn.addEventListener('click', () => {
   userInput.value = '';
 });
 
-socket.on('updateUsers', ({ usersList, name }) => {
+socket.on('updateName', (name) => {
   nickname = name;
-  console.log(name);
+});
+
+socket.on('updateUsers', (usersList) => {
   const usersUl = document.querySelector('.usersList');
   usersUl.innerHTML = '';
   Object.values(usersList).forEach((user) => {
@@ -57,6 +59,15 @@ sendBtn.addEventListener('click', () => {
 socket.on('message', (message) => {
   const messagesList = document.querySelector('.webChat');
   messagesList.appendChild(createNewMessage(message));
+});
+
+// imprime log de menssagens
+socket.on('printChatLog', (messagesLog) => {
+  const messagesList = document.querySelector('.webChat');
+  messagesLog.forEach(({ timestamp, nickname: name, message }) => {
+    const messageInfo = `${timestamp} - ${name}: ${message}`;
+    messagesList.appendChild(createNewMessage(messageInfo));
+  });
 });
 
 window.onbeforeunload = () => {

@@ -1,5 +1,6 @@
 const usersList = {};
 const crypto = require('crypto');
+const { saveLogMessage, getAllMessages } = require('../models/chatmodel');
 
 const createDate = () => {
   const date = new Date();
@@ -20,30 +21,33 @@ const sendInitialUsersList = (socket) => {
 const sendUsersList = (socket, io) => {
   socket.on('newUser', (newUser) => {
     usersList[socket.id] = newUser;
-
-    io.emit('updateUsers', { usersList, name: usersList[socket.id] });
+    socket.emit('updateName', usersList[socket.id]);
+    io.emit('updateUsers', usersList);
   });
 };
 
 const removeUser = (socket, io) => {
   socket.on('disconnect', () => {
     delete usersList[socket.id];
-    io.emit('updateUsers', { usersList });
+    io.emit('updateUsers', usersList);
   });
 };
 
 const sendNewMessage = (socket, io) => {
   socket.on('message', ({ chatMessage, nickname }) => {
+    saveLogMessage(chatMessage, nickname, createDate());
     const message = `${createDate()} - ${nickname}: ${chatMessage}`;
     io.emit('message', (message));
   });
 };
 
-const setInitailNick = (socket, io) => {
-  socket.on('randomNick', () => {
+const setInitailUser = (socket, io) => {
+  socket.on('userStart', async () => {
     usersList[socket.id] = crypto.randomBytes(20).toString('hex').substr(0, 16);
-
-    io.emit('updateUsers', { usersList, name: usersList[socket.id] });
+    socket.emit('updateName', usersList[socket.id]);
+    const messagesLog = await getAllMessages();
+    socket.emit('printChatLog', messagesLog);
+    io.emit('updateUsers', usersList);
   });
 };
 
@@ -52,5 +56,5 @@ module.exports = (io) => io.on('connection', (socket) => {
   sendUsersList(socket, io);
   removeUser(socket, io);
   sendNewMessage(socket, io);
-  setInitailNick(socket, io);
+  setInitailUser(socket, io);
 });
