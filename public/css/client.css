@@ -1,0 +1,11 @@
+#text_area_clients {
+  width: 20%;
+  height: 20%;
+  border: 3px solid black;
+}
+
+#text_area_messages {
+  width: 20%;
+  height: 20%;
+  border: 3px solid black;
+}

@@ -28,14 +28,11 @@ const nickNames = [];
 
 const date = () => {
   const d = new Date();
-  // return d.toLocaleString();
   return `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}
   ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
 };
 
 io.on('connection', (socket) => {
-  console.log(`socket conectado: ${socket.id}`);
-
   socket.emit('previousMessage', messages);
   socket.emit('previousNames', nickNames);
 
@@ -46,7 +43,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('message', messageFortmat);
     socket.emit('message', messageFortmat);
   });
-
+  
   socket.on('sendName', (data) => {
     nickNames.push(data);
     socket.broadcast.emit('receivedName', data);
