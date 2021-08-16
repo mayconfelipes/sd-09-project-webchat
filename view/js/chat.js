@@ -12,6 +12,10 @@ const objMessage = {
   nickname: '',
 };
 
+const setUserInSessionStorage = (username) => {
+  sessionStorage.setItem('userOnline', username);
+};
+
 const dataTestId = 'data-testid';
 
 formNickname.addEventListener('submit', (e) => {
@@ -36,15 +40,7 @@ const createMessage = (message) => {
   messagesUl.appendChild(li);
 };
 
-const updateNickname = (newNickname, id) => {
-  const li = document.querySelector(`#${id}`);
-  li.innerText = newNickname;
-};
-
 const createLiNickname = (nickname, id) => {
-  const li = document.querySelector(`#${id}`);
-  if (li) return updateNickname(nickname, id);
-
   const newLi = document.createElement('li');
   newLi.id = id;
   newLi.innerText = nickname;
@@ -52,8 +48,19 @@ const createLiNickname = (nickname, id) => {
   usersUl.appendChild(newLi);
 };
 
+const setUsers = (users, _userId) => {
+  const userOnline = sessionStorage.getItem('userOnline');
+  usersUl.innerHTML = '';
+  Object.keys(users).forEach((id) => {
+    if (users[id] !== userOnline) {
+      createLiNickname(users[id]);
+    }
+  });
+};
+
 const insertMyNickname = (nick) => {
   myNickname.innerText = nick;
+  setUserInSessionStorage(nick);
 };
 
 const loadLastMessages = (messages) => {
@@ -69,5 +76,5 @@ const loadLastMessages = (messages) => {
 
 socket.on('message', (message) => createMessage(message));
 socket.on('myNickname', (nick) => insertMyNickname(nick));
-socket.on('nickname', ({ nickname, id }) => createLiNickname(nickname, id));
+socket.on('newNickname', ({ users, id }) => setUsers(users, id));
 socket.on('getMessages', ({ messages }) => loadLastMessages(messages));

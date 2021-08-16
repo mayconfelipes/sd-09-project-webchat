@@ -18,7 +18,7 @@ const io = require('socket.io')(httpServer, {
   },
 });
 
-const messagesController = require('./controllers/messages');
+// const messagesController = require('./controllers/messages');
 
 app.use(express.static(path.join(__dirname, '/view')));
 // app.set('view engine', 'ejs');
@@ -29,6 +29,6 @@ require('./sockets/chat')(io);
 
 app.get('/ping', (req, res) => res.status(200).send('pong'));
 
-app.use('/', messagesController);
+// app.use('/', messagesController);
 
 httpServer.listen(PORT, () => console.log(`Rodando na porta ${PORT}`));
