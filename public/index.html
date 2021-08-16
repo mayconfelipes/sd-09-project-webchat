@@ -5,12 +5,28 @@
     <link rel="stylesheet" href="./css/chat.css">
   </head>
   <body>
-
-    <ul id="messages"></ul>
-    <form action="">
-      <!-- <input id="nickName" autocomplete="off" /> -->
-      <input id="messageInput" autocomplete="off" /><button>Send</button>
-    </form>
+    <section>
+      <h3 id='userNickname' data-testid="online-user"></h3>
+      <input
+        id="inputNickname"
+        autocomplete="off"
+        placeholder="Set your nickname"
+        data-testid="nickname-box"
+      />
+      <button id="btnSave" data-testid="nickname-button">Save</button>
+    </section>
+    <section>
+      <ul id="messages"></ul>
+      <form action="">
+        <input
+         id="messageInput"
+         autocomplete="off"
+         placeholder="Your text here"
+         data-testid="message-box"
+        />
+        <button data-testid="send-button" id="send-button">Enviar</button>
+      </form>
+    </section>
     <script src="/socket.io/socket.io.js"></script>
     <script src='./js/chat.js'></script>
   </body>
