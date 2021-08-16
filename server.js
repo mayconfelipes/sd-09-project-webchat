@@ -16,16 +16,18 @@ const io = require('socket.io')(socketIoServer, {
     methods: ['GET', 'POST', 'PUT'],
   },
 });
+const chatController = require('./controllers/chat');
+const chatModel = require('./models/chat');
 
 io.on('connection', (socket) => {
   const id = crypto.randomBytes(8).toString('hex');
   io.emit('newUser', { id });
-  socket.on('message', ({ chatMessage, nickname }) => {
-    console.log(`Mensagem ${chatMessage} do ${nickname}`);
+  socket.on('message', async ({ chatMessage, nickname }) => {
     const date = new Date();
     const finalDate = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`; 
     const finalTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
     const finalMessage = `${finalTime} ${finalDate} - ${nickname} ${chatMessage}`;
+    await chatModel.postMessage({ chatMessage, timeStamp: finalTime, nickname });
     io.emit('message', finalMessage);
   });
 });
@@ -34,9 +36,10 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '/public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.get('/', (_req, res) => {
-  res.status(200).render('chat');
-});
+app.get('/', chatController.chatView);
+// app.get('/', (_req, res) => {
+//   res.status(200).render('chat', { messages });
+// });
 
 socketIoServer.listen(PORT, () => {
   console.log(`Socket.io listening on port ${PORT}`);

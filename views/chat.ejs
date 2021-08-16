@@ -11,7 +11,11 @@
       <ul class="users"></ul>
     </section>
     <section class="chat">
-      <ul id="messages"></ul>
+      <ul id="messages">
+        <% messages.forEach((message) => { %>
+          <li data-testid="message"><%= message.timeStamp %><%= message.nickname %><%= message.chatMessage %></li>
+        <% }) %>
+      </ul>
       <form action="">
         <input id="messageInput" autocomplete="off" data-testid="message-box"/>
         <button data-testid="send-button" id="send-button">Enviar</button>
