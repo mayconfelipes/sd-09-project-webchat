@@ -23,7 +23,7 @@
       <div class='column is-one-fifth'>
         <p class='sub-title is-size-6 is-center'>Online users</p>
         <ul id='usersList'><% users.forEach((user) => {%>
-          <li data-testId='user-online'><%= user.nickname || user.id%></li> 
+          <li data-testId='user-online'><%= user.nickname || user.id%></li>
         <% })%>
         </ul>
       </div>
@@ -50,6 +50,8 @@
     <script>
       const socket = io();
       let nickname = '';
+
+      socket.emit('usersList');
 
       socket.on('tempNickname', (tempNickname) => {
         const greetings = document.getElementById('greetings');
@@ -116,9 +118,9 @@
         newNickname.value = '';
       });
 
-      window.onload = () => {
-        socket.emit('usersList');
-      };
+      // window.onload = () => {
+      //   socket.emit('usersList');
+      // };
     </script>
   </body>
 </html>
