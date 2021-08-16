@@ -9,15 +9,15 @@
   </head>
   <body>
     <form action="" id="regUserForm">
-      <input type="text" id="userInfo" placeholder="Digite seu nome">
-      <button>Editar nome de usuário</button>
+      <input type="text" id="userNameInput" placeholder="Digite seu nome" data-testid="nickname-box">
+      <button data-testid="nickname-button">Editar nome de usuário</button>
     </form>
 
     <ul id="users"></ul>
 
     <form action="" id="messageForm">
-      <input type="text" id="messageInput" placeholder="Digite algo">
-      <button>Enviar</button>
+      <input type="text" id="messageInput" placeholder="Digite algo" data-testid="message-box">
+      <button data-testid="send-button">Enviar</button>
     </form>
 
     <ul id="messages"></ul>
@@ -25,21 +25,64 @@
     <script>
       const socket = io('http://localhost:3000');
 
-      socket.on('connection', (user) => {
+      // const userForm = document.querySelector('#regUserForm');
+      // const inputUserName = document.querySelector('#userNameInput');
 
+      // userForm.addEventListener('submit', (e) => {
+      //   e.preventDefault();
+      //   socket.emit('editUserName', inputUserName.value);
+      //   inputUserName.value = '';
+      //   return false;
+      // });
+
+      // const editUserName = (userName) => {
+      //   const userList = document.querySelector('#messages');
+      //   const userListLi = document.querySelectorAll('userName');
+      //   console.log(userListLi)
+      //   const userNameToEdit = userListLi.for()
+      //   userNameToEdit.innerText = userName;
+      // }
+
+      // Referência: https://www.webtutorial.com.br/funcao-para-gerar-uma-string-aleatoria-random-com-caracteres-especificos-em-javascript/
+      const generateUserName = (length) => {
+        let randomString = '';
+        const char = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < length; i++) {
+          randomString += char.charAt(Math.floor(Math.random() * char.length));
+        }
+        return randomString;
+      }
+
+      let randomUserName = generateUserName(16);
+
+      const showUserName = (user) => {
         const userList = document.querySelector('#users');
         const userListLi = document.createElement('li');
-
-        userListLi.innerText = `${user} entrou na sala.`;
+        userListLi.classList.add('userName');
+        userListLi.setAttribute('data-testid', 'online-user');
+        userListLi.innerText = user;
         userList.appendChild(userListLi);
+      }
+
+      socket.emit('userLogin', randomUserName);
+
+      socket.on('userLogin', (user) => {
+        showUserName(user);
       });
 
       const form = document.querySelector('#messageForm');
       const inputMessage = document.querySelector('#messageInput');
 
       form.addEventListener('submit', (e) => {
+        const li = document.querySelector('.userName');
         e.preventDefault();
-        socket.emit('clientMessage', inputMessage.value);
+
+        const message = {
+          chatMessage: inputMessage.value,
+          nickname: li.innerText,
+        };
+
+        socket.emit('message', message);
         inputMessage.value = '';
         return false;
       });
@@ -49,12 +92,14 @@
         const li = document.createElement('li');
 
         li.innerText = message;
+        li.setAttribute('data-testid', 'message');
         ul.appendChild(li);
       };
 
-      socket.on('clientMessage', (message) => {
+      socket.on('message', (message) => {
         createMessage(message);
       });
+
     </script>
   </body>
 </html>
