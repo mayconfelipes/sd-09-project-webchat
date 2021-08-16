@@ -1,4 +1,4 @@
-* {
+/* * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -15,6 +15,7 @@ body {
 
 #form-nickname {
   background: black;
+  bottom: 0;
   margin-right: 30%;
   padding: 3px;
   position: fixed;
@@ -22,20 +23,23 @@ body {
 }
 
 #nickname-input {
+  border: 0;
   margin-right: 0.5%;
   padding: 10px;
   width: 70%;
 }
 
-/* #form-nickname-button {
+#form-nickname-button {
+  border: none;
   background: rgb(130, 224, 255);
   cursor: pointer;
   padding: 10px;
   width: 28%;
-} */
+}
 
 #form-message {
   background: black;
+  bottom: 0;
   margin-left: 35%;
   padding: 3px;
   position: fixed;
@@ -43,20 +47,24 @@ body {
 }
 
 .form-message-input {
-  margin-right: 1%;
+  border: 0;
+  margin-right: 0.5%;
   padding: 10px;
   width: 78%;
 }
-#form-nickname-button,
+
 #form-message-button {
   background: rgb(130, 224, 255);
+  border: none;
   cursor: pointer;
   padding: 10px;
   width: 20%;
 }
 
 #messages {
+  margin: 0;
   list-style-type: none;
+  padding: 0;
 }
 
 #messages li {
@@ -65,4 +73,4 @@ body {
 
 #messages li:nth-child( odd ) {
   background: #eee;
-}
+} */
