@@ -16,14 +16,17 @@ const io = require('socket.io')(httpServer, {
   },
 });
 
+const webChatController = require('./controllers/webChatController');
+
 const webChat = require('./socket/webChat');
 
-webChat(io);
+webChat.webChat(io);
 
 app.use(express.static(path.join(__dirname, '/public')));
+
 app.set('view engine', 'ejs');
 
-app.get('/', (req, res) => res.render('webchat'));
+app.get('/', (req, res) => res.render('webchat', { users: webChatController.connectedUsers }));
 
 const PORT = process.env.BACKEND_PORT || 3000;
 

@@ -20,4 +20,4 @@ const webChat = (io) => io.on('connection', async (socket) => {
   socket.on('disconnect', () => webChatController.disconnectUser(id, io));
 });
 
-module.exports = webChat;
+module.exports = { webChat };

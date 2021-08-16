@@ -49,4 +49,5 @@ module.exports = {
   saveMessage,
   getSavedMessages,
   getUserList,
+  connectedUsers,
 };

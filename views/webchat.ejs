@@ -18,10 +18,14 @@
       <p id='greetings'></p>
     </div>
     <div class='columns big-container'>
+
       <!-- Aqui fica a lista de usuários -->
       <div class='column is-one-fifth'>
         <p class='sub-title is-size-6 is-center'>Online users</p>
-        <ul id='usersList'></ul>
+        <ul id='usersList'><% users.forEach((user) => {%>
+          <li data-testId='user-online'><%= user.nickname || user.id%></li> 
+        <% })%>
+        </ul>
       </div>
 
       <!-- Aqui ficam as mensagems -->
