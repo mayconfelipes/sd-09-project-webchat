@@ -70,7 +70,8 @@ const setUsersOnline = (usersOnline) => {
   });
 };
 
-window.onbeforeunload = () => {
+window.onbeforeunload = (e) => {
+  e.preventDefault();
   socket.disconnect();
 };
 
