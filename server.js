@@ -23,6 +23,8 @@ const chatModel = require('./models/chat');
 io.on('connection', (socket) => {
   const id = crypto.randomBytes(8).toString('hex');
   // connectedUsers.push(id);
+  // console.log(connectedUsers);
+  // io.emit('newUser', { connectedUsers });
   io.emit('newUser', { id });
   socket.on('message', async ({ chatMessage, nickname }) => {
     const date = new Date();
@@ -32,7 +34,11 @@ io.on('connection', (socket) => {
     await chatModel.postMessage({ chatMessage, timeStamp: finalTime, nickname });
     io.emit('message', finalMessage);
   });
-  // socket.on('newNickname',({newNickname, oldNickname}))
+  // socket.on('newNickname', ({ newNickname, oldNickname }) => {
+  //   const index = connectedUsers.findIndex((nick) => nick === oldNickname);
+  //   connectedUsers.splice(index, 1, newNickname);
+  //   io.emit('users', { connectedUsers });
+  // });
 });
 // teste
 app.use(cors());

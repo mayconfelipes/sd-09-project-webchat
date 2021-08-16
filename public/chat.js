@@ -16,8 +16,9 @@ sendButton.addEventListener('click', (e) => {
 
 nicknameButton.addEventListener('click', (e) => {
   e.preventDefault();
+  // socket.emit('newNickname', { newNickname: inputNickname.value, 
+  //   oldNickname: usersUl.firstChild.innerText });
   usersUl.firstChild.innerText = inputNickname.value;
-  socket.emit('nickname', { nickname: inputNickname.value });
   inputNickname.value = '';
   return false;
 });
@@ -35,6 +36,17 @@ const createUser = (id) => {
   li.setAttribute('data-testid', 'online-user'); 
   usersUl.prepend(li);
 };
+// const populateUsers = (array) => {
+//   usersUl.innerHTML = null;
+//   console.log('passou ṔASSOU');
+//   array.forEach((id) => {
+//     const li = document.createElement('li');
+//     li.innerText = id;
+//     li.setAttribute('data-testid', 'online-user');
+//     usersUl.prepend(li);
+//   });
+// };
 
 socket.on('message', (message) => createMessage(message));
+// socket.on('newUser', ({ connectedUsers }) => populateUsers(connectedUsers));
 socket.on('newUser', ({ id }) => createUser(id));
