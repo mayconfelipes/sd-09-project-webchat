@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .chat-field {
+    display: flex;
+    height: 100vh;
+    margin: auto;
+    width: 60%;
+    border: 2px solid #8F9DA6;
+    border-radius: 10px;
+    background-color: #D9D9D9;
+  }
+
+  .users {
+    border-right: 1px solid #8F9DA6;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+  }
+
+  .user-infos {
+    display: flex;
+    flex-direction: column;
+    height: 40px;
+    border-bottom: 1px solid #8F9DA6;
+    border-radius: 5px;
+    background-color: inherit;
+  }
+
+  .chat {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 100%;
+    position: relative;
+    padding: 15px;
+    }
+
+  .write-message {
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+  }
+
+  #text-area {
+    width: 80%;
+    font-size: 17px;
+    border: none;
+    margin: 10px;
+  }
+
+  #sent {
+    height: 30px;
+    border: 1px solid #66CAF2;
+    border-radius: 5px;
+    background-color: #99D9F2;
+    color: black;
+    margin-left: 10px;
+    width: 10%;
+  }
+
+  textarea:focus, input:focus, select:focus {
+    box-shadow: 0 0 0 0;
+    border: 0 none;
+    outline: 0;
+} 
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.min.js"></script>
+</head>
+<body>
+<div>
+  <div class="chat-field">
+    <div class="users" id="users">
+    </div>
+    <div class="chat" id="chat">
+      <div class="write-message">
+        <textarea type="text" placeholder="Digite uma mensagem..." data-testid="message-box" id="text-area"></textarea>
+        <button type="button" id="sent">Enviar</button>
+    </div>
+  </div>
+</div>
+</div>
+<script type="text/javascript">
+  const socket = io();
+  let userId = '';
+
+  const buttonSent = document.getElementById('sent');
+  const textArea = document.getElementById('text-area');
+  const chat = document.getElementById('chat');
+  const usersArea = document.getElementById('users');
+
+  const createUsers = (users) => {
+    usersArea.innerHTML = '';
+    for (let index = 0; index <users.length; index += 1) {
+      const userDiv = document.createElement('div');
+      const name = document.createElement('p');
+      const status = document.createElement('p');
+      userDiv.className = 'user-infos';
+      userDiv.id = users[index]._id;
+      name.innerHTML = users[index].nickname;
+      name.setAttribute('data-testid', 'online-user');
+      status.innerHTML = users[index].status;
+      status.style.color = 'green';
+      userDiv.appendChild(name);
+      userDiv.appendChild(status);
+      usersArea.appendChild(userDiv)
+    }
+  }
+
+  socket.on('userId', (id, users) => {
+    userId = id;
+    createUsers(users);
+    console.log(users);
+    console.log(userId);  
+  });
+
+  socket.on('refreshUsers', (users) => {
+    createUsers(users);
+    console.log(users, 'no refresh');
+    console.log(userId);  
+  });
+
+  socket.on('message', (message) => {
+    const chatMessage = document.createElement('p');
+    chatMessage.innerHTML = message;
+    chat.appendChild(chatMessage)
+  });
+
+  const sentMessage = (e) => {
+    if(e.which == 13 || (e.type === 'click' && e.target.id === 'sent')){
+      console.log(e.witch);
+      socket.emit('message', { nickname: userId, chatMessage: textArea.value });
+      textArea.value = '';
+    }
+  }
+  
+  buttonSent.addEventListener('click', sentMessage);
+  textArea.addEventListener('keypress', sentMessage);
+
+</script>
+</body>
+</html>
