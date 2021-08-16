@@ -24,9 +24,10 @@
           </form>
         </div>
         <div>
+          <h1 id="my-nickname"></h1>
           <ul id="online-users">
-            <% sockets.forEach((socket) => { %>
-              <li data-testid="online-user"><%= socket.id %></li>
+            <% sockets.forEach(({ trimId }) => { %>
+              <li id="<%= trimId %>" data-testid="online-user"><%= trimId %></li>
             <% }) %>
           </ul>
         </div>
@@ -51,13 +52,14 @@
       const messageForm = document.querySelector('#message-form');
       const messageBox = document.querySelector('#message-box');
       const onlineUsers = document.querySelector('#online-users');
+      const myNickname = document.querySelector('#my-nickname')
       const chat = document.querySelector('#chat');
 
       messageForm.addEventListener('submit', (event) => {
         event.preventDefault();
 
         const chatMessage = messageBox.value;
-        const nickname = nicknameBox.value;
+        const nickname = myNickname.innerText;
 
         messageBox.value = '';
         socket.emit('message', { chatMessage, nickname });
@@ -65,10 +67,26 @@
         return false;
       });
 
+      nicknameForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const target = myNickname.innerText;
+        const newNickname = nicknameBox.value;
+
+        
+        socket.emit('nicknameUpdate', { target, newNickname })
+        myNickname.innerText = newNickname;
+      })
+
+      socket.on('welcome', (id) => {
+        myNickname.innerText = id
+      })
+
       socket.on('login', (id) => {
         const li = document.createElement('li');
 
         li.innerText = id;
+        li.id = id;
         onlineUsers.appendChild(li);
       })
 
@@ -78,6 +96,12 @@
         li.innerText = message;
         li.setAttribute('data-testid', 'message');
         chat.appendChild(li);
+      });
+
+      socket.on('nicknameUpdate', ({ target, newNickname }) => {
+        const elementToBeUpdated = document.querySelector(`#${target}`);
+
+        elementToBeUpdated.innerText = newNickname;
       });
     </script>
   </body>

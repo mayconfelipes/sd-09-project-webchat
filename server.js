@@ -12,6 +12,11 @@ const app = require('express')();
 const server = require('http').createServer(app);
 
 const sockets = [];
+const serializeId = (id) => {
+  const trimId = id.slice(0, 16);
+  
+  return trimId;
+};
 
 const io = require('socket.io')(server, {
   cors: {
@@ -33,17 +38,25 @@ app.use(
 );
 
 io.on('connection', (socket) => {
-  sockets.push(socket);
+  const trimId = serializeId(socket.id);
+  const socketWithTrimId = { ...socket, trimId };
 
-  io.emit('login', socket.id);
+  sockets.push(socketWithTrimId);
 
   socket.on('disconnect', () => {
-    sockets.splice(indexOf(socket), 1);
+    sockets.splice(indexOf(socketWithTrimId), 1);
   });
 
   socket.on('message', ({ chatMessage, nickname }) => {
     io.emit('message', `${moment().format('DD-MM-yyyy LTS')} - ${nickname}: ${chatMessage}`);
   });
+
+  socket.on('nicknameUpdate', ({ target, newNickname }) => {
+    io.emit('nicknameUpdate', { target, newNickname });
+  });
+
+  socket.emit('welcome', trimId);
+  io.emit('login', trimId);
 });
 
 app.get('/', (_req, res) => res.render('chat', { sockets }));
