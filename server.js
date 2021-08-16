@@ -21,7 +21,9 @@ const chatRoutes = require('./controllers/chat');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-require('./sockets/chat')(io);
+const sockets = require('./sockets/chat');
+
+sockets.connect(io);
 
 app.use(chatRoutes);
 

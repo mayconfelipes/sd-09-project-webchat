@@ -5,13 +5,13 @@ let connectedUsers = [];
 
 const createUser = (socket) => ({
   nickname: (socket.id).split('').splice(0, 16).join(''),
+  teste: (socket.id).split('').splice(0, 16).join(''),
   id: socket.id,
   namedNick: null,
 });
 
-module.exports = (io) => io.on('connection', (socket) => {
+const connect = (io) => io.on('connection', (socket) => {
   const user = createUser(socket);
-
   io.emit('connection', { user, connectedUsers, socketId: socket.id });
 
   connectedUsers.push(user);
@@ -29,8 +29,11 @@ module.exports = (io) => io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     const userToRemove = connectedUsers.find(({ id }) => id === socket.id);
-    const otherUsers = connectedUsers.filter(({ id }) => id !== socket.id);
-    connectedUsers = [...otherUsers];
-    socket.broadcast.emit('userDisconnect', userToRemove);
+    connectedUsers = connectedUsers.filter(({ id }) => id !== socket.id);
+    io.emit('userDisconnect', userToRemove);
   });
 });
+
+module.exports = {
+  connect,
+};

@@ -44,7 +44,7 @@ jobs:
         uses: betrybe/jest-evaluator-action@v7
         with:
           repository-test-name: 'betrybe/sd-0x-project-webchat-tests'
-          repository-test-branch: 'main'
+          repository-test-branch: 'riccihenrique-patch-1'
           npm-start: true
         env:
           DB_URL: mongodb://mongodb:27017/webchat
@@ -53,5 +53,5 @@ jobs:
         uses: betrybe/store-evaluation-action@v2
         with:
           evaluation-data: ${{ steps.evaluator.outputs.result }}
-          environment: production
+          environment: staging
           pr-number: ${{ github.event.number }}

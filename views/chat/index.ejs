@@ -42,10 +42,10 @@
   <script>
     const socket = io();
 
-    const createLi = (ulId, innerText, testId, id = '') => {
+    const createLi = (ulId, innerText, testId, id = '', tagId = '') => {
       const ul = document.querySelector(`#${ulId}`);
       const li = document.createElement('li');
-      li.id = innerText;
+      li.id = tagId;
       li.innerHTML = `<span id="${id}" data-testid="${testId}">${innerText}</span>`;
       ul.appendChild(li);
     };
@@ -57,9 +57,9 @@
 
     socket.on('connection', ({ user, connectedUsers, socketId }) => {
       const nick = user.namedNick || user.nickname;
-      createLi('users-ul', nick, 'online-user', socketId);
+      createLi('users-ul', nick, 'online-user', socketId, user.teste);
       if (socketId === socket.id) {
-        connectedUsers.forEach(({ nickname, id, namedNick }) => createLi('users-ul', namedNick || nickname, 'online-user', id));
+        connectedUsers.forEach(({ nickname, id, namedNick, teste }) => createLi('users-ul', namedNick || nickname, 'online-user', id, teste));
       }
     });
 
@@ -83,8 +83,6 @@
       e.preventDefault();
       const userNick = document.querySelector(`#${socket.id}`);
 
-      const dateOptions = { hour12: true };
-
       const messageObj = {
         chatMessage: messageInput.value,
         nickname: userNick ? userNick.innerText : (socket.id).split('').splice(0, 16).join(''),
@@ -96,9 +94,10 @@
 
     socket.on('message', (message) => createLi('messages-ul', message, 'message'));
 
-    socket.on('userDisconnect', ({ nickname }) => {
+    socket.on('userDisconnect', ({ teste }) => {
+      console.log(teste);
       const userUl = document.querySelector('#users-ul');
-      const li = document.getElementById(nickname);
+      const li = document.getElementById(teste);
       userUl.removeChild(li);
     });
 
