@@ -27,6 +27,7 @@ const createOnline = (user) => {
   const li = document.createElement('li');
   li.innerText = user;
   li.setAttribute('data-testid', 'online-user');
+  li.className = 'users';
   list.appendChild(li);
 };
 
@@ -47,8 +48,10 @@ sendMessage.addEventListener('click', () => {
 
 changeNickname.addEventListener('click', () => {
   const newNickname = document.querySelector('#inputNickname').value;
-  nickname = newNickname;
   socket.emit('changeNickname', { newNickname, nickname });
+  nickname = newNickname;
+  const users = document.querySelector('.users');
+  users[0].innerText = newNickname;
 });
 
 socket.on('message', (message) => createMessage(message));
