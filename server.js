@@ -21,9 +21,9 @@ const io = require('socket.io')(httpServer, {
 const messagesController = require('./controllers/messages');
 
 app.use(express.static(path.join(__dirname, '/view')));
-app.set('view engine', 'ejs');
+// app.set('view engine', 'ejs');
 
-app.set('views', './view');
+// app.set('views', './view');
 
 require('./sockets/chat')(io);
 
