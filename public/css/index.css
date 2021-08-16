@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+body {
+  color: grey;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 .chat-grid {
   display: grid;
   gap: 20px;
@@ -80,4 +85,10 @@
   border: 2px solid grey;
   border-radius: 20px;
   padding: 10px;
+}
+
+li::marker {
+  content: ">>  ";
+  font-weight: bold;
+  color: grey;
 }

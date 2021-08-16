@@ -1,13 +1,14 @@
 const socket = window.io();
 
 const form = document.querySelector('.send-message-form');
-const inputMessage = document.querySelector('send-message-input');
+const inputMessage = document.querySelector('.send-message-input');
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
+  console.log('clicado');
   const chatMessage = inputMessage.value;
   const nickname = socket.id;
-  socket.emit('clientMessage', { chatMessage, nickname });
+  socket.emit('message', { chatMessage, nickname });
   inputMessage.value = '';
   return false;
 });
