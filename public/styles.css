@@ -37,8 +37,8 @@ input {
 button {
   background: #069;
   color: #FFF;
-  font-weight: bold;
   font-size: 14px;
+  font-weight: bold;
   height: 50px;
   line-height: 50px;
   text-align: center;
@@ -74,14 +74,14 @@ button {
   width: 80%;
 }
 
-.botom-itens{
+.botom-itens {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   width: 72%;
 }
 
-.top-itens{
+.top-itens {
   align-self: flex-start;
   display: flex;
   flex-direction: row;
