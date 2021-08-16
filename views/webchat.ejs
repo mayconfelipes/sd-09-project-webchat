@@ -17,23 +17,24 @@
       <button id='changeNickname' data-testid='nickname-button'>mudar nickname</button>
       <p id='greetings'></p>
     </div>
-    <!-- Aqui fica a lista de usuários -->
-    <container class=container>
-      <p>Online users</p>
-      <ul id='usersList'></ul>
-    </container>
+    <div class='columns big-container'>
+      <!-- Aqui fica a lista de usuários -->
+      <div class='column is-one-fifth'>
+        <p class='sub-title is-size-6 is-center'>Online users</p>
+        <ul id='usersList'></ul>
+      </div>
 
-    <!-- Aqui ficam as mensagems -->
-    <container class='container center'>
-      <ul id='messagesList'></ul>
-    </container>
-
+      <!-- Aqui ficam as mensagems -->
+      <div class='center column message-container'>
+        <ul id='messagesList'></ul>
+      </div>
+    </div>
     <!-- Aqui fica o layout de escrever/mandar mensagens -->
     <footer class='center footer'>
-      <input 
-        id='inputMessage' 
-        type='text' 
-        class='input is-info is-rounded' 
+      <input
+        id='inputMessage'
+        type='text'
+        class='input is-info is-rounded'
         placeholder='insira a mensagem aqui'
         data-testid='message-box'
       >
@@ -45,6 +46,7 @@
     <script>
       const socket = io();
       let nickname = '';
+
       socket.on('tempNickname', (tempNickname) => {
         const greetings = document.getElementById('greetings');
         nickname = tempNickname;
@@ -75,8 +77,6 @@
           onlineList.appendChild(newUser);
         });
       });
-
-      socket.emit('usersList');
 
       const messagesList = document.getElementById('messagesList');
 
@@ -112,6 +112,9 @@
         newNickname.value = '';
       });
 
+      window.onload = () => {
+        socket.emit('usersList');
+      };
     </script>
   </body>
 </html>

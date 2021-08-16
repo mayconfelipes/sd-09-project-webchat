@@ -3,3 +3,12 @@
   display: flex;
   justify-content: center;
 }
+
+.message-container {
+  width: 100%;
+  margin: 0;
+}
+
+ul {
+  width: 100%;
+}

@@ -3,11 +3,11 @@ const webChatController = require('../controllers/webChatController');
 const webChat = (io) => io.on('connection', async (socket) => {
   const { id } = socket;
 
+  socket.emit('tempNickname', (id.slice(0, 16)));
+
   const oldMessages = await webChatController.getSavedMessages();
 
   socket.emit('oldMessages', (oldMessages));
-
-  socket.emit('tempNickname', (id.slice(0, 16)));
 
   socket.on('changeNickname', (newNickname) => webChatController
     .changeNickname(newNickname, id, socket, io));
