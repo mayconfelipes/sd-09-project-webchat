@@ -52,3 +52,12 @@ socket.on('message', (msg) => {
   item.textContent = msg;
   messages.appendChild(item);
 });
+
+socket.on('getMessages', (oldMessages) => {
+  oldMessages.forEach(({ message, nickname: nick, timestamp }) => {
+    const item = document.createElement('li');
+    item.setAttribute('data-testid', 'message');
+    item.textContent = `${timestamp} - ${nick}: ${message}`;
+    messages.appendChild(item);
+  });
+});
