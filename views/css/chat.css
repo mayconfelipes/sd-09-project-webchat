@@ -1,11 +1,11 @@
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
-  font: 13px Helvetica, Arial;
+  font: 13px Helvetica, Arial, sans-serif;
 }
 
 .messages {
@@ -19,7 +19,7 @@ body {
   width: 100%;
 }
 
-.messageInput > input:nth-of-type(2) {
+.messageInput > input:nth-of-type( 2 ) {
   flex-grow: 10;
   height: 40px;
   padding: 10px;
