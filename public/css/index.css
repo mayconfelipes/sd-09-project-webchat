@@ -18,7 +18,7 @@ body {
     'area2 area2 area3 area3 area3' 1fr
     'area2 area2 area3 area3 area3' 1fr
     'area4 area4 area4 area4 area4' 1fr
-  / 1fr 1fr 1fr 1fr 1fr;
+    / 1fr 1fr 1fr 1fr 1fr;
   height: 80vh;
   margin: 100px auto;
   width: 80vw;
