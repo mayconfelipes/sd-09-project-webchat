@@ -23,8 +23,16 @@ const changeNickname = document.querySelector('#buttonNickname');
 const usersList = document.querySelector('#onlineList');
 usersList.innerHTML = '';
 
+const createOnline = (user) => {
+  const li = document.createElement('li');
+  li.innerText = user;
+  li.setAttribute('data-testid', 'online-user');
+  usersList.appendChild(li);
+};
+
 const setOnline = () => {
   socket.emit('setOnline', nickname);
+  createOnline(nickname);
 };
 
 setOnline();
@@ -54,16 +62,8 @@ changeNickname.addEventListener('click', () => {
 
 socket.on('message', (message) => createMessage(message));
 
-const createOnline = (user) => {
-  const li = document.createElement('li');
-  li.innerText = user;
-  li.setAttribute('data-testid', 'online-user');
-  usersList.appendChild(li);
-};
-
 const setUsersOnline = (usersOnline) => {
   usersList.innerHTML = '';
-  // createOnline(nickname);
   usersOnline.forEach(({ user }) => {
     if (user !== nickname) {
       createOnline(user);
@@ -73,7 +73,6 @@ const setUsersOnline = (usersOnline) => {
 
 window.onbeforeunload = () => {
   socket.disconnect();
-  usersList.innerHTML = '';
 };
 
 socket.on('usersOnline', (usersOnline) => setUsersOnline(usersOnline));
