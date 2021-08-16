@@ -32,7 +32,6 @@ const createOnline = (user) => {
 
 const setOnline = () => {
   socket.emit('setOnline', nickname);
-  createOnline(nickname);
 };
 
 setOnline();
