@@ -15,7 +15,9 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static(`${__dirname}/public`)); // Configura url publica
 
-require('./sockets/messages')(io); // insere no app script do socket que gerencia mensagens back
+const messages = require('./sockets/messages'); // insere no app script do socket que gerencia mensagens back
+
+messages.messages(io);
 
 // configura rota / para enviar index.html
 app.get('/', controllers.chat.homeView);

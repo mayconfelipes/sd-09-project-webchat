@@ -40,6 +40,11 @@ const createMessage = (message) => {
   messagesUl.appendChild(li);
 };
 
+const cleanUsers = () => {
+  const usersUl = document.querySelector('.users-list');
+  usersUl.innerHTML = '';
+};
+
 const createUser = (nickname) => {
   const usersUl = document.querySelector('.users-list');
   const li = document.createElement('li');
@@ -48,19 +53,16 @@ const createUser = (nickname) => {
   usersUl.appendChild(li);
 };
 
-const updateUser = (oldNickname, newNickname) => {
-  const usersUl = document.querySelector('.users-list');
-  const users = usersUl.querySelectorAll('li');
-  let user = null;
-
-  for (let i = 0; i < users.length; i += 1) {
-    if (users[i].textContent === oldNickname) {
-      user = users[i];
-      break;
-    }
-  }
-
-  user.innerText = newNickname;
+const updateUser = (connections) => {
+  cleanUsers();
+  connections.forEach((item) => {
+    if (item.socketId === socket.id) return createUser(item.nickname);
+    return null;
+  });
+  connections.forEach((item) => {
+    if (item.socketId === socket.id) return null;
+    return createUser(item.nickname);
+  });
 };
 
 socket.on('connect', () => {
@@ -68,7 +70,8 @@ socket.on('connect', () => {
   socket.emit('newConnection', sessionStorage.getItem(socket.id));
 });
 
-socket.on('newConnection', (nickname) => createUser(nickname));
-socket.on('updateNickname', ({ oldNickname, newNickname }) => updateUser(oldNickname, newNickname));
+socket.on('newConnection', (connections) => updateUser(connections));
+
+socket.on('updateNickname', (connections) => updateUser(connections));
 
 socket.on('message', (message) => createMessage(message));

@@ -11,7 +11,9 @@
         <button class="submit-button" type="submit" data-testid="nickname-button">Salvar</button>
       </form>
       <ul class="users-list">
-        
+        <% users.forEach((item) => { %>
+          <li data-testid="online-user"><%= item %></li>
+        <% }) %>
       </ul>
       <ul class="messages-container">
         <% chat.forEach((item) => { %>
