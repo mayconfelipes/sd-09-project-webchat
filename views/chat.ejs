@@ -4,9 +4,50 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js" integrity="sha512-PU5S6BA03fRv1Q5fpwXjg5nlRrgdoguZ74urFInkbABMCENyx5oP3hrDzYMMPh3qdLdknIvrGj3yqZ4JuU7Nag==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>Chatting</title>
   </head>
   <body>
-    <script src="/socket.io/socket.io.js"></script>
+    <form action="" id="regUserForm">
+      <input type="text" id="userInfo" placeholder="Digite seu nome">
+      <button>Entrar</button>
+    </form>
+
+    <ul id="users"></ul>
+
+    <form action="" id="messageForm">
+      <input type="text" id="messageInput" placeholder="Digite algo">
+      <button>Enviar</button>
+    </form>
+
+    <ul id="messages"></ul>
+
+    <script>
+      const socket = io('http://localhost:3000');
+
+      socket.on('connection');
+
+      const form = document.querySelector('#messageForm');
+      const inputMessage = document.querySelector('#messageInput');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        socket.emit('clientMessage', inputMessage.value);
+        inputMessage.value = '';
+        return false;
+      });
+
+      const createMessage = (message) => {
+        const ul = document.querySelector('#messages');
+        const li = document.createElement('li');
+
+        li.innerText = message;
+        ul.appendChild(li);
+      };
+
+      socket.on('clientMessage', (message) => {
+        createMessage(message);
+      })
+    </script>
   </body>
 </html>
