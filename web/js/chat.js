@@ -40,7 +40,7 @@ const createMessage = (message) => {
   return 0;
 };
 
-const addUser = (user) => {
+const addUser = async (user) => {
   const li = document.createElement('li');
   li.setAttribute('data-testid', 'online-user');
   li.className = user;
