@@ -34,7 +34,24 @@ const createMessages = (msg) => {
   const li = document.createElement('li');
   li.innerText = msg;
   li.className = 'list-group-item list-group-item-info';
+  li.setAttribute('data-testid', 'message');
   messagesUl.appendChild(li);
 };
 
+const createAndAppendOnlineUser = (innerText) => {
+  const ul = document.querySelector('#online-user');
+  ul.innerHTML = '';
+  const li = document.createElement('li');
+  li.className = 'list-group-item list-group-item';
+  li.setAttribute('data-testid', 'online-user');
+  li.innerText = innerText;
+  ul.appendChild(li);
+};
+
+const updateUserConnected = (onlineUsers) => {
+  onlineUsers.map(({ randoNickname }) =>
+   createAndAppendOnlineUser(randoNickname));
+};
+
 socket.on('message', (formatedMsg) => createMessages(formatedMsg));
+socket.on('usersConnected', (onlineUsers) => updateUserConnected(onlineUsers));

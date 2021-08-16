@@ -15,29 +15,37 @@
   <div class="container">
     <form class="row g-1 p-2">
       <div class="col-auto">
-        <input id="nickname" type="text" class="form-control" placeholder="Insira seu nickname">
+        <input id="nickname" type="text" class="form-control" placeholder="Insira seu nickname"
+          data-testid="nickname-box">
       </div>
       <div class="col-auto">
-        <button id="save-user" type="button" class="btn btn-outline-success">Salvar</button>
+        <button id="save-user" type="button" class="btn btn-outline-success"
+          data-testid="nickname-button">Salvar</button>
       </div>
     </form>
-  
+
+    <div id="online-users">
+      <h4 class="text-success text-left mb-2">Online</h4>
+      <ul id="online-user"></ul>
+    </div>
+
     <div id="users-list">
       <h4 class="text-secondary text-left">Users</h4>
       <ul id="users" class="list-group"></ul>
     </div>
-  
+
     <div id="messages-list">
       <h4 class="text-secondary text-left">Messages</h4>
       <ul id="messages" class="list-group"></ul>
     </div>
-  
+
     <div class="fixed-bottom input-group">
-      <input id="messageInput" type="text" class="form-control" placeholder="Digite uma nova mensagem">
-      <button id="send-msg" class="btn btn-success" type="button">Enviar</button>
+      <input id="messageInput" type="text" class="form-control" placeholder="Digite uma nova mensagem"
+        data-testid="message-box">
+      <button id="send-msg" class="btn btn-success" type="button" data-testid="send-button">Enviar</button>
     </div>
   </div>
-  
+
   <script src="/socket.io/socket.io.js"></script>
   <script src='./js/chat.js'></script>
 </body>
