@@ -4,13 +4,26 @@
     <title>Socket.IO chat</title>
   </head>
   <body>
-    <h3>Nickname: </h3>
+    <form id='set-nickname'>
+      <input
+        type="text"
+        name="message"
+        placeholder="Choose a Nickname"
+        id="input-nick"
+        data-testid="nickname-box"
+      />
+      <button type="submit" data-testid="nickname-button">Set Nick</button>
+    </form>
+    <label>
+      <h4>Nickname: </h4>
+      <p id="nickname" data-testid="online-user"></p>
+    </label>
     <form id='chat'>
-      <input type="text" name="message" id="message"/>
+      <input type="text" name="message" id="message" data-testid="message-box"/>
       <div>
         <ul id="messages">Messages:</ul>
       </div>
-      <button type="submit">Send</button>
+      <button type="submit" data-testid="send-button">Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chat.js"></script>

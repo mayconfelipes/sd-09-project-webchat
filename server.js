@@ -16,8 +16,6 @@ app.get('/', (_req, res) => {
 io.on('connection', (socket) => {
   const time = formatData();
   socket.on('message', ({ chatMessage, nickname }) => {
-    console.log(nickname.length);
-    console.log(`${time} -${nickname}: ${chatMessage}`);
     io.emit('message', `${time} - ${nickname}: ${chatMessage}`);
   });
 });

@@ -43,6 +43,8 @@ describe('2 - Crie um frontend para que as pessoas interajam com o chat', () => 
     const messageBox = await page.$(`input${dataTestid('message-box')}`);
     const sendButton = await page.$(`button${dataTestid('send-button')}`);
 
+    console.log(messageBox);
+
     expect(messageBox).not.toBeNull();
     expect(sendButton).not.toBeNull();
   });
