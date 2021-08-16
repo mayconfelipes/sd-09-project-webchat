@@ -15,15 +15,8 @@ const createCounter = ((repeat, done) => {
 describe('1 - Crie um back-end para conexão simultânea de clientes e troca de mensagens em chat público', () => {
   const chatMessage = 'We can only see a short distance ahead, but we can see plenty there that needs to be done.';
   const nickname = 'Alan Turing';
-<<<<<<< HEAD
-  
-  let client1;
-  let client2;
-  let client3;
-=======
 
   let clients;
->>>>>>> cd9ccf2df78ea2480b5bff9b558de057b9246539
 
   afterEach(async (done) => {
     const counter = createCounter(clients.length, done);
