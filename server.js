@@ -6,6 +6,14 @@ const cors = require('cors');
 const path = require('path');
 
 const http = require('http').createServer(app);
+const io = require('socket.io')(http, {
+  cors: {
+    origin: 'http://localhost:3000/',
+    methods: ['GET', 'POST'],
+  },
+});
+
+const chatModel = require('./models/chatModel');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -14,20 +22,13 @@ app.use(express.static('public'));
 
 app.use(cors());
 
-const io = require('socket.io')(http, {
-  cors: {
-    origin: 'http://localhost:3000/',
-    methods: ['GET', 'POST'],
-  },
-});
-
-io.on('connection', (socket) => {
-  console.log(`Usuário: ${socket.id}`);
-
-  socket.on('message', (message) => {
-    const time = moment().format('DD-MM-yyyy h:mm:ss A');
-    io.emit('message', `${time} - ${message.nickname}: ${message.chatMessage}`);
+io.on('connection', async (socket) => {
+  socket.on('message', async ({ chatMessage, nickname }) => {
+    const timestamp = moment().format('DD-MM-yyyy h:mm:ss A');
+    await chatModel.setMessages({ message: chatMessage, nickname, timestamp });
+    io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
   });
+  socket.emit('getMessages', await chatModel.getMessages());
 });
 
 app.get('/', (_req, res) => res.render('index'));

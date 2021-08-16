@@ -49,3 +49,12 @@ formUser.addEventListener('submit', (event) => {
 socket.on('message', (message) => {
   createMessage(message);
 });
+
+socket.on('getMessages', (oldMessages) => {
+  oldMessages.forEach(({ message, nickname: nick, timestamp }) => {
+    const li = document.createElement('li');
+    li.setAttribute('data-testid', 'message');
+    li.textContent = `${timestamp} - ${nick}: ${message}`;
+    ulMessage.appendChild(li);
+  });
+});
