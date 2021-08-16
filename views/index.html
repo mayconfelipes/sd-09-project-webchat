@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+  <title>WebChat</title>
+</head>
+<body>
+  <main>
+    <header>
+      <h3 data-testid="online-user" id="nickname"></h3>
+    </header>
+    <div>
+      <ul id="messageList"></ul>
+    </div>
+    <div>
+      message
+      <input type="text" name="message" id="inputMessage" data-testid="message-box">
+      <button data-testid="send-button" id="sendMessage">Enviar</button>
+    </div>
+    <div>
+      nickname
+      <input type="text" name="nickname" id="inputNickname" data-testid="nickname-box">
+      <button data-testid="nickname-button" id="buttonNickname">Enviar</button>
+    </div>
+    <aside>
+      <ul id="onlineList"></ul>
+    </aside>
+  </main>
+</body>
+<script src="./chat.js"></script>
+</html>
