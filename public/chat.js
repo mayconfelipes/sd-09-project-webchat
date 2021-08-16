@@ -1,8 +1,11 @@
 const socket = window.io();
 
-const form = document.querySelector('form');
-const input = document.querySelector('input');
-const ul = document.querySelector('ul');
+const formMessage = document.querySelector('.message-box');
+const inputMessage = document.querySelector('#message-box');
+const inputNickname = document.querySelector('#nickname-box');
+const ulMessage = document.querySelector('#message');
+const formUser = document.querySelector('.nickname-box');
+const user = document.querySelector('#online-user');
 
 // ref: https://www.webtutorial.com.br/funcao-para-gerar-uma-string-aleatoria-random-com-caracteres-especificos-em-javascript/
 const randomString = (tamanho) => {
@@ -13,23 +16,36 @@ const randomString = (tamanho) => {
   }
   return string;
 };
+let nickname = randomString(16);
 
-const createLi = (message) => {
+const createUser = () => {
+  user.innerText = nickname;
+};
+createUser();
+
+const createMessage = (message) => {
   const li = document.createElement('li');
   li.innerText = message;
-  ul.appendChild(li);
+  li.setAttribute('data-testid', 'message');
+  ulMessage.appendChild(li);
 };
 
-form.addEventListener('submit', (event) => {
-  const nickname = randomString(16);
+formMessage.addEventListener('submit', (event) => {
   event.preventDefault();
   socket.emit('message', {
-    chatMessage: input.value,
+    chatMessage: inputMessage.value,
     nickname,
   });
-  input.value = '';
+  inputMessage.value = '';
+});
+
+formUser.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  user.innerText = inputNickname.value;
+  nickname = inputNickname.value;
 });
 
 socket.on('message', (message) => {
-  createLi(message);
+  createMessage(message);
 });
