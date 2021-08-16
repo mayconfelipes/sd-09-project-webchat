@@ -11,15 +11,15 @@
 <body>
   <form id="chat">
     <div class="top-itens">
-    <input type="text" name="username" placeholder="Digite um nick" id="input-nick">
-    <button data-testid="send-button">Salvar</button>
+    <input type="text" name="username" placeholder="Digite um nick" id="input-nick" data-testid="nickname-box">
+    <button data-testid="nickname-button">Salvar</button>
   </div>
     <div class="horizon">
     <div class="nick" id="nicks" data-testid="online-user"></div>
-    <div class="messages" id="mess" data-testid="message-box"></div>
+    <div class="messages" id="mess"></div>
   </div>
   <div class="botom-itens">
-    <input type="text" name="message" placeholder="Digite sua mensagem" id="input-message">
+    <input type="text" name="message" placeholder="Digite sua mensagem" id="input-message" data-testid="message-box">
     <button data-testid="send-button">Enviar</button>
   </div>
   </form>
@@ -46,11 +46,13 @@
     });
 
     socket.on('message', (message)=>{renderMessage(message)})
+    
     socket.on('newnick', (nick)=>{
       const ne = document.createElement('div');
       ne.innerText = nick;
-      localStorage.setItem(`${nick}`, `${nick}`);
-      renderMessage(nicks.appendChild(ne))})
+      //localStorage.setItem(`${nick}`, `${nick}`);
+      nicks.appendChild(ne);
+    })
 
     frm.addEventListener( 'submit', (e)=> {
       e.preventDefault();

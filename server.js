@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
   // gerando nick para o req2
   const geranick = (id) => {
     if (id) { socket.emit('newnick', id.slice(0, 16)); }
-    return false; 
+    return false;
   };  
     
   geranick(socket.id);
