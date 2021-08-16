@@ -1,7 +1,5 @@
 const socket = window.io();
 
-// console.log((Math.random().toString(36).substring(2, 14) + Math.random().toString(36).substring(2, 7)).length);
-
 const formMessages = document.querySelector('#formMessages');
 const formNickname = document.querySelector('#formNickname');
 const inputMessage = document.querySelector('#messageInput');
@@ -14,13 +12,15 @@ const objMessage = {
   nickname: '',
 };
 
+const dataTestId = 'data-testid';
+
 formNickname.addEventListener('submit', (e) => {
   e.preventDefault();
   objMessage.nickname = inputNickName.value;
   socket.emit('nickname', inputNickName.value);
 });
 
-formMessages.addEventListener('submit', (e) => {
+formMessages.addEventListener('submit', async (e) => {
   e.preventDefault();
   objMessage.chatMessage = inputMessage.value;
   socket.emit('message', objMessage);
@@ -32,7 +32,7 @@ const createMessage = (message) => {
   const messagesUl = document.querySelector('#messages');
   const li = document.createElement('li');
   li.innerText = message;
-  li.setAttribute('data-testid', 'message');
+  li.setAttribute(dataTestId, 'message');
   messagesUl.appendChild(li);
 };
 
@@ -48,7 +48,7 @@ const createLiNickname = (nickname, id) => {
   const newLi = document.createElement('li');
   newLi.id = id;
   newLi.innerText = nickname;
-  newLi.setAttribute('data-testid', 'online-user');
+  newLi.setAttribute(dataTestId, 'online-user');
   usersUl.appendChild(newLi);
 };
 
@@ -56,6 +56,18 @@ const insertMyNickname = (nick) => {
   myNickname.innerText = nick;
 };
 
+const loadLastMessages = (messages) => {
+  const messagesUl = document.querySelector('#messages');
+  messages.forEach(({ nickname, timestamp, message }) => {
+    const li = document.createElement('li');
+    const lastMessage = `${timestamp} - ${nickname}: ${message}`;
+    li.innerText = lastMessage;
+    li.setAttribute(dataTestId, 'message');
+    messagesUl.appendChild(li);
+  });
+};
+
 socket.on('message', (message) => createMessage(message));
 socket.on('myNickname', (nick) => insertMyNickname(nick));
 socket.on('nickname', ({ nickname, id }) => createLiNickname(nickname, id));
+socket.on('getMessages', ({ messages }) => loadLastMessages(messages));
