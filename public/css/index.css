@@ -10,15 +10,14 @@ body {
 .chat-grid {
   display: grid;
   gap: 20px;
-  grid-template:
-  'area1 area1 area3 area3 area3' 1fr
-  'area2 area2 area3 area3 area3' 1fr
-  'area2 area2 area3 area3 area3' 1fr
-  'area2 area2 area3 area3 area3' 1fr
-  'area2 area2 area3 area3 area3' 1fr
-  'area2 area2 area3 area3 area3' 1fr
-  'area2 area2 area3 area3 area3' 1fr
-  'area4 area4 area4 area4 area4' 1fr
+  grid-template: 'area1 area1 area3 area3 area3' 1fr
+    'area2 area2 area3 area3 area3' 1fr
+    'area2 area2 area3 area3 area3' 1fr
+    'area2 area2 area3 area3 area3' 1fr
+    'area2 area2 area3 area3 area3' 1fr
+    'area2 area2 area3 area3 area3' 1fr
+    'area2 area2 area3 area3 area3' 1fr
+    'area4 area4 area4 area4 area4' 1fr
   / 1fr 1fr 1fr 1fr 1fr;
   height: 80vh;
   margin: 100px auto;
@@ -88,6 +87,6 @@ body {
 
 li::marker {
   color: grey;
-  content: ">>  ";
+  content: '>>  ';
   font-weight: 700;
 }
