@@ -1,9 +1,13 @@
+const models = require('../models');
+
 const messages = (io) => {
   io.on('connection', (socket) => {
-    socket.on('message', ({ chatMessage, nickname }) => {
-      const data = new Date();
-      const formatedDate = `${data.getDate()}-${data.getMonth()}-${data.getFullYear()}`;
-      const formatedHour = `${data.getHours()}:${data.getMinutes()}:${data.getSeconds()}`;
+    socket.on('message', async ({ chatMessage, nickname }) => {
+      const date = new Date();
+      const formatedDate = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+      const formatedHour = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+      const timestamp = `${formatedDate} ${formatedHour}`;
+      await models.chat.postMessage(chatMessage, nickname, timestamp);
       io.emit('message', `${formatedDate} ${formatedHour} - ${nickname}: ${chatMessage}`);
     });
 

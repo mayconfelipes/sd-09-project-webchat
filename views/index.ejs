@@ -11,10 +11,12 @@
         <button class="submit-button" type="submit" data-testid="nickname-button">Salvar</button>
       </form>
       <ul class="users-list">
-
+        
       </ul>
       <ul class="messages-container">
-
+        <% chat.forEach((item) => { %>
+          <li><%= `${item.timestamp} - ${item.nickname}: ${item.message}` %></li>
+        <% }) %>
       </ul>
       <form class="send-message-form">
         <input type="text" name="send" id="send" class="send-message-input" placeholder="Escreva sua mensagem" data-testid="message-box">
