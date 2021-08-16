@@ -52,6 +52,16 @@ socket.on('message', (message) => {
   messageList.appendChild(li);
 });
 
+socket.on('newConnection', (msgList) => {
+  const messageList = document.querySelector('.message-list');
+  msgList.forEach((message) => {
+    const li = document.createElement('li');
+    li.setAttribute('data-testid', 'message');
+    li.innerHTML = `${message.timestamp} - ${message.nickname}: ${message.chatMessage}`;
+    messageList.appendChild(li);
+  });
+});
+
 window.onload = function onload() {
   createRandomNickname();
 };
