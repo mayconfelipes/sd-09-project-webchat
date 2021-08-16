@@ -20,10 +20,10 @@ const connect = (io) => io.on('connection', (socket) => {
     io.emit('newNick', { nickname, socketId });
   });
 
-  socket.on('message', async ({ chatMessage, nickname }) => {
+  socket.on('message', ({ chatMessage, nickname }) => {
     const date = moment().format('DD-MM-YYYY hh:mm:ss A');
-    await chatModel.addMessage({ message: chatMessage, nickname, timestamp: date });
     io.emit('message', `${date} - ${nickname}: ${chatMessage}`);
+    chatModel.addMessage({ message: chatMessage, nickname, timestamp: date });
   });
 
   socket.on('disconnect', () => {
