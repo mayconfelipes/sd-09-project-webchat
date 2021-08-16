@@ -16,17 +16,23 @@ const io = require('socket.io')(http, {
 });
 
 app.use(cors());
+const chatController = require('./controller/chatController');
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   console.log(`${socket.id} se conectou`);
   
+  const chatHistory = await chatController.getAll();
+  chatHistory.forEach(({ timestamp, nickname, message }) => {
+    socket.emit('message', `${timestamp} - ${nickname}: ${message}`);
+  });
   socket.emit('newConnection', 'Seja bem vindo ao Trybe Webchat');
   socket.on('disconnect', () => console.log(`${socket.id} se desconectou`));
-  socket.on('message', ({ chatMessage, nickname }) => {
+  socket.on('message', async ({ chatMessage, nickname }) => {
     const now = new Date();
     const time = moment(now).format('DD-MM-YYYY HH:MM');
-    const testmessage = `${time} - ${nickname}: ${chatMessage}`;
-    io.emit('message', testmessage);
+    const newMessage = `${time} - ${nickname}: ${chatMessage}`;
+    io.emit('message', newMessage);
+    await chatController.saveMessage(chatMessage, nickname, time);
   });
 });
 

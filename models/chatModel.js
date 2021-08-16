@@ -6,15 +6,12 @@ const getMessages = () => {
   return messages;
 };
 
-const saveMessage = (message) => {
-  const { content, user } = message;
-  return connection()
+const saveMessage = (chatMessage, nickname, timestamp) => connection()
     .then((db) => db.collection('messages').insertOne({
-      content,
-      user,
-      timestamp: new Date(),
-    })).ops[0];
-};
+      message: chatMessage,
+      nickname,
+      timestamp,
+    }));
 
 module.exports = {
   getMessages,

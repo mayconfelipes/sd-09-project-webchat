@@ -20,6 +20,7 @@ const getRandomString = (length) => {
 
 const newNickName = getRandomString(16);
 localStorage.setItem('nickname', newNickName);
+userNameField.innerText = `${newNickName}`;
 
 messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -40,11 +41,11 @@ userForm.addEventListener('submit', (e) => {
   return false;
 });
 
-socket.on('newConnection', () => {
-  // e.preventDefault();
-  const storeNickname = localStorage.getItem('nickname');
-  userNameField.innerText = `${storeNickname}`;
-});
+// socket.on('newConnection', (e) => {
+//   e.preventDefault();
+//   const storeNickname = localStorage.getItem('nickname');
+//   userNameField.innerText = `${storeNickname}`;
+// });
 
 socket.on('message', (message) => {
   const incomingMessage = document.createElement('li');
