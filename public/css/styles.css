@@ -26,9 +26,9 @@
 
 .inputNickname {
   border: solid red;
-  padding: 20px;
-  font-size: 30px;
   flex: 1;
+  font-size: 30px;
+  padding: 20px;
 }
 
 .btnSave {

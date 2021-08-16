@@ -10,13 +10,16 @@
         <div class="containerLogin">
           <form class="formUserLogin" action="">
             <input
+              data-testid="nickname-box"
               id="input-nickname"
               class="inputNickname"
               type="text"
               autocomplete="off"
               placeholder="Insira seu nickname"
             />
-            <button class="btnSave">Salvar</button>
+            <button data-testid="nickname-button" class="btnSave">
+              Salvar
+            </button>
           </form>
           <div class="containerUsers">
             <ul id="ulUsers"></ul>
@@ -28,13 +31,16 @@
       </div>
       <form class="formSendMessage">
         <input
+          data-testid="message-box"
           id="input-message"
           class="inputMessage"
           type="text"
           autocomplete="off"
           placeholder="Digite uma nova mensagem aqui"
         />
-        <button id="btn-send" class="btnSend">Enviar</button>
+        <button data-testid="send-button" id="btn-send" class="btnSend">
+          Enviar
+        </button>
       </form>
     </div>
     <script src="/socket.io/socket.io.js"></script>
