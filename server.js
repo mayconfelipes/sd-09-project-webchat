@@ -18,9 +18,16 @@ const server = app.listen(PORT, () => console.log(`Server rodando na porta ${POR
 
 const io = socketIO(server);
 
-io.on('connection', (socket) => {
-    console.log('New connection');
+const onlineUsers = [];
 
+io.on('connection', (socket) => {
+    console.log('New connection', socket);
+    // const newUser = socket.id.slice(4);
+    // onlineUsers.push(newUser);
+    // console.log(onlineUsers);
+
+    socket.emit('newConnection', onlineUsers);
+    
     socket.on('message', ({ chatMessage, nickname }) => {
         const date = getFullDate();
         const messageFormated = formatMessage(date, nickname, chatMessage);

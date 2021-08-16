@@ -1,8 +1,3 @@
-const { genereteNick } = require('../utils');
-
-const chatController = (_req, res) => {
-    const nickName = genereteNick();
-    return res.render('chat', { nickName });
-};
+const chatController = (_req, res) => res.render('chat');
 
 module.exports = { chatController };

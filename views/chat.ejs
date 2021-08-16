@@ -14,9 +14,13 @@
         <button type="button" id="btn-save" data-testid="nickname-button">Salvar</button>
     </div>
     <div class="main">
-        <h3>Online</h3>
-        <p data-testid="online-user" id="userOnline"><%=nickName%></p>
-        <div id="chat"></div>
+        <div id="online">
+            <h3>Online</h3>
+            <!-- <p data-testid="online-user" id="userOnline">nickName</p> -->
+        </div>
+        <div id="chat">
+            <h3>Chat</h3>
+        </div>
     </div>
     <div class="msg">
         <input type="text" id="input-msg" data-testid="message-box">
@@ -61,6 +65,14 @@
             inputMsg.value = '';
         })
 
+        socket.on('newConnection', (users) => {
+            const online = document.querySelector('#online')
+            users.forEach(user => {
+                const p = document.createElement('p');
+                p.innerText = user;
+                online.appendChild(p)
+            });
+        })
 
         btnSendMessage.addEventListener('click', sendNewMessage);
         btnSave.addEventListener('click', saveNewNick);
