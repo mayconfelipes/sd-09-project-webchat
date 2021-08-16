@@ -1,4 +1,5 @@
 const usersList = {};
+const crypto = require('crypto');
 
 const createDate = () => {
   const date = new Date();
@@ -20,14 +21,14 @@ const sendUsersList = (socket, io) => {
   socket.on('newUser', (newUser) => {
     usersList[socket.id] = newUser;
 
-    io.emit('updateUsers', usersList);
+    io.emit('updateUsers', { usersList, name: usersList[socket.id] });
   });
 };
 
 const removeUser = (socket, io) => {
   socket.on('disconnect', () => {
     delete usersList[socket.id];
-    io.emit('updateUsers', usersList);
+    io.emit('updateUsers', { usersList });
   });
 };
 
@@ -39,10 +40,10 @@ const sendNewMessage = (socket, io) => {
 };
 
 const setInitailNick = (socket, io) => {
-  socket.on('randomNick', (nick) => {
-    usersList[socket.id] = nick;
+  socket.on('randomNick', () => {
+    usersList[socket.id] = crypto.randomBytes(20).toString('hex').substr(0, 16);
 
-    io.emit('updateUsers', usersList);
+    io.emit('updateUsers', { usersList, name: usersList[socket.id] });
   });
 };
 

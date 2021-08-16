@@ -3,20 +3,22 @@ const socket = window.io();
 const addNewUserBtn = document.querySelector('.newUserBtn');
 const sendBtn = document.querySelector('.sendBtn');
 
-const randomNick = Math.random().toString(15).substr(-20);
+let nickname = '';
 
-socket.emit('randomNick', randomNick);
+socket.emit('randomNick');
 
 const createNewUser = (userName) => {
   const newUser = document.createElement('li');
   newUser.className = 'user';
   newUser.innerHTML = userName;
+  newUser.setAttribute('data-testid', 'online-user');
   return newUser;
 };
 
 const createNewMessage = (message) => {
   const messageElement = document.createElement('li');
   messageElement.innerHTML = message;
+  messageElement.setAttribute('data-testid', 'message');
   return messageElement;
 };
 
@@ -30,9 +32,12 @@ socket.on('onlineUser', (usersList) => {
 addNewUserBtn.addEventListener('click', () => {
   const userInput = document.querySelector('.newUserInput');
   socket.emit('newUser', userInput.value);
+  userInput.value = '';
 });
 
-socket.on('updateUsers', (usersList) => {
+socket.on('updateUsers', ({ usersList, name }) => {
+  nickname = name;
+  console.log(name);
   const usersUl = document.querySelector('.usersList');
   usersUl.innerHTML = '';
   Object.values(usersList).forEach((user) => {
@@ -44,7 +49,6 @@ socket.on('updateUsers', (usersList) => {
 sendBtn.addEventListener('click', () => {
   const inputMessage = document.querySelector('.messageInput');
   const chatMessage = inputMessage.value;
-  const nickname = socket.id;
   socket.emit('message', { chatMessage, nickname });
   inputMessage.value = '';
 });

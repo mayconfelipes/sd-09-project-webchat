@@ -15,10 +15,12 @@
     <input
       type="text"
       class="newUserInput"
+      data-testid="nickname-box"
     >
     <button
       type="button"
       class="newUserBtn"
+      data-testid="nickname-button"
     >
       Insira seu nome
     </button>
@@ -31,8 +33,8 @@
     </ul>
   </section>
   <div>
-    <input type="text" class="messageInput">
-    <button type="submit" class="sendBtn" >Enviar</button>
+    <input type="text" class="messageInput" data-testid="message-box">
+    <button type="submit" class="sendBtn" data-testid="send-button">Enviar</button>
   </div>
   <script src='/socket.io/socket.io.js'></script>
   <script src='./js/client.js'></script>
