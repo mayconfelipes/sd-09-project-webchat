@@ -63,9 +63,10 @@ const createOnline = (user) => {
 
 const setUsersOnline = (usersOnline) => {
   usersList.innerHTML = '';
-  const filterUsers = usersOnline.filter((user, index) => usersOnline.indexOf(user) === index);
-  filterUsers.forEach(({ user }) => {
-    createOnline(user);
+  usersOnline.forEach(({ user }) => {
+    if (user !== nickname) {
+      createOnline(user);
+    }
   });
 };
 
