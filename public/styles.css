@@ -1,6 +1,6 @@
-html, body {
+html , body {
   background: rgba(207, 18, 75, 0.411);
-  background-image: url(chat);
+  background-image: url("chat.png");
   background-size: cover;
   height: 100%;
 }
@@ -9,8 +9,9 @@ html, body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-} 
+}
  */
+
 #chat {
   align-items: center;
   display: flex;
@@ -26,17 +27,18 @@ input {
   padding: 0 20px;
   width: 72%;
 }
+
 #input-nick {
   border: 1px solid #ddd;
   font-size: 14px;
   height: 50px;
   width: 70%;
-  
+
 }
 
 button {
   background: #069;
-  color: #fff;
+  color: white;
   font-size: 14px;
   font-weight: 2;
   height: 50px;
@@ -59,7 +61,7 @@ button {
 .nick {
   background: rgba(100, 132, 238, 0.781);
   border: 1px solid #ddd;
-  font-weight: bold;
+  font-weight: 900;
   height: 300px;
   margin: 20px 0;
   overflow-y: auto;
@@ -87,7 +89,7 @@ button {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 0px;
+  margin-bottom: 1px;
   margin-left: 10%;
   width: 70%;
 }
