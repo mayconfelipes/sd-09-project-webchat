@@ -15,7 +15,7 @@
       </ul>
       <ul class="messages-container">
         <% chat.forEach((item) => { %>
-          <li><%= `${item.timestamp} - ${item.nickname}: ${item.message}` %></li>
+          <li data-testid="message"><%= `${item.timestamp} - ${item.nickname}: ${item.message}` %></li>
         <% }) %>
       </ul>
       <form class="send-message-form">
