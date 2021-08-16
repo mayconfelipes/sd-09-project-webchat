@@ -8,7 +8,7 @@ const userList = document.querySelector('.user-list');
 const nameInput = document.querySelector('.name-input');
 const nameButton = document.querySelector('.name-button');
 const userName = `User-${Math.random().toString().slice(2, 13)}`;
-let newName = '';
+let newName = userName;
 
 const renderUserList = (array) => {
   userList.innerHTML = '';
@@ -32,16 +32,14 @@ const changeName = (e) => {
     newName = nameInput.value;
     const newNameSchema = { old: userName, new: nameInput.value };
     socket.emit('updateUserName', newNameSchema);
-    socket.on('updateUserName', (list) => {
-      renderUserList(list);
-    });
     nameInput.value = '';
   }
 };
 
 const sendMessage = (e) => {
   e.preventDefault();
-  const obj = { chatMessage: chatInput.value, nickname: userName };
+  console.log(newName);
+  const obj = { chatMessage: chatInput.value, nickname: newName };
   if (chatInput.value) {
     socket.emit('message', obj);
     chatInput.value = '';
@@ -83,4 +81,7 @@ socket.on('userListConnect', (arr) => {
 socket.on('updateListDisconnect', (usersList) => {
   userList.innerHTML = '';
   renderUserList(usersList);
+});
+socket.on('updateUserName', (list) => {
+  renderUserList(list);
 });
