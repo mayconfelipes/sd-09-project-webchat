@@ -23,7 +23,6 @@ const changeNickname = (newNickname, socketId, socket, io) => {
   connectedUsers[userIndex].nickname = newNickname;
   socket.emit('newNickname', (newNickname));
   io.emit('usersList', (connectedUsers));
-  console.log(connectedUsers);
 };
 
 const saveMessage = ({ message, nickname, io }) => {
