@@ -17,6 +17,7 @@ sendButton.addEventListener('click', (e) => {
 nicknameButton.addEventListener('click', (e) => {
   e.preventDefault();
   usersUl.firstChild.innerText = inputNickname.value;
+  socket.emit('nickname', { nickname: inputNickname.value });
   inputNickname.value = '';
   return false;
 });

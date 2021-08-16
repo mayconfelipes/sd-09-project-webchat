@@ -19,8 +19,10 @@ const io = require('socket.io')(socketIoServer, {
 const chatController = require('./controllers/chat');
 const chatModel = require('./models/chat');
 
+// const connectedUsers = [];
 io.on('connection', (socket) => {
   const id = crypto.randomBytes(8).toString('hex');
+  // connectedUsers.push(id);
   io.emit('newUser', { id });
   socket.on('message', async ({ chatMessage, nickname }) => {
     const date = new Date();
@@ -30,6 +32,7 @@ io.on('connection', (socket) => {
     await chatModel.postMessage({ chatMessage, timeStamp: finalTime, nickname });
     io.emit('message', finalMessage);
   });
+  // socket.on('newNickname',({newNickname, oldNickname}))
 });
 // teste
 app.use(cors());
