@@ -42,7 +42,10 @@ socket.on('updateName', (name) => {
 socket.on('updateUsers', (usersList) => {
   const usersUl = document.querySelector('.usersList');
   usersUl.innerHTML = '';
-  Object.values(usersList).forEach((user) => {
+  const firstUser = Object.keys(usersList).find((user) => user === socket.id.toString());
+  const users = Object.values(usersList).filter((user) => user !== usersList[firstUser]);
+  const list = [usersList[firstUser], ...users];
+  list.forEach((user) => {
     usersUl.appendChild(createNewUser(user));
   });
 });
