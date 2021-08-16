@@ -6,6 +6,14 @@ const messages = (io) => {
       const formatedHour = `${data.getHours()}:${data.getMinutes()}:${data.getSeconds()}`;
       io.emit('message', `${formatedDate} ${formatedHour} - ${nickname}: ${chatMessage}`);
     });
+
+    socket.on('newConnection', (nickname) => {
+      io.emit('newConnection', nickname);
+    });
+
+    socket.on('updateNickname', ({ oldNickname, newNickname }) => {
+      io.emit('updateNickname', { oldNickname, newNickname });
+    });
   });
 };
 
