@@ -6,40 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webchat</title>
     <link rel="stylesheet" href="./css/chat.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/chat.js"></script>
   </head>
   <body>
-    <ul class="messages"></ul>
-    <form class="messageInput">
-      <input id="nickname" type="text" autocomplete="off" placeholder="Nickname" />
-      <input id="msg-text" type="text" autocomplete="off" />
-      <button id="send-btn" type="button" onclick="sendMsg()">
-        Enviar
-      </button>
-    </form>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-
-      const socket = io();
-      
-      const sendMsg = () => {
-        const inputMsg = document.querySelector('#msg-text');
-        const inputNickname = document.querySelector('#nickname');
-        socket.emit('message', {
-          chatMessage: inputMsg.value,
-          nickname: inputNickname.value,
-        });
-        inputMsg.value = '';
-      };
-
-      const createMsg = (msg) => {
-        const ul = document.querySelector('.messages');
-        const li = document.createElement('li');
-        li.innerText = msg;
-        ul.appendChild(li);
-      };
-
-      socket.on('message', (msg) => createMsg(msg));
-
-    </script>
+    <header>
+      <p>Nickname: <span id="nickname" data-testid="online-user"></span></p>
+      <form>
+        <input
+          id="nickname-input"
+          data-testid="nickname-box"
+          type="text"
+          autocomplete="off"
+          placeholder="Mudar apelido"
+        />
+        <button
+          type="button"
+          id="change-btn"
+          data-testid="nickname-button"
+          onclick="changeNickname()"
+        >
+          Mudar
+        </button>
+      </form>
+    </header>
+    <main>
+      <ul class="messages"></ul>
+      <form class="messageInput">
+        <input id="msg-text" data-testid="message-box" type="text" autocomplete="off" />
+        <button id="send-btn" type="button" data-testid="send-button">
+          Enviar
+        </button>
+      </form>
+    </main>
   </body>
 </html>
