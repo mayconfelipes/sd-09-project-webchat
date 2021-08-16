@@ -27,12 +27,12 @@ body {
   width: 70%;
 }
 
-#form-nickname-button {
+/* #form-nickname-button {
   background: rgb(130, 224, 255);
   cursor: pointer;
   padding: 10px;
   width: 28%;
-}
+} */
 
 #form-message {
   background: black;
@@ -47,7 +47,7 @@ body {
   padding: 10px;
   width: 78%;
 }
-
+#form-nickname-button,
 #form-message-button {
   background: rgb(130, 224, 255);
   cursor: pointer;
