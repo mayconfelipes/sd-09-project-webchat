@@ -7,17 +7,17 @@
       <link rel="stylesheet" href="../css/webChat.css">
   </head>
   <body>
-    <h1 id="title">TRYBE MESSENGER</h1>
-    <fieldset id="nick">
+    <h1 class="title">TRYBE MESSENGER</h1>
+    <fieldset class="nick">
       <span id="user">Welcome to Trybe WebChat! Your nickname is </span>
       <input id="nickInput" type="text" data-testid="nickname-box" placeholder="Change your nickname">
       <button id="nickBtn" data-testid="nickname-button">Submit</button>
     </fieldset>
-    <div id="allContainer">
-      <ul id="usersContainer" class="container">Online:</ul>
-      <ul id="msgContainer" class="container"></ul>
+    <div class="allContainer">
+      <ul id="usersContainer" class="container usersContainer">Online:</ul>
+      <ul id="msgContainer" class="container msgContainer"></ul>
     </div>
-    <fieldset id="msgForm">
+    <fieldset class="msgForm">
       <input id="messageInput" type="text" data-testid="message-box">
       <button id="messageBtn" data-testid="send-button">Send Message</button>
     </fieldset>
