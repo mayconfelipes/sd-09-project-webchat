@@ -7,6 +7,7 @@ const renderMessage = (msg) => $('#messages').append(`<li data-testid="message">
 $('#nickname-button').click(() => {
   nickname = $('#nickname-box').val();
   $('#user').text(nickname);
+  socket.emit('newUser', nickname);
 });
 
 $('form').submit((e) => {
@@ -18,7 +19,14 @@ $('form').submit((e) => {
 socket.on('newConnection', ({ userId, messages }) => {
   nickname = userId;
   messages.forEach((msg) => renderMessage(msg));
-  $('#users').append(`<p data-testid="online-user" id="user">${nickname}</p>`);
+  socket.emit('newUser', nickname);
 });
 
 socket.on('message', (msg) => renderMessage(msg));
+
+socket.on('users', (users) => {
+  $('#users').html('');
+  $('#users').append(`<p data-testid="online-user" id="user">${nickname}</p>`);
+  users.forEach((user) =>
+    (user !== nickname) && $('#users').append(`<p data-testid="online-user">${user}</p>`));
+});

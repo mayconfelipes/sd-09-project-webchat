@@ -16,4 +16,14 @@ module.exports = (io) => io.on('connection', async (socket) => {
     await Message.create({ message, nickname, timestamp });
     io.emit('message', `${timestamp} ${nickname} ${message}`);
   });
+
+  socket.on('newUser', (nickname) => {
+    users[socket.id] = nickname;
+    io.emit('users', Object.values(users));
+  });
+
+  socket.on('disconnect', () => {
+    delete users[socket.id];
+    io.emit('users', Object.values(users));
+  });
 });
