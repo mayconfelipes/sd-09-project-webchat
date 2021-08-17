@@ -39,16 +39,18 @@ const editName = ({ socket, io, nickName: userId }) => {
     io.emit('allUsers', arr);
   });
 };
+
+const getAllUser = async (socket) => {
+  const messages = await chatContRoller.getAllMessages();
+    socket.emit('previousMessage', messages);
+};
 const chatIo = (io) => {
-  io.on('connection', async (socket) => {
+  io.on('connection', (socket) => {
     const nickName = randomstring.generate(16);
     arr.push({ nickName, nameId: nickName });
 
-    const messages = await chatContRoller.getAllMessages();
-    socket.emit('previousMessage', messages);
-
     socket.emit('randomNickName', JSON.stringify(nickName));
-
+    getAllUser(socket);
     allUsers(socket, io);
 
     editName({ socket, io, nickName });
