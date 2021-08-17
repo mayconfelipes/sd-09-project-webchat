@@ -2,6 +2,13 @@
 const express = require('express');
 const path = require('path');
 const { name } = require('faker');
+const moment = require('moment');
+
+moment.updateLocale('en', {
+  longDateFormat: {
+    L: 'DD-MM-YYYY',
+  },
+});
 
 const app = express();
 
@@ -40,8 +47,9 @@ const changeNickname = (socket) => {
 };
 
 const message = (socket) => {
-  socket.on('message', async ({ chatMessage, nickname, currentTime }) => {
-    await messageModel
+  socket.on('message', ({ chatMessage, nickname }) => {
+    const currentTime = moment().format('L LTS');
+    messageModel
       .postMessage({ message: chatMessage, nickname, timestamp: currentTime });
 
     io.emit('message', `${currentTime} - ${nickname}: ${chatMessage}`);
@@ -62,11 +70,21 @@ io.on('connection', async (socket) => {
 
   userList.push({ nickname: newRandomName, userId: `${socket.id}` });
 
-  io.emit('connection', userList);
+  io.emit('connection', { userList, id: socket.id });
+
+  socket.on('sort', (list) => {
+    socket.emit('sort', { userList: list, id: socket.id });
+  });
 
   changeNickname(socket);
 
   message(socket);
+
+  socket.on('disconnect', () => {
+    userList = userList.filter(({ userId }) => userId !== socket.id);
+
+    socket.broadcast.emit('disc', userList);
+  });
 });
 
 app.set('view engine', 'ejs');

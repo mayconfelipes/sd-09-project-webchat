@@ -32,9 +32,23 @@ saveUserButton.addEventListener('click', (e) => {
 
 let updateNickname;
 
-socket.on('connection', (userList) => {
-  addNewUser(userList);
-  if (!updateNickname) updateNickname = userList[userList.length - 1].nickname;
+socket.on('connection', ({ userList: list }) => {
+  socket.emit('sort', list);
+  addNewUser(list);
+  // if (!updateNickname) updateNickname = userList[userList.length - 1].nickname;
+});
+
+socket.on('sort', ({ userList, id }) => {
+  if (userList.length === 1) {
+    updateNickname = userList[0].nickname;
+    return;
+  }
+  const user = userList.find(({ userId }) => userId === id);
+  const teste = userList.filter(({ userId }) => userId !== id);
+  teste.splice(0, 0, user);
+  console.log(teste);
+  addNewUser(teste);
+  if (!updateNickname) updateNickname = userList[0].nickname;
 });
 
 socket.on('nickname', (nickname) => {
@@ -45,29 +59,13 @@ socket.on('replaceUsername', (userList) => {
   addNewUser(userList);
 });
 
-const currentDate = () => {
-  const date = new Date();
-
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  const hour = date.getHours();
-  const minutes = date.getMinutes();
-  const seconds = date.getSeconds();
-
-  return { day, month, year, hour, minutes, seconds };
-};
-
 sendMessageButton.addEventListener('click', (e) => {
   e.preventDefault();
 
   const chatMessage = messageInput.value;
 
-  const { day, month, year, hour, minutes, seconds } = currentDate();
-
   const messageObj = {
     chatMessage,
-    currentTime: `${day}-${month}-${year} ${hour}:${minutes}:${seconds}`,
     nickname: updateNickname,
   };
 
@@ -102,3 +100,4 @@ const refreshMessageList = (updatedMessageList) => {
 
 socket.on('message', addNewMessage);
 socket.on('updateMessageList', refreshMessageList);
+socket.on('disc', addNewUser);
