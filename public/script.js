@@ -47,11 +47,19 @@ socket.on('updateList', (users) => {
   const index = users.indexOf(nickname);
   if (index !== -1) users.splice(index, 1);
   users.unshift(nickname);
+  console.log('users >>>', users)
+  usersArray = users.filter(user => user !== '');
+  console.log('users DEPOIS >>>', usersArray)
 
-  users.forEach((user) => {
-    const userLi = document.createElement('li');
-    userLi.innerHTML = user;
-    userLi.setAttribute('data-testid', 'online-user');
-    usersUl.appendChild(userLi);
+  usersArray.forEach((user) => {
+    console.log('user.nickname')
+    console.log(user)
+    // if(user.nickname) {
+      const userLi = document.createElement('li');
+      userLi.innerHTML = user;
+      userLi.setAttribute('data-testid', 'online-user');
+      usersUl.appendChild(userLi);
+    // }
+    // continue;
   });
 });
