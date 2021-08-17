@@ -12,9 +12,7 @@ const removeUser = (socket) => {
 
 const createUser = async (socket) => {
   const newUser = { socket, nickname: socket.id.slice(0, 16).toString() };
-  // console.log(newUser.nickname, ':::::::::::::::::::::');
-  // console.log(users, ':::::::::::::::::::::');
-  if(newUser.nickname !== '') users.push(newUser);
+  if (newUser.nickname !== '') users.push(newUser);
   return newUser;
 };
 
