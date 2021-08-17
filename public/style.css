@@ -1,0 +1,55 @@
+html , body {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  background: #069;
+  color: #eee;
+  font-size: 14px;
+  font-weight: 700;
+  height: 50px;
+  line-height: 50px;
+  margin-top: 10px;
+  text-align: center;
+  width: 600px;
+}
+
+form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+}
+
+form ul {
+  border: 1px solid #ddd;
+  height: 400px;
+  list-style-type: none;
+  margin: 0;
+  overflow: auto;
+  padding: 0;
+  width: 600px;
+}
+
+form ul li {
+  padding: 5px 10px;
+}
+
+form ul li:nth-child( odd ) {
+  background: #eee;
+}
+
+input {
+  border: 1px solid #ddd;
+  font-size: 14px;
+  height: 50px;
+  padding: 0 20px;
+  width: 600px;
+}

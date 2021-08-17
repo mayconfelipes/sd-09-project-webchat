@@ -5,11 +5,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web Chat</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <script src="socket.io/socket.io.js"></script>
+  <script src="client.js" defer></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <script>
-    const socket = window.io();
-  </script>
+  <section>
+    <strong>ONLINE USERS</strong>
+    <div id="users"></div>
+  </section>
+  <form id="chat">
+    <input type="text" data-testid="nickname-box" id="nickname-box">
+    <button type="button" data-testid="nickname-button" id="nickname-button">set nickname</button>
+    <ul id="messages"></ul>
+    <input type="text" data-testid="message-box" id="message-box">
+    <button type="submit" data-testid="send-button" id="send-button">send message</button>
+  </form>
 </body>
 </html>
