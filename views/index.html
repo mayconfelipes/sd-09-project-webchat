@@ -90,7 +90,7 @@
     cursor: pointer;
   }
 
- input:focus, select:focus {
+  textarea:focus, input:focus, select:focus {
     box-shadow: 0 0 0 0;
     border: 0 none;
     outline: 0;
@@ -160,7 +160,7 @@ h2 {
     <div class="chat-messages-field">
       <div class="chat" id="chat"></div>
       <div class="write-message" id="write-message">
-        <input type="text" placeholder="Digite uma mensagem..."  data-testid="message-box" id="text-area"/>
+        <input type="text" placeholder="Digite uma mensagem..."  data-testid="message-box" id="text-area"></input>
         <button type="button" id="sent" data-testid="send-button">Enviar</button>
     </div>
   </div>
