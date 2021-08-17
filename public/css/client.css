@@ -1,11 +1,17 @@
-#text_area_clients {
-  width: 20%;
-  height: 20%;
-  border: 3px solid black;
+body {
+  margin: 50px;
+  background-color: rgb(48, 46, 46);
+  color: whitesmoke
 }
 
-#text_area_messages {
-  width: 20%;
-  height: 20%;
-  border: 3px solid black;
+
+.container {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  margin: 10px;
+}
+
+.nickNames {
+  margin: 20px;
 }

@@ -8,14 +8,17 @@
   <title>Web Chat</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
+  <link rel="stylesheet" href="css/client.css"></link>
 </head>
 
 <body>
   <form id="chat">
-    <input type="text" id="inputName" data-testid="online-user" name="username" placeholder="Digite seu NickName">
-    <div class="messages" id="messages"></div>
-    <div class="nickNames"></div>
-    <button type="button" id="namesButton" data-testid="nickname-button">Enviar</button>
+    <input type="text" id="inputName" data-testid="nickname-box" name="username" placeholder="Digite seu NickName">
+    <button type="button" id="namesButton" data-testid="nickname-button" onclick=changeNickname()>Salvar</button>
+    <div class="container">
+      <div class="messages" id="messages"></div>
+      <div class="nickNames"></div>
+    </div>
     <input type="text" name="message" data-testid="message-box" placeholder="Digite sua Mensagem">
     <button type="submit" data-testid="send-button">Enviar</button>
   </form>
@@ -32,24 +35,30 @@
 
     const renderNickNames = (username) => {
       $('.nickNames').append(
-        `<div class="message">
-          <strong>${username}</strong>
+        `<div data-testid="message" class="message">
+         <strong data-testid="online-user">${username}</strong>
           </div>`)
     }
 
-    socket.on('previousMessage',  (messages) => {
+    const changeNickname = () => {
+      localStorage.setItem('nickname', getEl('inputName').value)
+    }
+
+    renderNickNames(localStorage.nickname)
+
+    socket.on('previousMessage', (messages) => {
       for (message of messages) {
         renderMessage(message);
       }
     })
 
-    socket.on('previousNames',  (messages) => {
+    socket.on('previousNames', (messages) => {
       for (message of messages) {
         renderNickNames(message);
       }
     })
 
-    socket.on('message',  (message) => {
+    socket.on('message', (message) => {
       renderMessage(message);
     })
 
@@ -57,9 +66,9 @@
       renderNickNames(message);
     })
 
-    $('#chat').submit( (event) => {
+    $('#chat').submit((event) => {
       event.preventDefault();
-      const nickname = $('input[name=username]').val();
+      const nickname = localStorage.nickname;
       const chatMessage = $('input[name=message]').val();
       const messageObject = {
         chatMessage, nickname

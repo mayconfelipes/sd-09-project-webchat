@@ -21,3 +21,4 @@ const getNickName = () => {
 
 const getEl = (id) => document.getElementById(id);
 getEl('inputName').value = getNickName();
+localStorage.setItem('nickname', getNickName());
