@@ -43,13 +43,18 @@ const saveUserOnDb = async (nickName, socketId) => {
 };
 
 const handleWithNewConnection = async (io, socket) => {
-  const nickName = `userId${iD()}`;
-  const id = await saveUserOnDb(nickName, socket.id);
-  const users = await chatModel.findUser();
-  const messages = await chatModel.findMessages();
-  socket.emit('userId', id, nickName, users);
-  io.emit('refreshUsers', users);  
-  io.emit('refreshMessages', messages);
+  try {
+    const nickName = `userId${iD()}`;
+    const id = await saveUserOnDb(nickName, socket.id);
+    const users = await chatModel.findUser();
+    const messages = await chatModel.findMessages();
+    console.log(users);
+    socket.emit('userId', id, nickName, users);
+    socket.broadcast.emit('refreshUsers', users);  
+    io.emit('refreshMessages', messages);
+  } catch (e) {
+    console.log(e.message);
+  }
 };
 
 const handleMessageEvent = async (io, chatMessage, nickname) => {
@@ -63,8 +68,8 @@ const handleMessageEvent = async (io, chatMessage, nickname) => {
 const handleChangeNickname = async (io, socket, userId, newNickname) => {
   await chatModel.updateUser(userId, newNickname);
   const users = await chatModel.findUser();
-  io.emit('refreshUsers', users);
   socket.emit('userId', userId, newNickname, users);
+  socket.broadcast.emit('refreshUsers', users);
 };
 
 const handleWithDisconnectEvent = async (socketId, io) => {

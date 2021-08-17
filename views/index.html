@@ -19,7 +19,7 @@
     width: 70%;
     border: 2px solid #8F9DA6;
     border-radius: 10px;
-    background-color: #D9D9D9;
+    background-color: #B8D9C6;
   }
 
   .users {
@@ -67,8 +67,17 @@
     width: 80%;
     font-size: 17px;
     border: none;
+    border-radius: 5px;
     margin: 10px;
+    font-family: sans-serif;
+    font-size: 15px;
   }
+
+  #text-area::placeholder {
+  color: grey;
+  font-family: sans-serif;
+  font-size: 15px;
+}
 
   #sent {
     height: 30px;
@@ -171,21 +180,24 @@ h2 {
   const buttonChangeNickname = document.getElementById('change-nickname');
   const inputNewNickName = document.getElementById('write-nickname');
 
-  const createUsers = (users) => {
-    usersArea.innerHTML = '';
-    for (let index = 0; index <users.length; index += 1) {
-      const userDiv = document.createElement('div');
+  const createAndAppendUser = (user) => {
+    const userDiv = document.createElement('div');
       const name = document.createElement('p');
       const status = document.createElement('p');
       userDiv.className = 'user-infos';
-      userDiv.id = users[index]._id;
-      name.innerHTML = users[index].nickname;
+      userDiv.id = user._id;
+      name.innerHTML = user.nickname;
       name.setAttribute('data-testid', 'online-user');
-      status.innerHTML = users[index].status;
+      status.innerHTML = user.status;
       status.style.color = 'green';
       userDiv.appendChild(name);
       userDiv.appendChild(status);
       usersArea.appendChild(userDiv)
+  }
+
+  const createUsers = (users) => {
+    for (let index = 0; index <users.length; index += 1) {
+      createAndAppendUser(users[index]);
     }
   }
 
@@ -199,18 +211,28 @@ h2 {
   }
 
   socket.on('userId', (id, nickname, users) => {
+    console.log(id);
+    console.log(users);
     userId = id;
     userNickname = nickname;
     userNickNameTitle.innerHTML = 'Nickname: ' + nickname;
+    const index = users.findIndex((user) => user._id.toString() === id.toString());
+    console.log(users[index]);
+    usersArea.innerHTML = '';
+    createAndAppendUser(users[index]);
+    users.splice(index, 1);
     createUsers(users);
-    console.log(users);
-    console.log(userId);
+    console.log('veio aq');
   });
 
   socket.on('refreshUsers', (users) => {
+    const index = users.findIndex((user) => user._id.toString() === userId.toString());
+    usersArea.innerHTML = '';
+    createAndAppendUser(users[index]);
+    users.splice(index, 1);
     createUsers(users);
     console.log(users, 'no refresh');
-    console.log(userId);  
+    console.log(userId);
   });
 
   socket.on('message', (message) => {
