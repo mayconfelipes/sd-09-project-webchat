@@ -5,6 +5,7 @@ const messages = document.querySelector('#messages');
 const formNickname = document.querySelector('#set-nickname');
 const nickInput = document.querySelector('#input-nick');
 const listUsers = document.querySelector('#user-list');
+const nickField = document.querySelector('#nick-field');
 const datatest = 'data-testid';
 
 const generateNickname = (length) => {
@@ -20,6 +21,7 @@ const generateNickname = (length) => {
 };
 
 let nickname = generateNickname(16);
+nickField.innerText = nickname;
 socket.emit('setNicks', nickname);
 
 form.addEventListener('submit', (e) => {
