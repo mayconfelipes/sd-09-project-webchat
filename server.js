@@ -64,39 +64,38 @@ const saveMessage = async () => {
 
 };
 
-const connection = (socket) => {
-  guest = crypto.randomBytes(8).toString('hex');
-  console.log(`${guest} conectado - ${socket.id}`);
-  guests.push({ guest, socket: socket.id });
-  socket.emit('user', guests, guest);
-  socket.broadcast.emit('users', guests);
-  console.log(guests);
-};
-
-const changeNickname = (socket, nickname) => {
-  const { newNickname, oldNickname } = nickname;
-  guests[findGuest(guests, oldNickname)].guest = newNickname;
-  socket.broadcast.emit('updadeUsers', guests);
+const sendMessage = (message) => {
+  const { nickname, chatMessage } = message;
+  const timestamp = currentTime();
+  const completeMessage = `${timestamp} - ${nickname}: ${chatMessage}`;
+  io.emit('message', completeMessage);
+  saveMessage(chatMessage, nickname, timestamp);
 };
 
 io.on('connection', (socket) => {
-  connection(socket);
-  
+  guest = crypto.randomBytes(8).toString('hex');
+  // console.log(`${guest} conectado - ${socket.id}`);
+  guests.push({ guest, socket: socket.id });
+  socket.emit('user', guests, guest);
+  socket.broadcast.emit('users', guests);
+
   socket.on('message', (message) => {
-    const { nickname, chatMessage } = message;
-    const timestamp = currentTime();
-    const completeMessage = `${timestamp} - ${nickname}: ${chatMessage}`;
-    io.emit('message', completeMessage);
-    saveMessage(chatMessage, nickname, timestamp);
+    sendMessage(message);
   });
+
   socket.on('changeNikname', (nickname) => {
-    changeNickname(nickname);
+    const { newNickname, oldNickname } = nickname;
+    guests[findGuest(guests, oldNickname)].guest = newNickname;
+    socket.broadcast.emit('updadeUsers', guests);
   });
 
   socket.on('disconnect', () => {
     const userIndex = findSocketId(guests, socket.id);
     const userExit = guests[userIndex].guest;
+    // console.log('usuario saiu', socket.id);
+  // console.log(guests);
     guests.splice(userIndex, 1);
+  // console.log(guests, userExit);
     socket.broadcast.emit('exitUser', guests, userExit);
   });
 });
