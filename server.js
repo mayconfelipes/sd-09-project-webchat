@@ -17,7 +17,7 @@ const io = require('socket.io')(http, {
 
 app.use(cors());
 
-const chatController = require('./controller/chat');
+const chatController = require('./controller/webchat');
 
 const currentTime = () => {
   const data = new Date();
@@ -70,33 +70,38 @@ const sendMessage = (message) => {
   const completeMessage = `${timestamp} - ${nickname}: ${chatMessage}`;
   io.emit('message', completeMessage);
   saveMessage(chatMessage, nickname, timestamp);
+  chatController.create({ message: chatMessage, nickname });
+};
+
+const getAll = async () => {
+  const allMessages = await chatController.getAll();
+  io.emit('bdMessages', allMessages);
+  return allMessages;
 };
 
 io.on('connection', (socket) => {
   guest = crypto.randomBytes(8).toString('hex');
-  // console.log(`${guest} conectado - ${socket.id}`);
   guests.push({ guest, socket: socket.id });
   socket.emit('user', guests, guest);
   socket.broadcast.emit('users', guests);
-
-  socket.on('message', (message) => {
-    sendMessage(message);
-  });
+  // io.emit('users', guests);
+  getAll();
+  
+  socket.on('message', (message) => sendMessage(message));
 
   socket.on('changeNikname', (nickname) => {
     const { newNickname, oldNickname } = nickname;
     guests[findGuest(guests, oldNickname)].guest = newNickname;
     socket.broadcast.emit('updadeUsers', guests);
+    // io.emit('updadeUsers', guests);
   });
 
   socket.on('disconnect', () => {
     const userIndex = findSocketId(guests, socket.id);
     const userExit = guests[userIndex].guest;
-    // console.log('usuario saiu', socket.id);
-  // console.log(guests);
     guests.splice(userIndex, 1);
-  // console.log(guests, userExit);
     socket.broadcast.emit('exitUser', guests, userExit);
+    // io.emit('exitUser', guests, userExit);
   });
 });
 

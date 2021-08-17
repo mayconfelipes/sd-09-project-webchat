@@ -36,7 +36,6 @@
         let userName;
 
         const socket = io();
-        // const labelUser = document.getElementById('user');
 
         const createLiUser = (user, testId) => {
             const ulGests = document.getElementById('guests');
@@ -66,32 +65,29 @@
             users.forEach((user) => {
                 if (user.guest !== userName) {
                     createLiUser(user.guest, false);
-                    // const li = document.createElement('li');
-                    // const liGuest = document.createTextNode(user.guest);
-                    // li.setAttribute('id', 'usersId')
-                    // li.appendChild(liGuest);
-                    // ulGests.appendChild(li);
                 };
             });
         }
 
-        const displayMessage = (message) => {
+        const displayMessage = (message, test) => {
             const ulMessages = document.getElementById('messages');
             const li = document.createElement('li');
             const liMessages = document.createTextNode(message);
-            li.setAttribute('data-testid', 'message')
+            if (test) {
+                li.setAttribute('data-testid', 'message')
+            }
             li.appendChild(liMessages);
             ulMessages.appendChild(li);
         }
 
         socket.on('user', (users, user) => {
-            displayMessage(`Seja bem vindo ${user}`)
+            displayMessage(`Seja bem vindo ${user}`, false)
             userName = user;
             displayUsers(users);
         });
 
         socket.on('users', (users) => {
-            displayMessage(`${users[users.length - 1].guest} entrou`)
+            displayMessage(`${users[users.length - 1].guest} entrou`, false)
             displayUsers(users);
         });
 
@@ -100,7 +96,7 @@
         });
 
         socket.on('exitUser', (users, user) => {
-            displayMessage(`${user} saiu`)
+            displayMessage(`${user} saiu`, false)
             displayUsers(users);
         });
 
@@ -140,7 +136,21 @@
         });
 
         socket.on('message', (message) => {
-            displayMessage(message);
+            displayMessage(message, true);
+        
+        });
+
+        socket.on('bdMessages', (messages) => {
+            messages.forEach((msg) => {
+                const { message, nickname, timestamp } = msg;
+                const timeData = timestamp.split(' ');
+                const data = timeData[0].split('-');
+                const fullTime = `${data[2]}-${data[1]}-${data[0]} ${timeData[1]}`;
+                const completeMessage = `${fullTime} - ${nickname}: ${message}`;
+                displayMessage(completeMessage, true)
+
+            })
+
         
         });
     </script>

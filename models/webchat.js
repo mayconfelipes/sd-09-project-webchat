@@ -2,8 +2,9 @@ const connection = require('./connection');
 
 const create = async (msg) => {
     const { message, nickname, timestamp } = msg;
+
     const newMessage = await connection()
-      .then((db) => db.collection('webchat').insertOne({ message, nickname, timestamp }))
+      .then((db) => db.collection('messages').insertOne({ message, nickname, timestamp }))
       .then((result) => result.ops[0]);
   
     const { _id } = newMessage;
@@ -18,9 +19,11 @@ const create = async (msg) => {
     };
 };
 
-const getAll = () => connection()
-      .then((db) => db.collection('webchat').find().toArray());
+// const getAll = () => connection()
+//       .then((db) => db.collection('webchat').find().toArray());
 
+const getAll = async () => connection().then((db) => db.collection('messages').find().toArray());
+ 
 module.exports = {
   create,
   getAll,
