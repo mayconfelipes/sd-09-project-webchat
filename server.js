@@ -26,14 +26,14 @@ io.on('connection', async (socket) => {
 
   socket.emit('getMessages', await ChatModel.getMessages());
 
-  socket.broadcast.on('setNicks', (newNick) => {
+  socket.on('setNicks', (newNick) => {
     users[socket.id] = newNick;
     io.emit('setNicks', users);
   });
 
   socket.on('disconnect', () => {
     delete users[socket.id];
-    socket.broadcast.emit('disconnectUser', users);
+    io.emit('disconnectUser', users);
   });
 });
 
