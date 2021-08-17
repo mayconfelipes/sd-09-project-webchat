@@ -39,12 +39,13 @@ const createNick = (nick) => {
   user.appendChild(nickname);
 };
 
-const updateNick = ({ nick }) => {
+const updateNick = ({ nick, users }) => {
   userNick = nick;
   const userId = () => (document.querySelector('#userId'));
   if (!userId()) createNick(nick);
   userId().innerHTML = nick;
   nickInput.value = '';
+  listUsers(users);
 };
 
 nickBtn.addEventListener('click', (e) => {
@@ -73,5 +74,6 @@ const removeNickname = (users) => {
 
 socket.on('connected', updateNick);
 socket.on('onlineUsers', listUsers);
+socket.on('updateNick', updateNick);
 socket.on('message', addMessage);
 socket.on('disconnectUser', removeNickname);

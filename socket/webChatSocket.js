@@ -19,7 +19,7 @@ function ioWebChat(io) {
       // aqui a funcao recebe a informacao do emit e chama o model
       const user = onlineUsers.findIndex((u) => u.nickname === userId);
       onlineUsers[user].nickname = newNick;
-      io.emit('onlineUsers', onlineUsers);
+      io.emit('updateNick', { users: onlineUsers, nick: newNick });
     });
 
     socket.on('message', async ({ chatMessage, nickname }) => {
