@@ -15,44 +15,48 @@ const listUsers = (users) => {
   onlineUsers = users;
   usersContainer.innerHTML = '';
   usersContainer.innerText = 'Online:';
-  users.forEach((user) => {
-    const liUser = document.createElement('li');
-    // liUser.setAttribute(DATA_TEST_ID, 'online-user');
-    liUser.innerText = user.nickname;
-    usersContainer.appendChild(liUser);
+  if (userNick !== '') {
+    const liMyUser = document.createElement('li');
+    liMyUser.setAttribute(DATA_TEST_ID, 'online-user');
+    liMyUser.innerText = userNick;
+    usersContainer.appendChild(liMyUser);
+  }
+  onlineUsers.forEach((u) => {
+    if (u.nickname !== userNick) {
+      const liUser = document.createElement('li');
+      liUser.setAttribute(DATA_TEST_ID, 'online-user');
+      liUser.innerText = u.nickname;
+      usersContainer.appendChild(liUser);
+    }
   });
 };
 
-const updateNick = (nick) => {
-  userNick = nick;
+const createNick = (nick) => {
   const user = document.querySelector('#user');
-  const userId = document.querySelector('#userId');
-  if (userId) {
-    user.removeChild(userId);
-    const userIndex = onlineUsers.findIndex((u) => u.nickname === userNick);
-    onlineUsers[userIndex].nickname = nick;
-  }
   const nickname = document.createElement('span');
-  nickname.setAttribute(DATA_TEST_ID, 'online-user');
   nickname.setAttribute('id', 'userId');
   nickname.innerText = nick;
   user.appendChild(nickname);
-  listUsers(onlineUsers);
+};
+
+const updateNick = ({ nick }) => {
+  userNick = nick;
+  const userId = () => (document.querySelector('#userId'));
+  if (!userId()) createNick(nick);
+  userId().innerHTML = nick;
+  nickInput.value = '';
 };
 
 nickBtn.addEventListener('click', (e) => {
   e.preventDefault();
-  socket.emit('updateNick', { defaultNick: userNick, newNick: nickInput.value });
-  updateNick(nickInput.value);
-  nickInput.value = '';
-  return false;
+  socket.emit('updateNick', { newNick: nickInput.value });
+  updateNick({ nick: nickInput.value });
 });
 
 messageBtn.addEventListener('click', (e) => {
   e.preventDefault();
   socket.emit('message', { chatMessage: messageInput.value, nickname: userNick });
   messageInput.value = '';
-  return false;
 });
 
 const addMessage = (message) => {
@@ -62,6 +66,12 @@ const addMessage = (message) => {
   msgContainer.appendChild(msg);
 };
 
-socket.on('connected', ({ userId }) => updateNick(userId));
-socket.on('onlineUsers', (users) => listUsers(users));
-socket.on('message', (message) => addMessage(message));
+const removeNickname = (users) => {
+  userNick = '';
+  listUsers(users);
+};
+
+socket.on('connected', updateNick);
+socket.on('onlineUsers', listUsers);
+socket.on('message', addMessage);
+socket.on('disconnectUser', removeNickname);
