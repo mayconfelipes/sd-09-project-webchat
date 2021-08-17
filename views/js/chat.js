@@ -44,7 +44,11 @@ socket.on('message', (msg) => createMsg(msg));
 window.onload = () => {
   const changeBtn = document.querySelector('#change-btn');
   const sendBtn = document.querySelector('#send-btn');
+
   changeBtn.addEventListener('click', changeNickname);
   sendBtn.addEventListener('click', sendMsg);
+
+  socket.emit('onload');
+
   getNickname();
 };

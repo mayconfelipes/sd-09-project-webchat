@@ -30,6 +30,14 @@ header > input {
   height: 60px;
 }
 
+header > p {
+  font-weight: 700;
+}
+
+header > p > span {
+  font-weight: 400;
+}
+
 .messages {
   list-style-type: none;
   padding: 20px;
@@ -41,16 +49,6 @@ header > input {
   display: flex;
   position: fixed;
   width: 100%;
-}
-
-.messageInput > p {
-  display: block;
-  font-weight: 700;
-  padding: 5px;
-}
-
-.messageInput > p > span {
-  display: block;
 }
 
 .messageInput > input {
