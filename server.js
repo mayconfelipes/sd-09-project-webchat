@@ -22,13 +22,12 @@ io.on('connection', async (socket) => {
   console.log(`${socket.id} se conectou`);
   
   const chatHistory = await chatController.getAll();
-  chatHistory.forEach(({ timestamp, nickname, message }) => {
-    socket.emit('message', `${timestamp} - ${nickname}: ${message}`);
-  });
-  socket.emit('newConnection', 'Seja bem vindo ao Trybe Webchat');
+  const messages = chatHistory
+    .map(({ timestamp, nickname, message }) => `${timestamp} - ${nickname}: ${message}`);
+  
+  socket.emit('newConnection', messages);
   socket.on('disconnect', () => console.log(`${socket.id} se desconectou`));
   socket.on('message', ({ chatMessage, nickname }) => {
-    console.log(chatMessage);
     const time = moment().format('DD-MM-yyyy HH:mm:ss A');
     const newMessage = `${time} ${nickname} ${chatMessage}`;
     io.emit('message', newMessage);
