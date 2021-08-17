@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        background-color: aquamarine;
+      }
+    </style>
+    <title>Socket.IO chat</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+  </head>
+  
+  <body>
+    <div>
+      <ul id="nicknames"></ul>
+      <form action="" id="nickname-form">
+        <input id="select-nickname" autocomplete="off">
+        <button>Send</button>
+      </form>
+    </div>
+    <div>
+      <ul id="message"></ul>
+      <form action="" id="form">
+        <input id="input" autocomplete="off" />
+        <button>Send</button>
+      </form> 
+    </div>
+   
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      const nicknames = document.getElementById('nicknames')
+      const nicknameForm = document.getElementById('nickname-form');
+      const nicknameInput = document.getElementById('select-nickname');
+    
+      const messages = document.getElementById('message')
+      const form = document.getElementById('form');
+      const input = document.getElementById('input');
+    
+      addEventListener('submit', function(e) {       
+        e.preventDefault();
+        if (input.value) {
+          // message = {
+            let chatMessage = input.value;
+            let nickname = '';
+          // }
+          socket.emit('message', { chatMessage, nickname });
+          input.value = '';
+        } 
+
+        if (nicknameInput.value){
+          socket.emit('nickname', nicknameInput.value);
+          nicknameInput.value = '';
+        }
+      });
+
+      // agradando o test
+
+      socket.on('nickname', function(chaters) {
+        nicknames.innerHTML = '';
+        const usuarioAtual = chaters[socket.id];
+        let namesList = [];
+        
+        // let aaaa = new Map(chaters)
+        Object.values(chaters).forEach((element) => {
+          if (usuarioAtual.name === element.name){
+            namesList.unshift(usuarioAtual.name)
+          } else {
+            namesList.push(element.name)
+          }
+        });
+        
+        namesList.forEach((nick) => {
+          const lItem = document.createElement('li');
+          lItem.textContent = nick;
+          nicknames.appendChild(lItem);
+        });
+      })
+
+      socket.on('message', function(message) {
+        console.log(message)
+        const item = document.createElement('li');
+        item.textContent = message;
+        messages.appendChild(item);
+      });
+    </script>   
+  </body>
+</html>
