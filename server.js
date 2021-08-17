@@ -14,14 +14,28 @@ app.get('/', (_req, res) => {
   res.sendFile('index.html');
 });
 
+const users = {};
+
 io.on('connection', async (socket) => {
   const timestamp = formatData();
+  
   socket.on('message', async ({ chatMessage, nickname }) => {
     await ChatModel.saveMessages({ message: chatMessage, nickname, timestamp });
     io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
   });
 
   socket.emit('getMessages', await ChatModel.getMessages());
+
+  socket.broadcast.on('setNicks', (newNick) => {
+    users[socket.id] = newNick;
+    io.emit('setNicks', users);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('saiu aqui ó');
+    delete users[socket.id];
+    socket.broadcast.emit('disconnectUser', users);
+  });
 });
 
 server.listen(3000, () => {

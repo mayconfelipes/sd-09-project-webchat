@@ -2,9 +2,10 @@ const socket = window.io();
 const form = document.querySelector('#chat');
 const input = document.querySelector('#message');
 const messages = document.querySelector('#messages');
-const nicknameField = document.querySelector('#nickname');
 const formNickname = document.querySelector('#set-nickname');
 const nickInput = document.querySelector('#input-nick');
+const listUsers = document.querySelector('#user-list');
+const datatest = 'data-testid';
 
 const generateNickname = (length) => {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -19,13 +20,7 @@ const generateNickname = (length) => {
 };
 
 let nickname = generateNickname(16);
-
-const setNickname = () => {
-  localStorage.setItem('nickname', nickname);
-  nicknameField.textContent = nickname;
-};
-
-setNickname();
+socket.emit('setNicks', nickname);
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -42,13 +37,13 @@ formNickname.addEventListener('submit', (e) => {
   if (nickInput.value) {
     nickname = nickInput.value;
     nickInput.value = '';
-    setNickname();
+    socket.emit('setNicks', nickname);
   }
 });
 
 socket.on('message', (msg) => {
   const item = document.createElement('li');
-  item.setAttribute('data-testid', 'message');
+  item.setAttribute(datatest, 'message');
   item.textContent = msg;
   messages.appendChild(item);
 });
@@ -56,8 +51,32 @@ socket.on('message', (msg) => {
 socket.on('getMessages', (oldMessages) => {
   oldMessages.forEach(({ message, nickname: nick, timestamp }) => {
     const item = document.createElement('li');
-    item.setAttribute('data-testid', 'message');
+    item.setAttribute(datatest, 'message');
     item.textContent = `${timestamp} - ${nick}: ${message}`;
     messages.appendChild(item);
   });
+});
+
+const createLiUsers = (users) => {
+  listUsers.innerHTML = '';
+  const user = document.createElement('li');
+  listUsers.appendChild(user);
+  user.innerText = nickname;
+  user.setAttribute(datatest, 'online-user');
+  users.forEach((element) => {
+    if (element !== nickname) {
+      const newUser = document.createElement('li');
+      listUsers.appendChild(newUser);
+      newUser.innerText = element;
+      newUser.setAttribute(datatest, 'online-user');
+    }
+  });
+};
+
+socket.on('setNicks', (users) => {
+  createLiUsers(Object.values(users));
+});
+
+socket.on('disconnectUser', (users) => {
+  createLiUsers(Object.values(users));
 });
