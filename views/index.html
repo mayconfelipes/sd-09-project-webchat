@@ -212,11 +212,11 @@ h2 {
     chat.appendChild(chatMessage)
   }
 
-  socket.on('userId', (id, nickname, users) => {
+  socket.on('userId', ({ id, nickname, users }) => {
     userId = id;
     userNickname = nickname;
     userNickNameTitle.innerHTML = 'Nickname: ' + nickname;
-    const index = users.findIndex((user) => user._id.toString() === id.toString());
+    const index = users.findIndex((user) => user.id.toString() === id.toString());
     usersArea.innerHTML = '';
     createAndAppendUser(users[index]);
     users.splice(index, 1);
@@ -224,7 +224,8 @@ h2 {
   });
 
   socket.on('refreshUsers', (users) => {
-    const index = users.findIndex((user) => user._id.toString() === userId.toString());
+    console.log(users);
+    const index = users.findIndex((user) => user.id.toString() === userId.toString());
     usersArea.innerHTML = '';
     createAndAppendUser(users[index]);
     users.splice(index, 1);
@@ -237,7 +238,6 @@ h2 {
 
   socket.on('refreshMessages', (messages) => {
     chat.innerHTML = '';
-    console.log(messages);
     for (let index = 0; index < messages.length; index += 1) {
       const message = `${messages[index].timestamp} ${messages[index].nickname} ${messages[index].message}`;
       createMessage(message);    
@@ -248,7 +248,6 @@ h2 {
   const sentMessage = (e) => {
     if(e.which == 13 || (e.type === 'click' && e.target.id === 'sent')){
       e.preventDefault();
-      console.log(e.witch);
       socket.emit('message', { nickname: userNickname, chatMessage: textArea.value });
       textArea.value = "";
     }

@@ -9,7 +9,8 @@ const handleEventsSocket = async (io) => {
   io.on('connection', async (socket) => {
     await handleWithNewConnection(io, socket);
 
-    socket.on('message', async ({ chatMessage, nickname }) => {
+    socket.on('message', async ({ nickname, chatMessage }) => {
+      console.log(nickname);
       await handleMessageEvent(io, chatMessage, nickname);
     });
 

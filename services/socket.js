@@ -36,22 +36,24 @@ module.exports = {
   iD,
 };
 
-const saveUserOnDb = async (nickName, socketId) => {
-  console.log(`${nickName} conectado`);
-  const id = await chatModel.createUsers(nickName, 'online', socketId);
-  return id;
-};
+// const saveUserOnDb = async (nickName, socketId) => {
+//   console.log(`${nickName} conectado`);
+//   const id = await chatModel.createUsers(nickName, 'online', socketId);
+//   return id;
+// };
+
+const users = [];
 
 const handleWithNewConnection = async (io, socket) => {
   try {
     //  when a new connection started get the nickname, create the user using nickname and socket id
     // get all users and message and sent to all clients connecteds
     const nickName = `userId${iD()}`;
-    const id = await saveUserOnDb(nickName, socket.id);
-    const users = await chatModel.findUser();
+    // const id = await saveUserOnDb(nickName, socket.id);
+    //  const users = await chatModel.findUser();
+    users.push({ id: socket.id, nickname: nickName, status: 'online' });
     const messages = await chatModel.findMessages();
-    console.log(users);
-    socket.emit('userId', id, nickName, users);
+    socket.emit('userId', { id: socket.id, nickname: nickName, users });
     socket.broadcast.emit('refreshUsers', users);  
     io.emit('refreshMessages', messages);
   } catch (e) {
@@ -72,19 +74,23 @@ const handleChangeNickname = async (io, socket, userObj) => {
   //  when a user wants to change nickname, update the nickname on db, update te nickname on the messages
   // that is on db sent the messages updated to all clientes as the new user nickname
   const { userId, newNickname } = userObj;
-  await chatModel.updateUser(userId, newNickname);
+  //  await chatModel.updateUser(userId, newNickname);
   //  await chatModel.updateMessages(userNickname, newNickname);
-  const users = await chatModel.findUser();
+  //  const users = await chatModel.findUser();
   //  const messages = await chatModel.findMessages();
-  socket.emit('userId', userId, newNickname, users);
+  const index = users.findIndex((user) => user.id === userId);
+  users[index].nickname = newNickname;
+  socket.emit('userId', { id: userId, nickname: newNickname, users });
   socket.broadcast.emit('refreshUsers', users);
   //  io.emit('refreshMessages', messages);
 };
 
 const handleWithDisconnectEvent = async (socketId, io) => {
   //  when a user disconnect delete the user using the socket id
-  await chatModel.deleteUser(socketId);
-  const users = await chatModel.findUser();
+  //  await chatModel.deleteUser(socketId);
+  //  const users = await chatModel.findUser();
+  const index = users.findIndex((user) => user.id === socketId);
+  users.splice(index, 1);
   io.emit('refreshUsers', users);
 };
 
