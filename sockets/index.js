@@ -1,9 +1,13 @@
 const moment = require('moment');
+const { io } = require('socket.io-client');
 const { getAll, save } = require('../models/messages');
 
 let users = [];
 
-const allNicknames = () => users.map((user) => user.nickname);
+const usersArray = () => users.filter((user) => user.nickname !== '');
+const allNicknames = () => usersArray().map((user) => user.nickname);
+
+// const allNicknames = () => users.map((user) => user.nickname);
 const updateList = (io) => io.emit('updateList', allNicknames());
 const findUser = (socket) => users.find((user) => user.socket === socket);
 const removeUser = (socket) => {
@@ -12,6 +16,7 @@ const removeUser = (socket) => {
 
 const createUser = async (socket) => {
   const newUser = { socket, nickname: socket.id.slice(0, 16).toString() };
+  socket.emit('newNickName', newUser.nickname)
   if (newUser.nickname !== '') users.push(newUser);
   return newUser;
 };

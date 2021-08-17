@@ -41,13 +41,15 @@ socket.on('messageList', (messageList) => {
   messageList.forEach((message) => createMessage(message));
 });
 
+socket.on('newNickName', (newNickname) => nickname = newNickname);
+
 socket.on('updateList', (users) => {
-  if (usersUl) usersUl.innerHTML = '';
+  usersUl.innerHTML = '';
 
   const index = users.indexOf(nickname);
   if (index !== -1) users.splice(index, 1);
-
   users.unshift(nickname);
+
   const usersArray = users.filter((user) => user !== '');
 
   usersArray.forEach((user) => {
