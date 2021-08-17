@@ -11,7 +11,7 @@ const io = require('socket.io')(server, {
   },
 });
 
-const sentMessage = require('./sockets');
+const handleEventsSocket = require('./sockets');
 
 app.set('views', path.join(__dirname, 'views'));
 
@@ -19,7 +19,7 @@ app.engine('html', require('ejs').renderFile);
 
 app.set('view engine', 'html');
 
-sentMessage(io);
+handleEventsSocket(io);
 
 app.use('/', (req, res) => {
   res.render('index.html');

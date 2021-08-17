@@ -1,24 +1,32 @@
-const { createMessage, iD } = require('./message');
-const chatModel = require('../models/chatModel');
+const {
+  handleChangeNickname,
+  handleMessageEvent,
+  handleWithNewConnection,
+  handleWithDisconnectEvent,
+} = require('../services/socket');
 
-const sentMessage = async (io) => {
+const handleEventsSocket = async (io) => {
   io.on('connection', async (socket) => {
-    const nickName = `userId${iD()}`;
-    console.log(`${nickName} conectado`);
-    const id = await chatModel.createUsers(nickName, 'online');
-    const users = await chatModel.findUser();
-    socket.emit('userId', id, users);
-    io.emit('refreshUsers', users);  
+    await handleWithNewConnection(io, socket);
+
     socket.on('message', async ({ chatMessage, nickname }) => {
-      const messageObj = createMessage(chatMessage, nickname);
-      const { message, timestamp } = messageObj;
-      await chatModel.createMessage(chatMessage, nickName, timestamp);
-      io.emit('message', message);
+      await handleMessageEvent(io, chatMessage, nickname);
     });
-  });
-  io.on('end', (_socket) => {
-    console.log('client desconectado');
+
+    socket.on('changeNickname', async ({ userId, newNickname }) => {
+      await handleChangeNickname(io, socket, userId, newNickname);
+    });
+
+    socket.on('connected', async ({ userId }) => {
+      console.log('no connec');
+      await handleWithDisconnectEvent(io, userId);
+    });
+
+    socket.on('disconnect', async () => {
+      console.log('user disconnected');
+      io.emit('areYouConnected?');
+    });
   });
 };
 
-module.exports = sentMessage;
+module.exports = handleEventsSocket;

@@ -16,7 +16,7 @@
     display: flex;
     height: 100vh;
     margin: auto;
-    width: 60%;
+    width: 70%;
     border: 2px solid #8F9DA6;
     border-radius: 10px;
     background-color: #D9D9D9;
@@ -28,6 +28,7 @@
     display: flex;
     flex-direction: column;
     width: 30%;
+    overflow:auto; 
   }
 
   .user-infos {
@@ -39,14 +40,19 @@
     background-color: inherit;
   }
 
-  .chat {
+  .chat-messages-field {
     display: flex;
     flex-direction: column;
-    width: 70%;
-    height: 100%;
-    position: relative;
     padding: 15px;
-    }
+    position: relative;
+    width: 70%;
+  }
+
+  .chat {
+    width: 100%;
+    height: 90%;
+    overflow:auto; 
+  }
 
   .write-message {
     bottom: 0;
@@ -72,25 +78,81 @@
     color: black;
     margin-left: 10px;
     width: 10%;
+    cursor: pointer;
   }
 
   textarea:focus, input:focus, select:focus {
     box-shadow: 0 0 0 0;
     border: 0 none;
     outline: 0;
-} 
+}
+
+.color-header {
+  background-color: #1C5359;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  background-color: #08646e;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+h2 {
+  margin-left: 30px;
+  color: #e7eaebd8;
+}
+
+#write-nickname{
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  background-color: inherit;
+  border-bottom: 1px solid #e7eaebd8;
+  color: white;
+  height: 60%;
+  margin-left: 30%;
+  width: 20%;
+}
+
+#write-nickname::placeholder {
+  color: white;
+}
+
+#change-nickname{
+  height: 30px;
+  border: 1px solid #66CAF2;
+  border-radius: 5px;
+  background-color: #99D9F2;
+  color: black;
+  margin-left: 10px;
+  width: 10%;
+  cursor: pointer;
+}
+
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.min.js"></script>
 </head>
 <body>
+<div class="color-header">
+    <header class="header">
+      <h2 id="nickname">Nickname</h2>
+        <input type="text" placeholder="Digite o novo nickname...." data-testid="nickname-box" id="write-nickname">
+        <button type="button" data-testid="nickname-button" id="change-nickname">Alterar</button>  
+    </header>
+</div>
 <div>
   <div class="chat-field">
     <div class="users" id="users">
     </div>
-    <div class="chat" id="chat">
-      <div class="write-message">
+    <div class="chat-messages-field">
+      <div class="chat" id="chat"></div>
+      <div class="write-message" id="write-message">
         <textarea type="text" placeholder="Digite uma mensagem..." data-testid="message-box" id="text-area"></textarea>
-        <button type="button" id="sent">Enviar</button>
+        <button type="button" id="sent" data-testid="send-button">Enviar</button>
     </div>
   </div>
 </div>
@@ -98,11 +160,16 @@
 <script type="text/javascript">
   const socket = io();
   let userId = '';
+  let userNickname = '';
 
   const buttonSent = document.getElementById('sent');
   const textArea = document.getElementById('text-area');
   const chat = document.getElementById('chat');
   const usersArea = document.getElementById('users');
+  const writeMessageField = document.getElementById('write-message');
+  const userNickNameTitle = document.getElementById('nickname');
+  const buttonChangeNickname = document.getElementById('change-nickname');
+  const inputNewNickName = document.getElementById('write-nickname');
 
   const createUsers = (users) => {
     usersArea.innerHTML = '';
@@ -122,11 +189,22 @@
     }
   }
 
-  socket.on('userId', (id, users) => {
+  const createMessage = (message) => {
+    const chatMessage = document.createElement('p');
+    chatMessage.innerHTML = message;
+    chatMessage.setAttribute('data-testid', 'message');
+    chatMessage.style.marginBottom = '5px';
+    chatMessage.style.fontSize = '18px';
+    chat.appendChild(chatMessage)
+  }
+
+  socket.on('userId', (id, nickname, users) => {
     userId = id;
+    userNickname = nickname;
+    userNickNameTitle.innerHTML = 'Nickname: ' + nickname;
     createUsers(users);
     console.log(users);
-    console.log(userId);  
+    console.log(userId);
   });
 
   socket.on('refreshUsers', (users) => {
@@ -136,22 +214,41 @@
   });
 
   socket.on('message', (message) => {
-    const chatMessage = document.createElement('p');
-    chatMessage.innerHTML = message;
-    chat.appendChild(chatMessage)
+    createMessage(message);
+  });
+
+  socket.on('refreshMessages', (messages) => {
+    chat.innerHTML = '';
+    for (let index = 0; index < messages.length; index += 1) {
+      const message = `${messages[index].timestamp} ${messages[index].nickName} ${messages[index].message}`;
+      createMessage(message);    
+    }
+    chat.appendChild(writeMessageField);
+  });
+
+  socket.on('areYouConnected?', () => {
+    console.log('sim');
+    socket.emit('connected', { userId });
   });
 
   const sentMessage = (e) => {
     if(e.which == 13 || (e.type === 'click' && e.target.id === 'sent')){
+      e.preventDefault();
       console.log(e.witch);
-      socket.emit('message', { nickname: userId, chatMessage: textArea.value });
-      textArea.value = '';
+      socket.emit('message', { nickname: userNickname, chatMessage: textArea.value });
+      textArea.value = "";
     }
   }
+
+  const changeNickname = () => {
+    const newNickname = inputNewNickName.value;
+    socket.emit('changeNickname', { userId, newNickname } );
+    newNickname.value = '';
+  };
   
   buttonSent.addEventListener('click', sentMessage);
   textArea.addEventListener('keypress', sentMessage);
-
+  buttonChangeNickname.addEventListener('click', changeNickname);
 </script>
 </body>
 </html>
