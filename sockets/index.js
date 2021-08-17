@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { getAll, post, save } = require('../models/messages');
+const { getAll, save } = require('../models/messages');
 
 let users = [];
 
@@ -16,16 +16,17 @@ const createUser = async (socket) => {
   return newUser;
 };
 
+const getMessageFormatedList = async () => {
+  const messageList = await getAll();
+  const messageFormatedList = messageList.map(({ timestamp, nickname, message }) => (
+    `${timestamp} - ${nickname}: ${message}`
+  ));
+  return messageFormatedList;
+};
+
 const chat = (io) => {
   io.on('connection', async (socket) => {
-
-    const messageList = await getAll();
-    const messageFormatedList = messageList.map(({timestamp, nickname, message}) => (
-      `${timestamp} - ${nickname}: ${message}`
-    ));
-    console.log(messageFormatedList, '<<<<<<<<<<<<<<<<<<<<<');
-
-    socket.emit('messageList', messageFormatedList)
+    socket.emit('messageList', await getMessageFormatedList());
     createUser(socket);
 
     socket.on('nickname', (nickname) => {
@@ -38,17 +39,12 @@ const chat = (io) => {
 
     socket.on('message', async ({ nickname, chatMessage }) => {
       const timestamp = moment().format('DD-MM-yyyy LTS');
-      let message = '';
-      if (!nickname) message = `${timestamp} - ${socket.nickname}: ${chatMessage}`;
-      else message = `${timestamp} - ${nickname}: ${chatMessage}`;
-      await save({ chatMessage, nickname, timestamp })
+      const message = `${timestamp} - ${nickname}: ${chatMessage}`;
+      await save({ chatMessage, nickname, timestamp });
       io.emit('message', message);
     });
 
-    socket.on('disconnect', () => {
-      removeUser(socket);
-      updateList(io);
-    });
+    socket.on('disconnect', () => { removeUser(socket); updateList(io); });
   });
 };
 
