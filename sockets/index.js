@@ -1,5 +1,4 @@
 const moment = require('moment');
-const { io } = require('socket.io-client');
 const { getAll, save } = require('../models/messages');
 
 let users = [];
@@ -16,7 +15,7 @@ const removeUser = (socket) => {
 
 const createUser = async (socket) => {
   const newUser = { socket, nickname: socket.id.slice(0, 16).toString() };
-  socket.emit('newNickName', newUser.nickname)
+  socket.emit('newNickName', newUser.nickname);
   if (newUser.nickname !== '') users.push(newUser);
   return newUser;
 };

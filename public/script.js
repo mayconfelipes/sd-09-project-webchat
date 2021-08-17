@@ -41,7 +41,7 @@ socket.on('messageList', (messageList) => {
   messageList.forEach((message) => createMessage(message));
 });
 
-socket.on('newNickName', (newNickname) => nickname = newNickname);
+socket.on('newNickName', (newNickname) => { nickname = newNickname; });
 
 socket.on('updateList', (users) => {
   usersUl.innerHTML = '';
