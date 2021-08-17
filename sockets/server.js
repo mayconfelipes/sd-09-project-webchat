@@ -1,17 +1,14 @@
 const date = require('../js/getDate.js');
 const mongo = require('../models/messages');
 
+const nickNames = [];
 module.exports = (io) => {
-  // const messages = [];
-  const nickNames = [];
   io.on('connection', async (socket) => {
     socket.emit('previousMessage', await mongo.findAll());
-   
-    socket.emit('previousNames', nickNames);
+    socket.emit('nickname');
 
     socket.on('message', (data) => {
       const messageFormat = `${date()} ${data.nickname}:${data.chatMessage}`;
-      // messages.push(messageFormat);
       mongo.addOne(messageFormat);
       console.log(messageFormat);
       socket.broadcast.emit('message', messageFormat);
@@ -19,8 +16,11 @@ module.exports = (io) => {
     });
 
     socket.on('sendName', (data) => {
+      console.log('sendname', data);
       nickNames.push(data);
-      socket.broadcast.emit('receivedName', data);
+      console.log('nickNames', nickNames);
+      socket.broadcast.emit('receivedNames', nickNames);
+      socket.emit('receivedNames', nickNames);
     });
   });
 };

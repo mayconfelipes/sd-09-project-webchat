@@ -8,7 +8,8 @@
   <title>Web Chat</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
-  <link rel="stylesheet" href="css/client.css"></link>
+  <link rel="stylesheet" href="css/client.css">
+  </link>
 </head>
 
 <body>
@@ -44,7 +45,7 @@
       localStorage.setItem('nickname', getEl('inputName').value)
     }
 
-    renderNickNames(localStorage.nickname)
+    // renderNickNames(localStorage.nickname)
 
     socket.on('previousMessage', (messages) => {
       for (item of messages) {
@@ -62,9 +63,15 @@
       renderMessage(message);
     })
 
-    socket.on('receivedName', (message) => {
-      renderNickNames(message);
+// https://pt.stackoverflow.com/questions/441373/como-remover-todos-os-elementos-de-uma-div-em-javascript
+    socket.on('receivedNames', (names) => {
+      $('.nickNames').empty();
+      for (item of names) {
+        renderNickNames(item);
+      }
     })
+
+    socket.on('nickname', () => socket.emit('sendName', localStorage.nickname))
 
     $('#chat').submit((event) => {
       event.preventDefault();
@@ -76,7 +83,7 @@
       socket.emit('message', messageObject)
     })
 
-    // const getEl = (id) => document.getElementById(id);
+    const getEl = (id) => document.getElementById(id);
     const namesButton = getEl('namesButton');
 
     namesButton.addEventListener('click', () => {
