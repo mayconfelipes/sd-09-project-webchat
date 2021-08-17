@@ -64,22 +64,11 @@ describe('1 - Crie um back-end para conexão simultânea de clientes e troca de 
       expect(message.includes(nickname)).toBeTruthy();
       // expect(message).toMatch(dateRegex);
       expect(message).toMatch(timeRegex);
-<<<<<<< HEAD
-    });
-    client2.on('message', (message) => {
-      expect(message.includes(chatMessage)).toBeTruthy();
-      expect(message.includes(nickname)).toBeTruthy();
-      // expect(message).toMatch(dateRegex);
-      expect(message).toMatch(timeRegex);
-      done();
-    });
-=======
       counter.inc();
     }));
 
     const [client] = clients;
 
     client.emit('message', { chatMessage, nickname });
->>>>>>> cd9ccf2df78ea2480b5bff9b558de057b9246539
   });
 });
