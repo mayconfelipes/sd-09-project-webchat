@@ -1,46 +1,52 @@
 * {
-  padding: 0;
-  margin: 0;
   box-sizing: border-box;
   font-size: 18px;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   background-color: rgb(44, 44, 44);
-  width: 100vw;
-  height: 100vh;
   display: flex;
   flex-direction: column;
+  height: 100vh;
   justify-content: space-between;
   padding: 1%;
+  width: 100vw;
 }
 
 h1 {
-  font-size: 2rem;
   align-self: center;
   color: orange;
+  font-size: 2rem;
   margin-top: 0.5rem;
+}
+
+footer form {
+  display: flex;
+  height: 5vh;
+  width: 100%;
 }
 
 .user-info-container form {
   display: flex;
-  width: 25vw;
   margin-top: 4rem;
+  width: 25vw;
 }
 
 main {
   display: flex;
   height: 80vh;
-  margin: 0.5rem 0;
   justify-content: space-between;
+  margin: 0.5rem 0;
 }
 
 .user-container {
   border: 1px solid rgb(32, 123, 207);
-  margin-right: 3px;
-  width: 50%;
   height: 100%;
+  margin-right: 3px;
   overflow-y: auto;
+  width: 50%;
 }
 
 .user-container::-webkit-scrollbar {
@@ -49,16 +55,16 @@ main {
 
 .user-container::-webkit-scrollbar-thumb {
   background-color: rgb(223 227 229 / 34%);
-  border-radius: 1.1rem;
   border: 0.2rem solid #2c2c2c;
+  border-radius: 1.1rem;
 }
 
 .message-container {
   border: 1px solid rgb(32, 123, 207);
-  width: 50%;
-  margin-left: 3px;
   height: 100%;
+  margin-left: 3px;
   overflow-y: auto;
+  width: 50%;
 }
 
 .message-container::-webkit-scrollbar {
@@ -67,50 +73,44 @@ main {
 
 .message-container::-webkit-scrollbar-thumb {
   background-color: rgb(223 227 229 / 34%);
-  border-radius: 1.1rem;
   border: 0.2rem solid #2c2c2c;
+  border-radius: 1.1rem;
 }
 
-.user-list, .message-list {
-  list-style: none;
+.user-list , .message-list {
   color: aliceblue;
-  padding: 0.5rem;
   height: 0;
+  list-style: none;
+  padding: 0.5rem;
 }
 
 li {
-  padding: 1rem;
   background-color: rgb(43, 78, 190);
-  font-size: 1.3rem;
   border-radius: 0.5rem;
-  overflow-y: auto;
+  font-size: 1.3rem;
   margin: 0.5rem;
-}
-
-footer form {
-  width: 100%;
-  height: 5vh;
-  display: flex;
+  overflow-y: auto;
+  padding: 1rem;
 }
 
 button {
-  border-radius: 0.2rem;
-  padding: 0.5rem;
-  height: 100%;
-  border: none;
-  outline: none;
   background-color: rgb(26, 189, 40);
-  margin-left: 3px;
-  flex-basis: 10%;
+  border: none;
+  border-radius: 0.2rem;
   cursor: pointer;
+  flex-basis: 10%;
+  height: 100%;
+  margin-left: 3px;
+  outline: none;
+  padding: 0.5rem;
 }
 
 input {
-  padding: 0.5rem;
-  border-radius: 0.2rem;
-  outline: none;
   border: none;
-  margin-right: 3px;
-  height: 100%;
+  border-radius: 0.2rem;
   flex-basis: 90%;
+  height: 100%;
+  margin-right: 3px;
+  outline: none;
+  padding: 0.5rem;
 }
