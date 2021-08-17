@@ -28,14 +28,14 @@
 
     const renderMessage = (message) => {
       $('.messages').append(
-        `<div class="message">
+        `<div data-testid="message"  class="message">
           ${message}
           </div>`)
     }
 
     const renderNickNames = (username) => {
       $('.nickNames').append(
-        `<div data-testid="message" class="message">
+        `<div class="message">
          <strong data-testid="online-user">${username}</strong>
           </div>`)
     }
