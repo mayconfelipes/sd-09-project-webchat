@@ -1,6 +1,6 @@
 html , body {
   background: rgba(207, 18, 75, 0.411);
-  background-image: url("chat.png");
+  background-image: url('chat.png');
   background-size: cover;
   height: 100%;
 }
@@ -23,17 +23,7 @@ form {
 input {
   border: 1px solid #ddd;
   font-size: 14px;
-  height: 50px;
-  padding: 0 20px;
   width: 72%;
-}
-
-#input-nick {
-  border: 1px solid #ddd;
-  font-size: 14px;
-  height: 50px;
-  width: 70%;
-
 }
 
 button {
@@ -63,7 +53,7 @@ button {
   border: 1px solid #ddd;
   font-weight: 900;
   height: 300px;
-  margin: 20px 0;
+  margin: 20px;
   overflow-y: auto;
   padding: 20px;
   width: 35%;
