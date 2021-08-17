@@ -280,6 +280,7 @@ describe('4 - Informe a todos os clientes quem está online no momento', () => {
     // he sees it changed
     client1Nicknames = await page.$$eval(dataTestid('online-user'), (nodes) => nodes.map((n) => n.innerText));
     await page.waitForTimeout(500);
+    console.log(client1Nicknames, 'console do teste');
     expect(client1Nicknames.length).toBe(1);
     expect(client1Nicknames).toEqual(
       expect.arrayContaining([
