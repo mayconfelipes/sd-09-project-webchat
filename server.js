@@ -27,12 +27,12 @@ io.on('connection', async (socket) => {
   });
   socket.emit('newConnection', 'Seja bem vindo ao Trybe Webchat');
   socket.on('disconnect', () => console.log(`${socket.id} se desconectou`));
-  socket.on('message', async ({ chatMessage, nickname }) => {
-    const now = new Date();
-    const time = moment(now).format('DD-MM-YYYY HH:MM');
-    const newMessage = `${time} - ${nickname}: ${chatMessage}`;
+  socket.on('message', ({ chatMessage, nickname }) => {
+    console.log(chatMessage);
+    const time = moment().format('DD-MM-yyyy HH:mm:ss A');
+    const newMessage = `${time} ${nickname} ${chatMessage}`;
     io.emit('message', newMessage);
-    await chatController.saveMessage(chatMessage, nickname, time);
+    chatController.saveMessage(chatMessage, nickname, time);
   });
 });
 
