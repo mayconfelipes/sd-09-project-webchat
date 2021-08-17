@@ -13,9 +13,9 @@
    
 <body>
     <h1>Web Chat</h1>
-    <div>
+    <!-- <div>
         <h2 data-testid="online-user" id="user"></h2>
-    </div>
+    </div> -->
     <form class="form-nickname" action="">
         <input data-testid="nickname-box" id="nickname" placeholder="Digite seu nickname" autocomplete="off">
         <button data-testid="nickname-button" id="btn-nickname" type="button">Enviar</button>
@@ -36,7 +36,44 @@
         let userName;
 
         const socket = io();
-        const labelUser = document.getElementById('user');
+        // const labelUser = document.getElementById('user');
+
+        const createLiUser = (user, testId) => {
+            const ulGests = document.getElementById('guests');
+            const li = document.createElement('li');
+            const liGuest = document.createTextNode(user);
+            if (testId) {
+                
+                li.setAttribute('id', 'user');
+            }
+            li.classList.add('users');
+            li.setAttribute('data-testid', 'online-user');
+            li.appendChild(liGuest);
+            ulGests.appendChild(li);
+
+        };
+
+        const displayUsers = (users) => {
+            const ulGests = document.getElementById('guests');
+            const oldUsers = document.querySelectorAll('.users');
+
+            if (oldUsers) {
+                oldUsers.forEach(oldUser => ulGests.removeChild(oldUser));
+            }
+
+            createLiUser(userName, true);
+    
+            users.forEach((user) => {
+                if (user.guest !== userName) {
+                    createLiUser(user.guest, false);
+                    // const li = document.createElement('li');
+                    // const liGuest = document.createTextNode(user.guest);
+                    // li.setAttribute('id', 'usersId')
+                    // li.appendChild(liGuest);
+                    // ulGests.appendChild(li);
+                };
+            });
+        }
 
         const displayMessage = (message) => {
             const ulMessages = document.getElementById('messages');
@@ -47,31 +84,25 @@
             ulMessages.appendChild(li);
         }
 
-        socket.on('user', (user) => {
+        socket.on('user', (users, user) => {
             displayMessage(`Seja bem vindo ${user}`)
-            labelUser.textContent = user;
             userName = user;
+            displayUsers(users);
         });
 
         socket.on('users', (users) => {
-            displayMessage(`${users[users.length - 1]} entrou`)
-            const ulGests = document.getElementById('guests');
-            const oldUsers = document.querySelectorAll('#usersId');
+            displayMessage(`${users[users.length - 1].guest} entrou`)
+            displayUsers(users);
+        });
 
-            if (oldUsers) {
-                oldUsers.forEach(oldUser => oldUser.remove());
-            }
-    
-            users.forEach((user) => {
-                if (user !== userName) {
-                    const li = document.createElement('li');
-                    const liGuest = document.createTextNode(user);
-                    li.setAttribute('id', 'usersId')
-                    li.appendChild(liGuest);
-                    ulGests.appendChild(li);
-                }
-            })
-        })
+        socket.on('updadeUsers', (users) => {
+            displayUsers(users);
+        });
+
+        socket.on('exitUser', (users, user) => {
+            displayMessage(`${user} saiu`)
+            displayUsers(users);
+        });
 
         const btnSend = document.getElementById('btn-send');
         const messageSend = document.getElementById('input-message');
@@ -95,6 +126,7 @@
             event.preventDefault();
 
             if (nickname.value) {
+                const labelUser = document.getElementById('user');
                 labelUser.textContent = nickname.value;
                 socket.emit('changeNikname', {
                     newNickname: nickname.value,

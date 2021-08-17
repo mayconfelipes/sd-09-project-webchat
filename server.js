@@ -31,6 +31,26 @@ const currentTime = () => {
   return `${d}-${m}-${a} ${h}:${mi}:${s}`;
 };
 
+const findSocketId = (array, sockedId) => {
+  let returnValue;
+  array.forEach((item, index) => {
+    if (item.socket === sockedId) {
+      returnValue = index;
+    }
+  });
+  return returnValue;
+};
+
+const findGuest = (array, guest) => {
+  let returnValue;
+  array.forEach((item, index) => {
+    if (item.guest === guest) {
+      returnValue = index;
+    }
+  });
+  return returnValue;
+};
+
 const guests = [];
 let guest;
         
@@ -40,27 +60,44 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-io.on('connection', (socket) => {
-  guest = crypto.randomBytes(8).toString('hex');
-  console.log(`${guest} conectado`);
-  guests.push(guest);
-  socket.emit('user', guest);
-  socket.emit('users', guests);
+const saveMessage = async () => {
 
+};
+
+const connection = (socket) => {
+  guest = crypto.randomBytes(8).toString('hex');
+  console.log(`${guest} conectado - ${socket.id}`);
+  guests.push({ guest, socket: socket.id });
+  socket.emit('user', guests, guest);
+  socket.broadcast.emit('users', guests);
+  console.log(guests);
+};
+
+const changeNickname = (socket, nickname) => {
+  const { newNickname, oldNickname } = nickname;
+  guests[findGuest(guests, oldNickname)].guest = newNickname;
+  socket.broadcast.emit('updadeUsers', guests);
+};
+
+io.on('connection', (socket) => {
+  connection(socket);
+  
   socket.on('message', (message) => {
     const { nickname, chatMessage } = message;
-    const completeMessage = `${currentTime()} - ${nickname}: ${chatMessage}`;
+    const timestamp = currentTime();
+    const completeMessage = `${timestamp} - ${nickname}: ${chatMessage}`;
     io.emit('message', completeMessage);
+    saveMessage(chatMessage, nickname, timestamp);
   });
-
   socket.on('changeNikname', (nickname) => {
-    const { newNickname, oldNickname } = nickname;
-    guests[guests.indexOf(oldNickname)] = newNickname;
-    socket.broadcast.emit('newUser', guests);
+    changeNickname(nickname);
   });
 
   socket.on('disconnect', () => {
-    console.log('usuario saiu');
+    const userIndex = findSocketId(guests, socket.id);
+    const userExit = guests[userIndex].guest;
+    guests.splice(userIndex, 1);
+    socket.broadcast.emit('exitUser', guests, userExit);
   });
 });
 
