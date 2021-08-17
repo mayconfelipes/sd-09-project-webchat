@@ -2,6 +2,13 @@ const socket = window.io();
 
 socket.emit('updateUsersList');
 
+const createListItem = (parent, innerText, dataTestId = '') => {
+  const listItem = document.createElement('li');
+  listItem.innerText = innerText;
+  listItem.dataset.testid = dataTestId;
+  parent.appendChild(listItem);
+};
+
 const nicaknameButton = document.querySelector('#nickname-button');
 const sendButton = document.querySelector('#send-button');
 
@@ -22,26 +29,23 @@ sendButton.addEventListener('click', (e) => {
 
 // Sockets events
 socket.on('message', (message) => {
-  const newMessage = document.createElement('li');
-  newMessage.innerText = message;
-  newMessage.dataset.testid = 'message';
-
   const messageList = document.querySelector('#message-list');
-  messageList.appendChild(newMessage);
+  createListItem(messageList, message, 'message');
 });
 
 socket.on('updateUsersList', (users) => {
   localStorage.setItem(socket.id, users[socket.id]);
+  const localUser = users[socket.id];
+  const usersCopy = { ...users };
+  delete usersCopy[socket.id];
 
   const usersList = document.querySelector('#users-list');
   usersList.innerHTML = '';
 
-  Object.keys(users).forEach((user) => {
-    const onlineUser = document.createElement('li');
-    onlineUser.innerText = users[user];
-    onlineUser.dataset.testid = 'online-user';
-    usersList.appendChild(onlineUser);
-  });
+  createListItem(usersList, localUser, 'online-user');
+  Object.keys(usersCopy).forEach((user) => (
+    createListItem(usersList, usersCopy[user], 'online-user')
+  ));
 });
 
 window.onbeforeunload = () => {
