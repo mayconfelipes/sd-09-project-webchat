@@ -10,8 +10,8 @@
     <script>
       const socket = io();
 
-      if (!localStorage.getItem('users')) localStorage.setItem('users', JSON.stringify([]));
-
+      if (!localStorage.getItem('users'))
+        localStorage.setItem('users', JSON.stringify([]));
     </script>
   </head>
   <body>
@@ -27,13 +27,17 @@
           <h1 id="my-nickname"></h1>
           <ul id="online-users">
             <% sockets.forEach(({ trimId }) => { %>
-              <li id="<%= trimId %>" data-testid="online-user"><%= trimId %></li>
+            <li id="<%= trimId %>" data-testid="online-user"><%= trimId %></li>
             <% }) %>
           </ul>
         </div>
       </section>
       <section>
-        <ul id="chat"></ul>
+        <ul id="chat">
+          <% messages.forEach(( { message, nickname, timestamp } ) => { %>
+            <li data-testid="message"><%= `${timestamp} - ${nickname}: ${message}` %></li>
+          <% }) %>
+        </ul>
       </section>
     </main>
     <form action="" id="message-form">
@@ -52,7 +56,7 @@
       const messageForm = document.querySelector('#message-form');
       const messageBox = document.querySelector('#message-box');
       const onlineUsers = document.querySelector('#online-users');
-      const myNickname = document.querySelector('#my-nickname')
+      const myNickname = document.querySelector('#my-nickname');
       const chat = document.querySelector('#chat');
 
       messageForm.addEventListener('submit', (event) => {
@@ -73,23 +77,22 @@
         const target = myNickname.innerText;
         const newNickname = nicknameBox.value;
 
-        
-        socket.emit('nicknameUpdate', { target, newNickname })
+        socket.emit('nicknameUpdate', { target, newNickname });
         myNickname.innerText = newNickname;
-      })
+      });
 
       socket.on('welcome', (id) => {
-        myNickname.innerText = id
-      })
+        myNickname.innerText = id;
+      });
 
       socket.on('login', (id) => {
         const li = document.createElement('li');
 
         li.innerText = id;
         li.id = id;
-        li.setAttribute('data-testid', 'online-user')
+        li.setAttribute('data-testid', 'online-user');
         onlineUsers.appendChild(li);
-      })
+      });
 
       socket.on('message', (message) => {
         const li = document.createElement('li');
@@ -103,6 +106,7 @@
         const elementToBeUpdated = document.querySelector(`#${target}`);
 
         elementToBeUpdated.innerText = newNickname;
+        nicknameBox.value = '';
       });
     </script>
   </body>
