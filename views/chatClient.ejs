@@ -27,7 +27,7 @@
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      socket.emit('mensagem', {chatMessage: inputMessage.value, nickname});
+      socket.emit('message', {chatMessage: inputMessage.value, nickname})
       inputMessage.value='';
       return false;
   })
@@ -39,8 +39,13 @@
     li.setAttribute('data-testid', 'message');
     messagesUl.appendChild(li);
   }
-
+  // listar o histórico
+  socket.on('listAllMessages', (arrayMessagens) => {
+    arrayMessagens.map((message) => createMessage(message)); 
+  })
   socket.on('message', ({message}) => createMessage(message));
+  // recebendo como parâmetro o name e repassando para variavel nickname
+  socket.on('createNickname', (name) => { nickname = name });
   </script>
 </body>
 </html>
