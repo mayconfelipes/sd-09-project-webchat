@@ -2,17 +2,26 @@ const moment = require('moment');
 //  https://momentjs.com/
 const WebChatModel = require('../models/webChatModel');
 
-// const onlineUsers = [];
+const onlineUsers = [];
 
 function ioWebChat(io) {
   io.on('connection', (socket) => {
-    // socket indentifica o quem realizou o emit
+    // segundo parâmetro é uma callback com o parâmetro socket que é a
+    // representação de uma conexão aberta ao socket-io rodando no back-end.
+    // No objeto socket tem um atributo id que é uma string aleatória gerada a cada nova conexão.
 
-    socket.on('message', async ({ chatMessage, nickname }) => {
+    console.log(`connected user - ID: ${socket.id}`);
+    const nick = socket.id.slice(0, 16);
+    onlineUsers.push({ userID: socket.id, nickname: nick });
+
+    io.emit('connected', nick);
+    io.emit('onlineUsers', onlineUsers);
+
+    socket.on('message', ({ chatMessage, nickname }) => {
       // aqui a funcao recebe a informacao do emit e chama o model
       const timeStamp = moment().format('DD-MM-yyyy HH:mm:ss');
-      await WebChatModel.addNewMessage({ message: chatMessage, nickname, timeStamp });
       io.emit('message', `${timeStamp} - ${nickname}: ${chatMessage}`);
+      WebChatModel.addNewMessage({ message: chatMessage, nickname, timeStamp });
     });
   });
 }

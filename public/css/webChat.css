@@ -1,0 +1,65 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font: 13px Helvetica, Arial;
+}
+
+#msgForm {
+  padding: 20px;
+  width: 100%;
+}
+
+#msgForm input {
+  padding: 10px;
+  width: 70vw;
+}
+
+#msgForm button {
+  background: rgb(202, 205, 206);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 12px;
+}
+
+#msgContainer {
+  list-style-type: none;
+  background-color: rgb(202, 205, 206);
+  min-height: 60vh;
+  width: 100%;
+}
+
+#msgContainer li {
+  padding: 15px 10px;
+}
+
+#nick {
+  align-items: center;
+  display: flex;
+  font: 14px Helvetica, Arial;
+  justify-content: space-between;
+  padding: 15px 30px;
+  width: 100%;
+}
+
+#nick button {
+  background: rgb(202, 205, 206);
+  border: none;
+  border-radius: 3px;
+  margin: 5px;
+  padding: 3px;
+  cursor: pointer;
+}
+
+#title {
+  background-color: rgb(92, 93, 94) ;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  width: 100%;
+}
+

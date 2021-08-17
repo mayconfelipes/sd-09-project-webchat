@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>WEBCHAT</title>
+      <link rel="stylesheet" href="../css/webChat.css">
+  </head>
+  <body>
+    <h1 id="title">TRYBE MESSENGER</h1>
+    <fieldset id="nick">
+      <span id="user">Welcome to Trybe WebChat! Your default nickname is </span>
+      <form id="nicknameForm" action="">
+        <input id="nickname" type="text" data-testid="nickname-box" placeholder="Change your nickname">
+        <button data-testid="nickname-button">Submit</button>
+      </form>
+    </fieldset>
+    <ul id="msgContainer"></ul>
+    <fieldset>
+      <form id="msgForm">
+        <input id="message" type="text" data-testid="message-box">
+        <button id="messageBtn" data-testid="send-button">Send Message</button>
+      </form>
+    </fieldset>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../js/webChat.js"></script>
+  </body>
+</html>
+
+
+
+

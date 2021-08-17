@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
-const cors = require('cors');
+// const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -11,8 +12,8 @@ const httpServer = http.createServer(app);
 // quando dermos o '.listen' o node informa pro sistema que quer receber os pacotes daquela porta,
 // ai ele trata os pacotes e passa pra funcao (o app por exemplo é uma função e por isso passamos pro createServer)
 
-app.use(cors());
-// cors vai deifinir qual endereço podem acessar e quais métodos/headers ele aceita!
+// app.use(cors());
+// cors vai deifinir qual endereço pode ser acessado e quais métodos/headers ele aceita!
 
 const io = require('socket.io')(httpServer, {
   cors: {
@@ -27,11 +28,12 @@ const ioWebChat = require('./socket/webChatSocket');
 
 ioWebChat(io);
 
-app.use('/', webChatRouter);
+app.use(webChatRouter);
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.set('view engine', 'ejs');
 // configurando o express para utilizar o EJS por padrão como template engine
-app.set('views', './views');
+app.set('views', path.join(__dirname, 'public/views'));
 // adiciona o diretório /views à lista de diretórios em que o expresss vai procurar um arquivo
 // com o nome especificado pelo método render -> não precisa especificar o caminho completo do arquivo
 
