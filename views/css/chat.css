@@ -38,7 +38,22 @@ header > p > span {
   font-weight: 400;
 }
 
+.main-chat {
+  display: flex;
+  justify-content: center;
+}
+
+.online-users {
+  padding: 20px;
+}
+
+.online-users > ul {
+  color: green;
+  font-weight: 700;
+}
+
 .messages {
+  flex-grow: 8;
   list-style-type: none;
   padding: 20px;
   position: relative;

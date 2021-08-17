@@ -18,7 +18,7 @@ const createMsg = (msg) => {
   ul.appendChild(li);
 };
 
-const randomNickname = () => {
+const getRandomNickname = () => {
   const letters = 'abcdefghijklmnopqrstuvxwyz';
   const stringLength = 16;
   let nickname = '';
@@ -30,16 +30,47 @@ const randomNickname = () => {
 
 const getNickname = () => {
   const nickname = document.querySelector('#nickname');
-  nickname.innerText = randomNickname();
+  const randomNickname = getRandomNickname();
+  socket.emit('loadUsers', randomNickname);
+  nickname.innerText = randomNickname;
 };
 
 const changeNickname = () => {
   const inputNickname = document.querySelector('#nickname-input');
   const nickname = document.querySelector('#nickname');
+  const onlineUsers = document.querySelectorAll('.user');
+  onlineUsers.forEach((user) => {
+    if (user.innerText === nickname.innerText) {
+      socket.emit('changeNickname', {
+        newNickname: inputNickname.value,
+        oldNickname: user.innerText,
+      });
+    }
+  });
   nickname.innerText = inputNickname.value;
 };
 
+const loadUser = (user) => {
+  const ul = document.querySelector('.users');
+  const li = document.createElement('li');
+  const nickname = document.querySelector('#nickname');
+  li.dataset.testid = 'online-user';
+  li.className = 'user';
+  li.innerText = user;
+  if (user === nickname.innerText) {
+    ul.insertBefore(li, ul.firstChild);
+    return;
+  }
+  ul.appendChild(li);
+};
+
 socket.on('message', (msg) => createMsg(msg));
+
+socket.on('loadUsers', (users) => {
+  const onlineUsers = Array.from(document.querySelectorAll('.user'));
+  onlineUsers.forEach((user) => user.remove());
+  users.forEach(loadUser);
+});
 
 window.onload = () => {
   const changeBtn = document.querySelector('#change-btn');
@@ -48,7 +79,11 @@ window.onload = () => {
   changeBtn.addEventListener('click', changeNickname);
   sendBtn.addEventListener('click', sendMsg);
 
-  socket.emit('onload');
+  socket.emit('loadMessages');
 
   getNickname();
+};
+
+window.onbeforeunload = () => {
+  socket.disconnect();
 };

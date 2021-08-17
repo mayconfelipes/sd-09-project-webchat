@@ -11,7 +11,7 @@
   </head>
   <body>
     <header>
-      <p>Nickname: <span id="nickname" data-testid="online-user"></span></p>
+      <p>Nickname: <span id="nickname"></span></p>
       <form>
         <input
           id="nickname-input"
@@ -31,7 +31,13 @@
       </form>
     </header>
     <main>
-      <ul class="messages"></ul>
+      <div class="main-chat">
+        <aside class="online-users">
+          <h4>Online Users</h4>
+          <ul class="users"></ul>
+        </aside>
+        <ul class="messages"></ul>
+      </div>
       <form class="messageInput">
         <input id="msg-text" data-testid="message-box" type="text" autocomplete="off" />
         <button id="send-btn" type="button" data-testid="send-button">
