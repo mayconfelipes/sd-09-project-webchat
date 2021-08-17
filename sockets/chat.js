@@ -25,18 +25,17 @@ const onDisconnection = (socket, io, nickName) => {
 const allUsers = (socket, io) => {
   socket.on('allUsers', () => {
     io.emit('allUsers', arr);
-    console.log('all', arr);
   });
 };
 
 const editName = ({ socket, io, nickName: userId }) => {
   socket.on('editName', (newName) => {
     io.emit('editName', ({ newName, userId }));
-    console.log('userId', userId);
+  
     const arrayIndex = arr.findIndex((user) => user.nameId === userId);
-    console.log(arrayIndex);
+ 
     arr[arrayIndex].nickName = newName;
-    console.log(arr);
+ 
     io.emit('allUsers', arr);
   });
 };
@@ -44,7 +43,6 @@ const chatIo = (io) => {
   io.on('connection', async (socket) => {
     const nickName = randomstring.generate(16);
     arr.push({ nickName, nameId: nickName });
-    console.log('push', arr);
 
     const messages = await chatContRoller.getAllMessages();
     socket.emit('previousMessage', messages);
