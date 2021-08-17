@@ -1,4 +1,3 @@
-const { result } = require('lodash');
 const chatModel = require('../models/chatModel');
 
 const addZero = (numero) => {
@@ -81,7 +80,7 @@ const handleWithDisconnectEvent = async (io, userId) => {
   connectedClients.push(userId);
   const results = [];
   for (let index = 0; index < connectedClients.length; index += 1) {
-   
+   results.push(chatModel.updateUserStatus(connectedClients, 'online'));
   }
   await Promise.all(results);
   connectedClients.length = 0;
