@@ -83,7 +83,7 @@ describe('3 - Elabore o histórico do chat para que as mensagens persistam', () 
     // peek the messages we sent
     const messages = await page.$$eval(dataTestid('message'), (nodes) => nodes.map((n) => n.innerText));
     expect(messages.length).toEqual(3);
-
+    console.log(messages)
     expect(messages).toEqual(
       expect.arrayContaining([
         expect.stringMatching(chatMessage),
