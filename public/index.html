@@ -35,19 +35,15 @@
 
     let userName = null;
     let newUserName = null;
-    const renderNickName = (nickName) => {
-      
+    const renderNickName = (nickName, nameId) => {
       const ul = document.getElementById('nickName');
       const li = document.createElement('li');
       if (li.innerText !== nickName) {
-        li.setAttribute('id', nickName);
+        li.setAttribute('id', nameId);
         li.innerText = nickName;
         li.setAttribute('data-testid', 'online-user');
         ul.appendChild(li);
-        if (newUserName !== nickName) {
-        }
       }
-
     }
 
     const saveButton = document.getElementById('nicknameUser');
@@ -59,25 +55,40 @@
         input.value = '';
       });
 
-    socket.on('editName', ({newName, nickName}) => {
-      newUserName = newName;
-      const liName = document.getElementById(`${nickName}`);
-      if (newName.length) liName.innerText = newName;
-      socket.emit('allUsers', newName);
-    });
-
+      socket.on('randomNickName', (nickName) => {
+        userName = JSON.parse(nickName);
+        // renderNickName(JSON.parse(nickName));
+      });
 
     socket.on('allUsers', (name) => {
-      const items = name.filter((n) => n !== userName && n);
+      console.log('newUserName', newUserName);
+      const ul = document.getElementById('nickName');
+      ul.innerHTML = '';
+      const mainUser = name.filter(({nameId}) => nameId == userName);
+      mainUser.forEach(({nickName, nameId}) => renderNickName(nickName, nameId))
 
-      items.forEach((item) => {
-        const li = document.getElementById(item);
-        if (!li) {
-          renderNickName(item);
-        }
+      console.log('mainUser', mainUser);
+      console.log('userName', userName);
+
+      const items = name.filter(({nameId}) => nameId !== userName );
+      console.log('items', items);
+      console.log('name', name);
+      items.forEach(({nickName, nameId}) => {
+        // const li = document.getElementById(item);
+        // if (!li) {
+          renderNickName(nickName, nameId);
+        // }
       });
     });
     
+    socket.on('editName', ({newName, userId}) => {
+      console.log('userId', userId);
+      newUserName = newName;
+      const liName = document.getElementById(`${userId}`);
+      if(newName.length) liName.innerText = newName;
+      // socket.emit('allUsers', newName);
+    });
+
     socket.on('previousMessage', (messages) => {
       messages.forEach(renderMessage);
     });
@@ -97,7 +108,7 @@
       event.preventDefault();
       const ul = document.getElementById('nickName');
       const liId = ul.children[0].id;
-      const nickname = document.getElementById(liId);
+      const nickname = document.getElementById(userName);
       const chatMessage = document.getElementById('message');
       if(nickname.innerText.length  && chatMessage.value.length) {
         const messageObject = {
@@ -109,10 +120,7 @@
       }
     });
 
-    socket.on('randomNickName', (nickName) => {
-        userName = nickName;
-        renderNickName(JSON.parse(nickName));
-      });
+   
 
     window.onload = () => {
         socket.emit('allUsers');
