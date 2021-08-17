@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebChat :)</title>
+    <link rel="stylesheet" href="./css/chat.css">
+  </head>
+  <body>
+    <div class="inputName" action="">
+      <input id="newName" autocomplete="off" placeholder="Digite seu novo nome de usuário" />
+      <button id="changeName">Change</button>
+    </div>
+
+    <div>
+      <ul id="listUsers"></ul>
+    </div>
+
+    <div>
+      <ul id="messages"></ul>
+    </div>
+
+    <div class="inputChat" action="">
+      <input id="messageInput" autocomplete="off" placeholder="Digite sua mensagem" />
+      <button id="sendMsg">Send</button>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src='./js/chat.js'></script>
+  </body>
+</html>
