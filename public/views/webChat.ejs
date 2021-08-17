@@ -15,7 +15,11 @@
     </fieldset>
     <div class="allContainer">
       <ul id="usersContainer" class="container usersContainer">Online:</ul>
-      <ul id="msgContainer" class="container msgContainer"></ul>
+      <ul id="msgContainer" class="container msgContainer">
+        <% history.forEach((msg) => { %>
+          <li data-testid="message"><%= msg %></li>
+        <% }) %>
+      </ul>
     </div>
     <fieldset class="msgForm">
       <input id="messageInput" type="text" data-testid="message-box">
@@ -25,7 +29,3 @@
     <script src="../js/webChat.js"></script>
   </body>
 </html>
-
-
-
-

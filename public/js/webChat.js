@@ -56,22 +56,12 @@ messageBtn.addEventListener('click', (e) => {
 });
 
 const addMessage = (message) => {
-  const msg = document.createElement('p');
+  const msg = document.createElement('li');
   msg.setAttribute(DATA_TEST_ID, 'message');
   msg.innerText = message;
   msgContainer.appendChild(msg);
 };
 
-const listMessages = (history) => {
-  if (history) {
-    history.forEach((msg) => {
-      const { timestamp, nickname, message } = msg;
-      addMessage(`${timestamp} - ${nickname}: ${message}`);
-    });
-  }
-};
-
-socket.on('connected', (nick) => updateNick(nick));
-socket.on('history', (history) => listMessages(history));
+socket.on('connected', ({ userId }) => updateNick(userId));
 socket.on('onlineUsers', (users) => listUsers(users));
 socket.on('message', (message) => addMessage(message));
