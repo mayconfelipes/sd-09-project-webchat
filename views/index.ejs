@@ -8,5 +8,12 @@
 </head>
 <body>
   <h1>t9ers webchat</h1>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+			const socket = window.io();
+  </script>
+  <script>
+    socket.emit('message', { chatMessage, nickname })
+  </script>
 </body>
 </html>
