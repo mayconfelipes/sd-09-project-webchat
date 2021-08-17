@@ -13,8 +13,8 @@ const handleEventsSocket = async (io) => {
       await handleMessageEvent(io, chatMessage, nickname);
     });
 
-    socket.on('changeNickname', async ({ userId, newNickname }) => {
-      await handleChangeNickname(io, socket, userId, newNickname);
+    socket.on('changeNickname', async (userObj) => {
+      await handleChangeNickname(io, socket, userObj);
     });
 
     socket.on('disconnect', async () => {

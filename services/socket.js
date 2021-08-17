@@ -65,11 +65,15 @@ const handleMessageEvent = async (io, chatMessage, nickname) => {
   io.emit('message', message);
 };
 
-const handleChangeNickname = async (io, socket, userId, newNickname) => {
+const handleChangeNickname = async (io, socket, userObj) => {
+  const { userNickname, userId, newNickname } = userObj;
   await chatModel.updateUser(userId, newNickname);
+  await chatModel.updateMessages(userNickname, newNickname);
   const users = await chatModel.findUser();
+  const messages = await chatModel.findMessages();
   socket.emit('userId', userId, newNickname, users);
   socket.broadcast.emit('refreshUsers', users);
+  io.emit('refreshMessages', messages);
 };
 
 const handleWithDisconnectEvent = async (socketId, io) => {

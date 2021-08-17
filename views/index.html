@@ -211,18 +211,14 @@ h2 {
   }
 
   socket.on('userId', (id, nickname, users) => {
-    console.log(id);
-    console.log(users);
     userId = id;
     userNickname = nickname;
     userNickNameTitle.innerHTML = 'Nickname: ' + nickname;
     const index = users.findIndex((user) => user._id.toString() === id.toString());
-    console.log(users[index]);
     usersArea.innerHTML = '';
     createAndAppendUser(users[index]);
     users.splice(index, 1);
     createUsers(users);
-    console.log('veio aq');
   });
 
   socket.on('refreshUsers', (users) => {
@@ -231,8 +227,6 @@ h2 {
     createAndAppendUser(users[index]);
     users.splice(index, 1);
     createUsers(users);
-    console.log(users, 'no refresh');
-    console.log(userId);
   });
 
   socket.on('message', (message) => {
@@ -241,8 +235,9 @@ h2 {
 
   socket.on('refreshMessages', (messages) => {
     chat.innerHTML = '';
+    console.log(messages);
     for (let index = 0; index < messages.length; index += 1) {
-      const message = `${messages[index].timestamp} ${messages[index].nickName} ${messages[index].message}`;
+      const message = `${messages[index].timestamp} ${messages[index].nickname} ${messages[index].message}`;
       createMessage(message);    
     }
     chat.appendChild(writeMessageField);
@@ -259,7 +254,7 @@ h2 {
 
   const changeNickname = () => {
     const newNickname = inputNewNickName.value;
-    socket.emit('changeNickname', { userId, newNickname } );
+    socket.emit('changeNickname', { userNickname, userId, newNickname } );
     inputNewNickName.value = '';
   };
   

@@ -13,10 +13,10 @@ const findMessages = async (id) => {
   return obj[0];
 };
 
-const createMessage = async (message, nickName, timestamp) => {
+const createMessage = async (message, nickname, timestamp) => {
   const msg = await connection().then((db) => db.collection('messages').insertOne({
     message,
-    nickName,
+    nickname,
     timestamp,
   }));
   return msg.insertedId;
@@ -38,6 +38,16 @@ const updateUser = async (id, newNickname) => {
   }));
   if (user.modifiedCount === 1) return;
   throw new Error('Update nao realizafo');
+};
+
+const updateMessages = async (oldNickname, newNickname) => {
+  console.log(oldNickname);
+  await connection().then((db) => db.collection('messages').updateMany({
+    nickname: oldNickname,
+  },
+  {
+    $set: { nickname: newNickname },
+  }));
 };
 
 const updateUserStatus = async (id, status) => {
@@ -77,4 +87,5 @@ module.exports = {
   updateUser,
   deleteUser,
   updateUserStatus,
+  updateMessages,
 };
