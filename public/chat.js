@@ -1,5 +1,6 @@
 const socket = window.io();
 
+const dataTestId = 'data-testid';
 const formMessage = document.querySelector('.message-box');
 const inputMessage = document.querySelector('#message-box');
 const inputNickname = document.querySelector('#nickname-box');
@@ -17,16 +18,15 @@ const randomString = (tamanho) => {
   return string;
 };
 let nickname = randomString(16);
-const dataTestId = 'data-testid';
 
 socket.emit('nickname', nickname);
 
 const createUser = (users) => {
   ulUser.innerHTML = '';
   const liUser = document.createElement('li');
-  liUser.innerText = nickname;
   liUser.setAttribute(dataTestId, 'online-user');
   ulUser.appendChild(liUser);
+  liUser.innerText = nickname;
 
   users.forEach((newUser) => {
     if (newUser !== nickname) {
