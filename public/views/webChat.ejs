@@ -9,18 +9,17 @@
   <body>
     <h1 id="title">TRYBE MESSENGER</h1>
     <fieldset id="nick">
-      <span id="user">Welcome to Trybe WebChat! Your default nickname is </span>
-      <form id="nicknameForm" action="">
-        <input id="nickname" type="text" data-testid="nickname-box" placeholder="Change your nickname">
-        <button data-testid="nickname-button">Submit</button>
-      </form>
+      <span id="user">Welcome to Trybe WebChat! Your nickname is </span>
+      <input id="nickInput" type="text" data-testid="nickname-box" placeholder="Change your nickname">
+      <button id="nickBtn" data-testid="nickname-button">Submit</button>
     </fieldset>
-    <ul id="msgContainer"></ul>
-    <fieldset>
-      <form id="msgForm">
-        <input id="message" type="text" data-testid="message-box">
-        <button id="messageBtn" data-testid="send-button">Send Message</button>
-      </form>
+    <div id="allContainer">
+      <ul id="usersContainer" class="container">Online:</ul>
+      <ul id="msgContainer" class="container"></ul>
+    </div>
+    <fieldset id="msgForm">
+      <input id="messageInput" type="text" data-testid="message-box">
+      <button id="messageBtn" data-testid="send-button">Send Message</button>
     </fieldset>
     <script src="/socket.io/socket.io.js"></script>
     <script src="../js/webChat.js"></script>
