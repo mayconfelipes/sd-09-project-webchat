@@ -47,8 +47,8 @@
     renderNickNames(localStorage.nickname)
 
     socket.on('previousMessage', (messages) => {
-      for (message of messages) {
-        renderMessage(message);
+      for (item of messages) {
+        renderMessage(item.message);
       }
     })
 
