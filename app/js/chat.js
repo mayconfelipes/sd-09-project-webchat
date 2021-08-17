@@ -60,15 +60,15 @@ socket.on('getMessages', (oldMessages) => {
 const createLiUsers = (users) => {
   listUsers.innerHTML = '';
   const user = document.createElement('li');
+  user.setAttribute('data-testid', 'online-user');
   listUsers.appendChild(user);
   user.innerText = nickname;
-  user.setAttribute(datatest, 'online-user');
   users.forEach((element) => {
     if (element !== nickname) {
       const newUser = document.createElement('li');
+      newUser.setAttribute(datatest, 'online-user');
       listUsers.appendChild(newUser);
       newUser.innerText = element;
-      newUser.setAttribute(datatest, 'online-user');
     }
   });
 };
