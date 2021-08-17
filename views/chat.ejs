@@ -49,7 +49,7 @@
     function sendNewMessage() {
         const chatMessage = inputMsg.value;
         const nickname = onlineUsers.find(({ id }) => socket.id.includes(id));
-        console.log(nickname);
+        // console.log(nickname);
         socket.emit('message', { chatMessage, nickname: nickname.name || nickname.id });
     }
 
@@ -85,7 +85,16 @@
 
     socket.on('updateOnlineUsers', (users) => {
         removeAllChildrens();
-        addUsersOnline(users);
+        
+        const teste1 = users.filter((user) => !socket.id.includes(user.id));
+        const teste2 = users.find((user) => socket.id.includes(user.id));
+
+        teste1.unshift(teste2)
+
+        
+        addUsersOnline(teste1);
+        
+        // addUsersOnline(users);
     });
 
     btnSendMessage.addEventListener('click', sendNewMessage);

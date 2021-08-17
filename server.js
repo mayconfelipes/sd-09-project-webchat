@@ -20,7 +20,6 @@ const server = app.listen(PORT, () => console.log(`Server rodando na porta ${POR
 const io = socketIO(server);
 
 let onlineUsers = [];
-// getAllMessages().then((res) => console.log(res));
 const socketOn = {
     message: ({ chatMessage, nickname }) => {
         console.log(nickname);
@@ -30,14 +29,21 @@ const socketOn = {
         io.emit('message', messageFormated);
     },
 
-    updateNick: (socket) => (({ newNick, id }) => {
-        const response = onlineUsers.map((user) => {
-            if (socket.id.includes(user.id)) return { name: newNick, id };
-            return user;
-        });
+    // updateNick: (socket) => (({ newNick, id }) => {
+    //     const response = onlineUsers.map((user) => {
+    //         if (socket.id.includes(user.id)) return { name: newNick, id };
+    //         return user;
+    //     });
+    //     onlineUsers = response;
+    //     io.emit('updateOnlineUsers', response);
+    // }),
+
+    updateNick: (socket) => ({ newNick, id }) => {
+        const response = onlineUsers.filter((user) => !socket.id.includes(user.id));
         onlineUsers = response;
-        io.emit('updateOnlineUsers', response);
-    }),
+        onlineUsers.unshift({ id, name: newNick });
+        io.emit('updateOnlineUsers', onlineUsers);
+    },
 };
 
 io.on('connection', (socket) => {
@@ -48,10 +54,17 @@ io.on('connection', (socket) => {
     };
     
     onlineUsers.push(newUser);
-    
+    // onlineUsers.unshift(newUser);
+        
     io.emit('updateOnlineUsers', onlineUsers);
     
     socket.on('message', socketOn.message);
 
     socket.on('updateNick', socketOn.updateNick(socket));
+
+    socket.on('disconnect', () => {
+        const newUsersOnline = onlineUsers.filter((user) => !socket.id.includes(user.id));
+        onlineUsers = newUsersOnline;
+        io.emit('updateOnlineUsers', onlineUsers);
+    });
 });
