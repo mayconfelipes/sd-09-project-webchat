@@ -71,14 +71,14 @@ const handleMessageEvent = async (io, chatMessage, nickname) => {
 const handleChangeNickname = async (io, socket, userObj) => {
   //  when a user wants to change nickname, update the nickname on db, update te nickname on the messages
   // that is on db sent the messages updated to all clientes as the new user nickname
-  const { userNickname, userId, newNickname } = userObj;
+  const { userId, newNickname } = userObj;
   await chatModel.updateUser(userId, newNickname);
-  await chatModel.updateMessages(userNickname, newNickname);
+  //  await chatModel.updateMessages(userNickname, newNickname);
   const users = await chatModel.findUser();
-  const messages = await chatModel.findMessages();
+  //  const messages = await chatModel.findMessages();
   socket.emit('userId', userId, newNickname, users);
   socket.broadcast.emit('refreshUsers', users);
-  io.emit('refreshMessages', messages);
+  //  io.emit('refreshMessages', messages);
 };
 
 const handleWithDisconnectEvent = async (socketId, io) => {
