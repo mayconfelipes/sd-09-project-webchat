@@ -16,9 +16,8 @@ sendButton.addEventListener('click', (e) => {
 
 nicknameButton.addEventListener('click', (e) => {
   e.preventDefault();
-  // socket.emit('newNickname', { newNickname: inputNickname.value, 
-  //   oldNickname: usersUl.firstChild.innerText });
-  usersUl.firstChild.innerText = inputNickname.value;
+  socket.emit('newNickname', { newNickname: inputNickname.value });
+  // usersUl.firstChild.innerText = inputNickname.value;
   inputNickname.value = '';
   return false;
 });
@@ -30,23 +29,22 @@ const createMessage = (message) => {
   li.setAttribute('data-testid', 'message'); 
   messagesUl.appendChild(li);
 };
-const createUser = (id) => {
-  const li = document.createElement('li');
-  li.innerText = id;
-  li.setAttribute('data-testid', 'online-user'); 
-  usersUl.prepend(li);
+
+const populateUsers = (array, id) => {
+  usersUl.innerHTML = null;
+  if (!sessionStorage.getItem('socket')) sessionStorage.setItem('socket', id);
+  array.forEach((item) => {
+    const li = document.createElement('li');
+    li.innerText = item.nickname;
+    li.setAttribute('data-testid', 'online-user');
+    if (sessionStorage.getItem('socket') !== item.socketId) {
+      usersUl.appendChild(li);
+    } else {
+      usersUl.prepend(li);
+    }
+  });
 };
-// const populateUsers = (array) => {
-//   usersUl.innerHTML = null;
-//   console.log('passou ṔASSOU');
-//   array.forEach((id) => {
-//     const li = document.createElement('li');
-//     li.innerText = id;
-//     li.setAttribute('data-testid', 'online-user');
-//     usersUl.prepend(li);
-//   });
-// };
 
 socket.on('message', (message) => createMessage(message));
-// socket.on('newUser', ({ connectedUsers }) => populateUsers(connectedUsers));
-socket.on('newUser', ({ id }) => createUser(id));
+socket.on('newUser', ({ connectedUsers, id }) => populateUsers(connectedUsers, id));
+socket.on('users', ({ connectedUsers, id }) => populateUsers(connectedUsers, id));

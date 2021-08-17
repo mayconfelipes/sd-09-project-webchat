@@ -19,26 +19,31 @@ const io = require('socket.io')(socketIoServer, {
 const chatController = require('./controllers/chat');
 const chatModel = require('./models/chat');
 
-// const connectedUsers = [];
+const messageFunc = async (chatMessage, nickname) => {
+  const date = new Date();
+  const finalDate = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`; 
+  const finalTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  const finalMessage = `${finalTime} ${finalDate} - ${nickname} ${chatMessage}`;
+  await chatModel.postMessage({ chatMessage, timeStamp: finalTime, nickname });
+  io.emit('message', finalMessage);
+};
+const connectedUsers = [];
 io.on('connection', (socket) => {
   const id = crypto.randomBytes(8).toString('hex');
-  // connectedUsers.push(id);
-  // console.log(connectedUsers);
-  // io.emit('newUser', { connectedUsers });
-  io.emit('newUser', { id });
-  socket.on('message', async ({ chatMessage, nickname }) => {
-    const date = new Date();
-    const finalDate = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`; 
-    const finalTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-    const finalMessage = `${finalTime} ${finalDate} - ${nickname} ${chatMessage}`;
-    await chatModel.postMessage({ chatMessage, timeStamp: finalTime, nickname });
-    io.emit('message', finalMessage);
+  connectedUsers.push({ socketId: socket.id, nickname: id });
+  io.emit('newUser', { connectedUsers, id: socket.id });
+  socket.on('message', ({ chatMessage, nickname }) => {
+    messageFunc(chatMessage, nickname);
   });
-  // socket.on('newNickname', ({ newNickname, oldNickname }) => {
-  //   const index = connectedUsers.findIndex((nick) => nick === oldNickname);
-  //   connectedUsers.splice(index, 1, newNickname);
-  //   io.emit('users', { connectedUsers });
-  // });
+  socket.on('newNickname', ({ newNickname }) => {
+    const index = connectedUsers.findIndex(({ socketId }) => socketId === socket.id);
+    connectedUsers.splice(index, 1, { socketId: socket.id, nickname: newNickname });
+    io.emit('users', { connectedUsers, id: socket.id });
+  });
+  socket.on('disconnect', () => {
+    connectedUsers.splice(connectedUsers.findIndex(({ socketId }) => socketId === socket.id), 1);
+    io.emit('users', { connectedUsers, id: false });
+  });
 });
 // teste
 app.use(cors());
