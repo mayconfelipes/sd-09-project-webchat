@@ -6,7 +6,6 @@ const messages = document.querySelector('#messages');
 const formNickname = document.querySelector('#set-nickname');
 const nickInput = document.querySelector('#input-nick');
 const listUsers = document.querySelector('#user-list');
-const nickField = document.querySelector('#nick-field');
 
 const generateNickname = (length) => {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

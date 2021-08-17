@@ -18,18 +18,18 @@ const users = {};
 
 io.on('connection', async (socket) => {
   const timestamp = formatData();
-  
+
+  socket.on('setNicks', (newNick) => {
+    users[socket.id] = newNick;
+    io.emit('setNicks', users);
+  });
+
   socket.on('message', async ({ chatMessage, nickname }) => {
     await ChatModel.saveMessages({ message: chatMessage, nickname, timestamp });
     io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
   });
 
   socket.emit('getMessages', await ChatModel.getMessages());
-
-  socket.on('setNicks', (newNick) => {
-    users[socket.id] = newNick;
-    io.emit('setNicks', users);
-  });
 
   socket.on('disconnect', () => {
     delete users[socket.id];
