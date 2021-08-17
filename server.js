@@ -8,8 +8,10 @@ const app = express();
 const socketIoServer = require('http').createServer(app);
 
 const io = require('socket.io')(socketIoServer);
+const messageModel = require('./models/messages');
 
 let userList = [];
+let messageList;
 
 const generateRandomName = () => {
   let randomName;
@@ -23,17 +25,7 @@ const generateRandomName = () => {
   return randomName;
 };
 
-io.on('connection', (socket) => {
-  const newRandomName = generateRandomName();
-
-  userList.push({ nickname: newRandomName, userId: `${socket.id}` });
-
-  io.emit('connection', userList);
-
-  console.log(userList);
-
-  socket.emit('nickname', newRandomName);
-
+const changeNickname = (socket) => {
   socket.on('changeNickname', (newNickname) => {
     socket.emit('nickname', newNickname);
 
@@ -45,10 +37,36 @@ io.on('connection', (socket) => {
 
     io.emit('replaceUsername', userList);
   });
+};
 
-  socket.on('message', ({ chatMessage, nickname, currentTime }) => {
+const message = (socket) => {
+  socket.on('message', async ({ chatMessage, nickname, currentTime }) => {
+    await messageModel
+      .postMessage({ message: chatMessage, nickname, timestamp: currentTime });
+
     io.emit('message', `${currentTime} - ${nickname}: ${chatMessage}`);
   });
+};
+
+const messages = async () => await messageModel.getAllMessages() || [];
+
+messages().then((list) => {
+  messageList = list;
+});
+
+io.on('connection', async (socket) => {
+  const newRandomName = generateRandomName();
+  const updatedMessageList = await messageModel.getAllMessages();
+
+  io.emit('updateMessageList', updatedMessageList);
+
+  userList.push({ nickname: newRandomName, userId: `${socket.id}` });
+
+  io.emit('connection', userList);
+
+  changeNickname(socket);
+
+  message(socket);
 });
 
 app.set('view engine', 'ejs');
@@ -57,7 +75,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (_, res) => {
-  res.render('index', { userList });
+  res.render('index', { userList, messageList });
 });
 
 socketIoServer.listen(3000, () => console.log('Listening on *:3000'));

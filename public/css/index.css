@@ -39,6 +39,18 @@ main {
   border: 1px solid rgb(32, 123, 207);
   margin-right: 3px;
   width: 50%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.user-container::-webkit-scrollbar {
+  width: 0.7rem;
+}
+
+.user-container::-webkit-scrollbar-thumb {
+  background-color: rgb(223 227 229 / 34%);
+  border-radius: 1.1rem;
+  border: 0.2rem solid #2c2c2c;
 }
 
 .message-container {
@@ -52,10 +64,6 @@ main {
 .message-container::-webkit-scrollbar {
   width: 0.7rem;
 }
-
-/* .message-container::-webkit-scrollbar-track {
-  background: orange;
-} */
 
 .message-container::-webkit-scrollbar-thumb {
   background-color: rgb(223 227 229 / 34%);

@@ -35,7 +35,13 @@
     
     <!-- display flex column -->
     <section class="message-container">
-      <ul class="message-list"></ul>
+      <ul class="message-list">
+        <% messageList.length && messageList.forEach(({ message, nickname, timestamp }) => { %>
+          <li data-testid="message" >
+            <%= timestamp %> - <%= nickname %>: <%= message %>
+          </li>
+        <%}) %>
+      </ul>
     </section>
   </main>
 

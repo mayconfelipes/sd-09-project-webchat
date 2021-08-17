@@ -86,4 +86,19 @@ const addNewMessage = (message) => {
   messageList.appendChild(newMessageElement);
 };
 
+const refreshMessageList = (updatedMessageList) => {
+  const messageList = document.querySelector('.message-list');
+
+  messageList.innerHTML = null;
+  updatedMessageList.forEach(({ message, timestamp, nickname }) => {
+    const newMessageElement = document.createElement('li');
+
+    newMessageElement.innerText = `${timestamp} - ${nickname}: ${message}`;
+    newMessageElement.dataset.testid = 'message';
+
+    messageList.appendChild(newMessageElement);
+  });
+};
+
 socket.on('message', addNewMessage);
+socket.on('updateMessageList', refreshMessageList);
