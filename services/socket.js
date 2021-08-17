@@ -36,15 +36,15 @@ module.exports = {
   iD,
 };
 
-const saveUserOnDb = async (nickName) => {
+const saveUserOnDb = async (nickName, socketId) => {
   console.log(`${nickName} conectado`);
-  const id = await chatModel.createUsers(nickName, 'online');
+  const id = await chatModel.createUsers(nickName, 'online', socketId);
   return id;
 };
 
 const handleWithNewConnection = async (io, socket) => {
   const nickName = `userId${iD()}`;
-  const id = await saveUserOnDb(nickName);
+  const id = await saveUserOnDb(nickName, socket.id);
   const users = await chatModel.findUser();
   const messages = await chatModel.findMessages();
   socket.emit('userId', id, nickName, users);
@@ -67,23 +67,10 @@ const handleChangeNickname = async (io, socket, userId, newNickname) => {
   socket.emit('userId', userId, newNickname, users);
 };
 
-const connectedClients = [];
-
-// for (let index2 = 0; index2 < connectedClients.length; index2 += 1) {
-//   if (_id.toString() !== connectedClients[index2].toString()) {
-//     result.push(chatModel.deleteUser(userId));
-//   }
-// }
-const handleWithDisconnectEvent = async (io, userId) => {
-  console.log('aqui');
-  // const users = await chatModel.findUser();
-  connectedClients.push(userId);
-  const results = [];
-  for (let index = 0; index < connectedClients.length; index += 1) {
-   results.push(chatModel.updateUserStatus(connectedClients, 'online'));
-  }
-  await Promise.all(results);
-  connectedClients.length = 0;
+const handleWithDisconnectEvent = async (socketId, io) => {
+  await chatModel.deleteUser(socketId);
+  const users = await chatModel.findUser();
+  io.emit('refreshUsers', users);
 };
 
 module.exports = {

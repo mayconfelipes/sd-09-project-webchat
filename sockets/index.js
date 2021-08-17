@@ -17,14 +17,9 @@ const handleEventsSocket = async (io) => {
       await handleChangeNickname(io, socket, userId, newNickname);
     });
 
-    socket.on('connected', async ({ userId }) => {
-      console.log('no connec');
-      await handleWithDisconnectEvent(io, userId);
-    });
-
     socket.on('disconnect', async () => {
-      console.log('user disconnected');
-      io.emit('areYouConnected?');
+      console.log(socket.id);
+      await handleWithDisconnectEvent(socket.id, io);
     });
   });
 };

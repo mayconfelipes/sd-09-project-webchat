@@ -151,7 +151,7 @@ h2 {
     <div class="chat-messages-field">
       <div class="chat" id="chat"></div>
       <div class="write-message" id="write-message">
-        <textarea type="text" placeholder="Digite uma mensagem..." data-testid="message-box" id="text-area"></textarea>
+        <textarea type="text" placeholder="Digite uma mensagem..."  data-testid="message-box" id="text-area"></textarea>
         <button type="button" id="sent" data-testid="send-button">Enviar</button>
     </div>
   </div>
@@ -226,11 +226,6 @@ h2 {
     chat.appendChild(writeMessageField);
   });
 
-  socket.on('areYouConnected?', () => {
-    console.log('sim');
-    socket.emit('connected', { userId });
-  });
-
   const sentMessage = (e) => {
     if(e.which == 13 || (e.type === 'click' && e.target.id === 'sent')){
       e.preventDefault();
@@ -243,7 +238,7 @@ h2 {
   const changeNickname = () => {
     const newNickname = inputNewNickName.value;
     socket.emit('changeNickname', { userId, newNickname } );
-    newNickname.value = '';
+    inputNewNickName.value = '';
   };
   
   buttonSent.addEventListener('click', sentMessage);

@@ -22,9 +22,9 @@ const createMessage = async (message, nickName, timestamp) => {
   return msg.insertedId;
 };
 
-const createUsers = async (nickname, status) => {
+const createUsers = async (nickname, status, socketId) => {
   const user = await connection().then((db) => db.collection('users').insertOne({
-    nickname, status,
+    nickname, status, socketId,
   }));
   return user.insertedId;
 };
@@ -63,11 +63,12 @@ const findUser = async (id) => {
   return obj[0];
 };
 
-const deleteUser = async (id) => {
-  await connection().then((db) => db.collection('users').find({
-    _id: ObjectId(id),
-  }));
+const deleteUser = async (socketId) => {
+  await connection().then((db) => db.collection('users').deleteOne({ 
+    socketId,
+    }));
 };
+
 module.exports = {
   findMessages,
   createMessage,
