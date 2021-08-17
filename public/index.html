@@ -12,13 +12,14 @@
 
 <body>
   <form id="chat">
-    <input type="text" id="inputName" name="username" placeholder="Digite seu NickName">
-    <div class="messages"></div>
+    <input type="text" id="inputName" data-testid="online-user" name="username" placeholder="Digite seu NickName">
+    <div class="messages" id="messages"></div>
     <div class="nickNames"></div>
-    <button type="button" id="namesButton">Enviar</button>
-    <input type="text" name="message" placeholder="Digite sua Mensagem">
-    <button type="submit">Enviar</button>
+    <button type="button" id="namesButton" data-testid="nickname-button">Enviar</button>
+    <input type="text" name="message" data-testid="message-box" placeholder="Digite sua Mensagem">
+    <button type="submit" data-testid="send-button">Enviar</button>
   </form>
+  <script src="js/getNickName.js"></script>
   <script>
     const socket = io('localhost:3000')
 
@@ -36,27 +37,27 @@
           </div>`)
     }
 
-    socket.on('previousMessage', function (messages) {
+    socket.on('previousMessage',  (messages) => {
       for (message of messages) {
         renderMessage(message);
       }
     })
 
-    socket.on('previousNames', function (messages) {
+    socket.on('previousNames',  (messages) => {
       for (message of messages) {
         renderNickNames(message);
       }
     })
 
-    socket.on('message', function (message) {
+    socket.on('message',  (message) => {
       renderMessage(message);
     })
 
-    socket.on('receivedName', function (message) {
+    socket.on('receivedName', (message) => {
       renderNickNames(message);
     })
 
-    $('#chat').submit(function (event) {
+    $('#chat').submit( (event) => {
       event.preventDefault();
       const nickname = $('input[name=username]').val();
       const chatMessage = $('input[name=message]').val();
@@ -66,7 +67,7 @@
       socket.emit('message', messageObject)
     })
 
-    const getEl = (id) => document.getElementById(id);
+    // const getEl = (id) => document.getElementById(id);
     const namesButton = getEl('namesButton');
 
     namesButton.addEventListener('click', () => {
