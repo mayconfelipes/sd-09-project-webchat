@@ -32,7 +32,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('saiu aqui ó');
     delete users[socket.id];
     socket.broadcast.emit('disconnectUser', users);
   });
