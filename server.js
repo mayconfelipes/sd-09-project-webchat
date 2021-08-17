@@ -22,6 +22,8 @@ app.use(express.static('public'));
 
 app.use(cors());
 
+const users = {};
+
 io.on('connection', async (socket) => {
   socket.on('message', async ({ chatMessage, nickname }) => {
     const timestamp = moment().format('DD-MM-yyyy h:mm:ss A');
@@ -29,6 +31,16 @@ io.on('connection', async (socket) => {
     io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
   });
   socket.emit('getMessages', await chatModel.getMessages());
+
+  socket.broadcast.on('nickname', (nickname) => {
+    users[socket.id] = nickname;
+    io.emit('nickname', Object.values(users));
+  });
+
+  socket.on('disconnect', () => {
+    delete users[socket.id];
+    socket.broadcast.emit('userDisconnect', Object.values(users));
+  });
 });
 
 app.get('/', (_req, res) => res.render('index'));

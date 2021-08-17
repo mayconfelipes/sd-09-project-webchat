@@ -4,8 +4,8 @@ const formMessage = document.querySelector('.message-box');
 const inputMessage = document.querySelector('#message-box');
 const inputNickname = document.querySelector('#nickname-box');
 const ulMessage = document.querySelector('#message');
+const ulUser = document.querySelector('#user');
 const formUser = document.querySelector('.nickname-box');
-const user = document.querySelector('#online-user');
 
 // ref: https://www.webtutorial.com.br/funcao-para-gerar-uma-string-aleatoria-random-com-caracteres-especificos-em-javascript/
 const randomString = (tamanho) => {
@@ -17,16 +17,40 @@ const randomString = (tamanho) => {
   return string;
 };
 let nickname = randomString(16);
+const dataTestId = 'data-testid';
 
-const createUser = () => {
-  user.innerText = nickname;
+socket.emit('nickname', nickname);
+
+const createUser = (users) => {
+  ulUser.innerHTML = '';
+  const liUser = document.createElement('li');
+  liUser.innerText = nickname;
+  liUser.setAttribute(dataTestId, 'online-user');
+  ulUser.appendChild(liUser);
+
+  users.forEach((newUser) => {
+    if (newUser !== nickname) {
+      const li = document.createElement('li');
+      li.innerText = newUser;
+      li.setAttribute(dataTestId, 'online-user');
+      ulUser.appendChild(li);
+    }
+  });
 };
-createUser();
+
+socket.on('userDisconnect', (dropUser) => {
+  console.log(dropUser);
+  createUser(dropUser);
+});
+
+socket.on('nickname', (users) => {
+  createUser(users);
+});
 
 const createMessage = (message) => {
   const li = document.createElement('li');
   li.innerText = message;
-  li.setAttribute('data-testid', 'message');
+  li.setAttribute(dataTestId, 'message');
   ulMessage.appendChild(li);
 };
 
@@ -41,9 +65,10 @@ formMessage.addEventListener('submit', (event) => {
 
 formUser.addEventListener('submit', (event) => {
   event.preventDefault();
-
-  user.innerText = inputNickname.value;
   nickname = inputNickname.value;
+
+  socket.emit('nickname', nickname);
+  inputNickname.value = '';
 });
 
 socket.on('message', (message) => {
@@ -53,7 +78,7 @@ socket.on('message', (message) => {
 socket.on('getMessages', (oldMessages) => {
   oldMessages.forEach(({ message, nickname: nick, timestamp }) => {
     const li = document.createElement('li');
-    li.setAttribute('data-testid', 'message');
+    li.setAttribute(dataTestId, 'message');
     li.textContent = `${timestamp} - ${nick}: ${message}`;
     ulMessage.appendChild(li);
   });
