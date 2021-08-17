@@ -16,11 +16,14 @@
     <div>
         <h3>Online</h3>
         <ul id="usersOnline">
-
+            
         </ul>
     </div>
     <div id="chat">
         <h3>Chat</h3>
+        <% messages.forEach((msg) => { %>
+          <p data-testid="message"><%= msg %></p>
+        <% }) %>
     </div>
     <div>
         <input type="text" id="input-msg" data-testid="message-box">
@@ -51,32 +54,26 @@
     }
 
     function saveNewNick() {
-        const newNick = inputNick.value;        
-        socket.emit('updateNick', {newNick, id: socket.id});
+        const newNick = inputNick.value;
+        socket.emit('updateNick', { newNick, id: socket.id });
         inputNick.value = '';
     }
 
     function removeAllChildrens() {
         const childrens = document.querySelectorAll('.userName');
-        childrens.forEach((element) => usersOnline.removeChild(element))
+        childrens.forEach((element) => usersOnline.removeChild(element));
     }
 
-    function addUsersOnline(users)  {
+    function addUsersOnline(users) {
         onlineUsers = users;
-        // saveOnStorage('onlineUsers', users)
-        users.forEach(({name, id}) => {
+        users.forEach(({ name, id }) => {
             const li = document.createElement('li');
             li.innerText = name || id;
-            li.className = 'userName'
+            li.className = 'userName';
             li.setAttribute('data-testid', 'online-user');
-            usersOnline.appendChild(li)
+            usersOnline.appendChild(li);
         });
     }
-
-    // function saveOnStorage(key, value) {
-    //     const stringValue = JSON.stringify(value)
-    //     localStorage.setItem(key, stringValue)
-    // }
 
     socket.on('message', (menssage) => {
         const p = document.createElement('p');
