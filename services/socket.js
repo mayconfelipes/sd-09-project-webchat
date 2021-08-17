@@ -44,6 +44,8 @@ const saveUserOnDb = async (nickName, socketId) => {
 
 const handleWithNewConnection = async (io, socket) => {
   try {
+    //  when a new connection started get the nickname, create the user using nickname and socket id
+    // get all users and message and sent to all clients connecteds
     const nickName = `userId${iD()}`;
     const id = await saveUserOnDb(nickName, socket.id);
     const users = await chatModel.findUser();
@@ -58,6 +60,7 @@ const handleWithNewConnection = async (io, socket) => {
 };
 
 const handleMessageEvent = async (io, chatMessage, nickname) => {
+  // when arrive a new message get all messages and sent to all clients connecteds
   const messageObj = createMessage(chatMessage, nickname);
   const { message, timestamp } = messageObj;
   const nickNameChat = nickname;
@@ -66,6 +69,8 @@ const handleMessageEvent = async (io, chatMessage, nickname) => {
 };
 
 const handleChangeNickname = async (io, socket, userObj) => {
+  //  when a user wants to change nickname, update the nickname on db, update te nickname on the messages
+  // that is on db sent the messages updated to all clientes as the new user nickname
   const { userNickname, userId, newNickname } = userObj;
   await chatModel.updateUser(userId, newNickname);
   await chatModel.updateMessages(userNickname, newNickname);
@@ -77,6 +82,7 @@ const handleChangeNickname = async (io, socket, userObj) => {
 };
 
 const handleWithDisconnectEvent = async (socketId, io) => {
+  //  when a user disconnect delete the user using the socket id
   await chatModel.deleteUser(socketId);
   const users = await chatModel.findUser();
   io.emit('refreshUsers', users);
