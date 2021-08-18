@@ -11,13 +11,13 @@ const socketServer = require('http').createServer(app);
 const io = require('socket.io')(socketServer);
 
 const messageDate = () => {
-  const toLocate = new Date()
+  const toLocale = new Date()
   .toLocaleDateString('pt-br', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
   });
-  const date = toLocate.split('/').join('-');
+  const date = toLocale.split('/').join('-');
   const hour = new Date().toTimeString().split(' ')[0];
   return `${date} ${hour}`;
 };
@@ -27,9 +27,9 @@ io.on('connection', (socket) => {
   console.log(`Client ${socket.id} se conectou`);
 
   socket.on('message', ({ nickname, chatMessage }) => {
-    const messa = `${messageDate()} - ${nickname}: ${chatMessage}`;
-    io.emit('message', messa);
-    return messa;
+    const message = `${messageDate()} - ${nickname}: ${chatMessage}`;
+    io.emit('message', message);
+    return message;
   });
 });
 
