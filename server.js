@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 require('dotenv').config();
 
 const { PORT = 3000 } = process.env;
@@ -41,28 +42,18 @@ app.use(
   }),
 );
 
-app.get('/', async (_req, res) => {
-  const messages = await ChatController.findAll(connection, ChatModel);
-
-  return res.render('chat', { sockets, messages });
-});
-
-app.get('/chat', async (_req, res) => {
-  const messages = await ChatController.findAll(connection, ChatModel);
-
-  return res.status(200).json(messages);
-});
-
-app.get('/ping', (_req, res) => res.status(200).json({ message: 'pong' }));
-
 io.on('connection', (socket) => {
   const trimId = serializeId(socket.id);
   const socketWithTrimId = { ...socket, trimId };
 
   sockets.push(socketWithTrimId);
-
+  console.log(sockets.length);
+  socket.emit('welcome', trimId);
+  io.emit('login', trimId);
+  
   socket.on('disconnect', () => {
     sockets.splice(sockets.indexOf(socketWithTrimId), 1);
+    io.emit('logout', trimId);
   });
 
   socket.on('message', ({ chatMessage, nickname }) => {
@@ -78,10 +69,21 @@ io.on('connection', (socket) => {
   socket.on('nicknameUpdate', ({ target, newNickname }) => {
     io.emit('nicknameUpdate', { target, newNickname });
   });
-
-  socket.emit('welcome', trimId);
-  io.emit('login', trimId);
 });
+
+app.get('/', async (_req, res) => {
+  const messages = await ChatController.findAll(connection, ChatModel);
+
+  return res.render('chat', { sockets, messages });
+});
+
+app.get('/chat', async (_req, res) => {
+  const messages = await ChatController.findAll(connection, ChatModel);
+
+  return res.status(200).json(messages);
+});
+
+app.get('/ping', (_req, res) => res.status(200).json({ message: 'pong' }));
 
 server.listen(PORT, () => {
   console.log(`Listening to port ${PORT}`);
