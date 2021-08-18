@@ -19,8 +19,12 @@ function ioWebChat(io) {
       // aqui a funcao recebe a informacao do emit e chama o model
       const user = onlineUsers.findIndex((u) => u.nickname === userId);
       onlineUsers[user].nickname = newNick;
-      io.emit('updateNick', { nick: newNick, users: onlineUsers });
+      io.emit('refreshUsers', { users: onlineUsers });
     });
+
+    // socket.on('refreshUsers', ()  => {
+    //   io.emit()
+    // })
 
     socket.on('message', async ({ chatMessage, nickname }) => {
       io.emit('message', `${getTimestamp} - ${nickname}: ${chatMessage}`);
@@ -29,7 +33,7 @@ function ioWebChat(io) {
 
     socket.on('disconnect', () => {
     const userIndex = onlineUsers.findIndex((u) => u.userId === userId);
-    onlineUsers.splice(userIndex, 1); io.emit('disconnectUser', onlineUsers);
+    onlineUsers.splice(userIndex, 1); io.emit('disconnectUser', { users: onlineUsers });
     });
   });
 }

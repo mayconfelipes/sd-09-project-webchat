@@ -11,14 +11,15 @@ const nickInput = document.querySelector('#nickInput');
 const usersContainer = document.querySelector('#usersContainer');
 const DATA_TEST_ID = 'data-testid';
 
-const listUsers = ({ nick = userNick, users }) => {
+const listUsers = ({ users, noUser = false }) => {
   onlineUsers = users;
+  if (noUser) userNick = '';
   usersContainer.innerHTML = '';
-  usersContainer.innerText = 'Online:';
+  // usersContainer.innerText = 'Online:';
   if (userNick !== '') {
     const liMyUser = document.createElement('li');
     liMyUser.setAttribute(DATA_TEST_ID, 'online-user');
-    liMyUser.innerText = nick;
+    liMyUser.innerText = userNick;
     usersContainer.appendChild(liMyUser);
   }
   onlineUsers.forEach((u) => {
@@ -29,23 +30,29 @@ const listUsers = ({ nick = userNick, users }) => {
       usersContainer.appendChild(liUser);
     }
   });
+  return null;
 };
 
-const createNick = (nick) => {
-  const user = document.querySelector('#user');
-  const nickname = document.createElement('span');
-  nickname.setAttribute('id', 'userId');
-  nickname.innerText = nick;
-  user.appendChild(nickname);
+const createNick = ({ nick }) => {
+  const userId = () => (document.querySelector('#myUser'));
+  if (!userId()) {
+    userNick = nick;
+    const user = document.querySelector('#user');
+    const nickname = document.createElement('span');
+    nickname.setAttribute('id', 'myUser');
+    nickname.innerText = nick;
+    user.appendChild(nickname);
+  }
+  return null;
 };
 
-const updateNick = ({ nick, users }) => {
+const updateNick = ({ nick }) => {
   userNick = nick;
-  const userId = () => (document.querySelector('#userId'));
+  const userId = () => (document.querySelector('#myUser'));
   if (!userId()) createNick(nick);
   userId().innerHTML = nick;
   nickInput.value = '';
-  listUsers({ users });
+  return null;
 };
 
 nickBtn.addEventListener('click', (e) => {
@@ -67,13 +74,13 @@ const addMessage = (message) => {
   msgContainer.appendChild(msg);
 };
 
-const removeNickname = (users) => {
+const removeNickname = ({ users }) => {
   userNick = '';
-  listUsers({ users });
+  listUsers({ users, noUser: true });
 };
 
-socket.on('connected', updateNick);
+socket.on('connected', ({ nick, users }) => [createNick({ nick }), listUsers({ users })]);
 socket.on('onlineUsers', listUsers);
-socket.on('updateNick', updateNick);
+socket.on('refreshUsers', listUsers);
 socket.on('message', addMessage);
 socket.on('disconnectUser', removeNickname);
