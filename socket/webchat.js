@@ -12,7 +12,7 @@ function ioWebchat(io) {
   io.emit('connected', { nick: userId, users: onlineUsers });
 
   socket.on('updateNick', ({ newNick }) => {
-    const user = onlineUsers.findIndex((u) => u.nickname === userId);
+    const user = onlineUsers.findIndex((u) => u.userId === userId);
     onlineUsers[user].nickname = newNick; io.emit('refreshUsers', { users: onlineUsers });
   });
 

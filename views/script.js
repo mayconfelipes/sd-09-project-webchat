@@ -66,11 +66,6 @@ const createNick = ({ nick }) => {
     messageInput.value = '';
   });
 
-  const removeNickname = ({ users }) => {
-    userNick = '';
-    listUsers({ users, noUser: true });
-  };
-
   socket.on('connected', ({ nick, users }) => [createNick({ nick }), listUsers({ users })]);
   socket.on('onlineUsers', listUsers);
   socket.on('refreshUsers', listUsers);
@@ -82,4 +77,6 @@ const createNick = ({ nick }) => {
     msgContainer.appendChild(newMessage);
   });
 
-  socket.on('disconnectUser', removeNickname);
+  socket.on('disconnectUser', ({ users }) => {
+    listUsers({ users, noUser: true });
+  });
