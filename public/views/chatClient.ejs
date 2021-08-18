@@ -13,14 +13,14 @@
 <body>
 
   <div id="content">
-    <div id="content-usuarios">
+    <div id="content-users">
 
-      <form id="form-usuarios" action="">
+      <form id="form-users" action="">
       <input data-testid="nickname-box" autocomplete="off" placeholder="Alterar nickname" />
       <button data-testid="nickname-button">Salvar</button>
       </form>
   
-      <ul id="usuarios">
+      <ul id="users">
         <li>Usuario 1</li>
         <li>Usuario 2</li>
         <li>Usuario 3</li>
@@ -28,7 +28,7 @@
 
     </div>
   
-  <ul id="mensagens">
+  <ul id="messages">
     <li> Mensagens 1</li>
     <li> Mensagens 2</li>
     <li> Mensagens 3</li>
@@ -36,14 +36,15 @@
 </div>
 
   <form id="form-messages" action="">
-    <input data-testid="message-box" id="mensagemInput" autocomplete="off" placeholder="Digite uma nova mensagem aqui"/>
+    <input data-testid="message-box" id="messageInput" autocomplete="off" placeholder="Digite uma nova mensagem aqui"/>
     <button data-testid="send-button">Enviar</button>
   </form>
 
   <script>
+    // escuta os eventos do chatServer
     const socket = io();
     const form = document.querySelector('#form-messages')
-    const inputMessage = document.querySelector('#mensagemInput')
+    const inputMessage = document.querySelector('#messageInput')
 
     let nickname = createNickname(16);
 
