@@ -34,3 +34,8 @@ app.get('/', async (_req, res) => {
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+// Academic Honesty:
+// Consulted repositories: https://github.com/tryber/sd-05-project-webchat/pull/8/files 
+// https://github.com/tryber/sd-09-project-webchat/pull/60/files
+// Consulted content: https://www.youtube.com/watch?v=-jXfKDYJJvo
