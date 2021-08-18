@@ -30,18 +30,41 @@ http.listen(3000, () => {
   console.log('Conectado...');
 });
 
-// Emitindo e recebendo eventos
-io.on('connection', (socket) => {
-  socket.on('userLogin', (user) => {
-    io.emit('userLogin', user);
-  });
+const users = [];
 
-  // recebendo
-  socket.on('message', (data) => {
-    const { chatMessage, nickname } = data;
+const userLoginEvent = (socket) => (user) => {
+  const userData = {
+    nickname: user,
+    userId: socket.id,
+  };
+  users.unshift(userData);
+  io.emit('userLogin', users);
+};
 
+const userMessageEvent = (socket) => (data) => {
+  const { chatMessage, nickname } = data;
     const message = `${moment().format('L LTS')} - ${nickname}: ${chatMessage}`;
+    io.emit('message', message, socket.id);
+};
 
-    io.emit('message', message);
+io.on('connection', (socket) => {
+  socket.on('userLogin', userLoginEvent(socket));
+
+  socket.on('message', userMessageEvent(socket));
+
+  socket.on('updateUserName', (nickName) => {
+    console.log(nickName);
+
+    users.map((user) => {
+      if (user.userId === socket.id) {
+        users.splice(users.indexOf(user), 1);
+        const userUpdated = { nickname: nickName, userId: socket.id };
+
+        return users.push(userUpdated);
+      }
+
+      return users;
+    });
+    io.emit('updateUserName', users);
   });
 });

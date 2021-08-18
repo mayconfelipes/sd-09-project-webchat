@@ -23,6 +23,7 @@
     <ul id="messages"></ul>
 
     <script>
+
       const socket = io('http://localhost:3000');
 
       // Referência: https://www.webtutorial.com.br/funcao-para-gerar-uma-string-aleatoria-random-com-caracteres-especificos-em-javascript/
@@ -37,26 +38,53 @@
 
       let randomUserName = generateUserName(16);
 
-      const showUserName = (user) => {
+      const userNameForm = document.querySelector('#regUserForm');
+      const userNameInput = document.querySelector('#userNameInput');
+
+      userNameForm.addEventListener('submit', (e) => {
+
+        e.preventDefault();
+
+        socket.emit('updateUserName', userNameInput.value);
+
+        userNameInput.value = ''
+        return false;
+      });
+
+      const showUserName = (users) => {
+        console.log(users)
         const userList = document.querySelector('#users');
-        const userListLi = document.createElement('li');
-        userListLi.classList.add('userName');
-        userListLi.setAttribute('data-testid', 'online-user');
-        userListLi.innerText = user;
-        userList.appendChild(userListLi);
+        userList.innerHTML = '';
+        users.map((user) => {
+          const userList = document.querySelector('#users');
+          const userListLi = document.createElement('li');
+
+          userListLi.classList.add('userName');
+          userListLi.setAttribute('data-testid', 'online-user');
+          userListLi.setAttribute('id', user.userId);
+          userListLi.innerText = user.nickname;
+          userList.appendChild(userListLi);
+        });
+
+
       }
 
       socket.emit('userLogin', randomUserName);
 
-      socket.on('userLogin', (user) => {
-        showUserName(user);
+      socket.on('userLogin', (users) => {
+        showUserName(users);
+      });
+
+      socket.on('updateUserName', (users) => {
+        showUserName(users);
       });
 
       const form = document.querySelector('#messageForm');
       const inputMessage = document.querySelector('#messageInput');
 
       form.addEventListener('submit', (e) => {
-        const li = document.querySelector('.userName');
+        const li = document.querySelector(`#${socket.id}`);
+
         e.preventDefault();
 
         const message = {
@@ -69,20 +97,19 @@
         return false;
       });
 
-      const createMessage = (message) => {
+      const createMessage = (message, id) => {
         const ul = document.querySelector('#messages');
         const li = document.createElement('li');
-
+        console.log(id)
         li.innerText = message;
         li.setAttribute('data-testid', 'message');
+        li.setAttribute('id', id);
         ul.appendChild(li);
       };
 
-      socket.on('message', (message) => {
-        createMessage(message);
+      socket.on('message', (message, id) => {
+        createMessage(message, id);
       });
-
-
 
     </script>
   </body>
