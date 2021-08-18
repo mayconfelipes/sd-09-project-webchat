@@ -11,14 +11,14 @@ const nickInput = document.querySelector('#nickInput');
 const usersContainer = document.querySelector('#usersContainer');
 const DATA_TEST_ID = 'data-testid';
 
-const listUsers = (users) => {
+const listUsers = ({ nick = userNick, users }) => {
   onlineUsers = users;
   usersContainer.innerHTML = '';
   usersContainer.innerText = 'Online:';
   if (userNick !== '') {
     const liMyUser = document.createElement('li');
     liMyUser.setAttribute(DATA_TEST_ID, 'online-user');
-    liMyUser.innerText = userNick;
+    liMyUser.innerText = nick;
     usersContainer.appendChild(liMyUser);
   }
   onlineUsers.forEach((u) => {
@@ -45,7 +45,7 @@ const updateNick = ({ nick, users }) => {
   if (!userId()) createNick(nick);
   userId().innerHTML = nick;
   nickInput.value = '';
-  listUsers(users);
+  listUsers({ users });
 };
 
 nickBtn.addEventListener('click', (e) => {
@@ -69,7 +69,7 @@ const addMessage = (message) => {
 
 const removeNickname = (users) => {
   userNick = '';
-  listUsers(users);
+  listUsers({ users });
 };
 
 socket.on('connected', updateNick);
