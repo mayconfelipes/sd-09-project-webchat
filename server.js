@@ -14,6 +14,9 @@ require('./sockets/chat')(io);
 
 app.use(express.static(`${__dirname}/public`));
 
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
 app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/index.html`);
 });
