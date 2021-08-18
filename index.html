@@ -42,16 +42,14 @@
       const form = document.getElementById('form');
       const input = document.getElementById('input');
     
-      addEventListener('submit', function(e) {       
+      addEventListener('submit', function(e) {
         e.preventDefault();
         if (input.value) {
-          // message = {
-            let chatMessage = input.value;
-            let nickname = '';
-          // }
+          let chatMessage = input.value;
+          let nickname = '';
           socket.emit('message', { chatMessage, nickname });
           input.value = '';
-        } 
+        };
 
         if (nicknameInput.value){
           socket.emit('nickname', nicknameInput.value);
@@ -59,57 +57,35 @@
         }
       });
 
-      // agradando o test
-
       socket.on('nickname', function(chaters) {
         nicknames.innerHTML = '';
         const usuarioAtual = chaters[socket.id];
         let namesList = [];
         
-        // let aaaa = new Map(chaters)
         Object.values(chaters).forEach((element) => {
           if (usuarioAtual.name === element.name){
-            namesList.unshift(usuarioAtual.name)
+            namesList.unshift(usuarioAtual.name);
           } else {
-            namesList.push(element.name)
+            namesList.push(element.name);
           }
         });
         
         namesList.forEach((nick) => {
           const lItem = document.createElement('li');
-          lItem.setAttribute('data-testid', 'online-user')
+          if (nick === namesList[0]) {
+            lItem.setAttribute('data-testid', 'online-user');
+          }
           lItem.textContent = nick;
           nicknames.appendChild(lItem);
         });
       })
 
       socket.on('message', function(message) {
-        let msgs = [];
-        console.log('entrei no front', message)
-
-        if (!Array.isArray(message)) {
-          msgs.push(message)
-          console.log('sem array', msgs)
-
-        } else {
-          console.log('com array', message)
-
-          for (const msgHist of message) {
-            const msg = `${msgHist.timestamp} - ${msgHist.nickname}: ${msgHist.message}`;
-            msgs.push(msg)
-          }
-        }
-
-        msgs.forEach(element => {
-          console.log(element)
-          const item = document.createElement('li');
-          item.textContent = element;
-          item.setAttribute('data-testid', 'message')
-          messages.appendChild(item);
-        });
-
-       
+        const item = document.createElement('li');
+        item.textContent = message;
+        item.setAttribute('data-testid', 'message');
+        messages.appendChild(item);
       });
-    </script>   
+    </script>
   </body>
 </html>

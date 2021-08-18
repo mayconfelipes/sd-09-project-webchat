@@ -8,9 +8,10 @@ await connection()
 
 const historyRead = async () => {
   const list = await connection()
-    .then((db) => db.collection('messages').find().project({_id: 0}).toArray());
+    .then((db) => db.collection('messages').find().project({
+      _id: 0, chatMessage: '$message', nickname: 1, timestamp: 1,
+    }).toArray());
   
-  // console.log('no model', list)
   return list;
 };
 
