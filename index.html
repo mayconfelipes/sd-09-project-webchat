@@ -92,9 +92,9 @@
         
         namesList.forEach((nick) => {
           const lItem = document.createElement('li');
-          if (nick === namesList[0]) {
+          // if (nick === namesList[0]) {
           lItem.setAttribute('data-testid', 'online-user');
-          }
+          // }
           // if (nick === namesList[latItem]) {
           //   lItem.setAttribute('data-testid', 'online-user');
           // }
@@ -102,6 +102,11 @@
           nicknames.appendChild(lItem);
         });
       })
+
+      window.onberoreunload = (e) => {
+        e.preventDefault();
+        socket.disconnect();
+      };
 
     </script>
   </body>
