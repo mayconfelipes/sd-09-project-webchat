@@ -4,10 +4,6 @@
   padding: 0;
 }
 
-body {
-  font: 13px Helvetica, Arial;
-}
-
 form {
   background: #050505;
   bottom: 0;
@@ -42,5 +38,5 @@ form button {
 }
 
 .messages li:nth-child(odd) {
-  background: #eeeeee;
+  background: #e9e6e6;
 }
