@@ -66,9 +66,7 @@ socket.on('restoreChat', (messageList) => {
 
 socket.on('message', (message) => createMessage(message));
 
-socket.on('newUser', (userList) => addUser(userList));
-
-socket.on('changeName', (userList) => addUser(userList));
+socket.on('users', (userList) => addUser(userList));
 
 socket.on('online', (userList) => {
   const userId = userList[userList.length - 1];
@@ -76,5 +74,3 @@ socket.on('online', (userList) => {
   const newList = [userId, ...userList];
   addUser(newList);
 });
-
-socket.on('offline', (userList) => addUser(userList));

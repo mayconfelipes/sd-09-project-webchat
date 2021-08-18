@@ -11,18 +11,18 @@ module.exports = (io) => io.on('connection', async (socket) => {
   const { id } = socket;
   const random = id.slice(0, -4);
 
-  const messageList = await Messages.getAll();
-  io.emit('restoreChat', messageList);
-  
   socket.on('newUser', () => {
     userList.set(random, random);
-    socket.broadcast.emit('newUser', [...userList]);
+    socket.broadcast.emit('users', [...userList]);
     socket.emit('online', [...userList]);
   });
+  
+  const messageList = await Messages.getAll();
+  io.emit('restoreChat', messageList);
 
   socket.on('changeName', (nickname) => {
     userList.set(random, nickname);
-    io.emit('changeName', [...userList]);
+    io.emit('users', [...userList]);
   });
 
   socket.on('message', ({ chatMessage, nickname }) => {
@@ -30,5 +30,5 @@ module.exports = (io) => io.on('connection', async (socket) => {
     io.emit('message', `${moment().format()} ${nickname || userList.get(random)}: ${chatMessage}`);
   });
 
-  socket.on('disconnect', () => { userList.delete(random); io.emit('offline', [...userList]); });
+  socket.on('disconnect', () => { userList.delete(random); io.emit('users', [...userList]); });
 });
