@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 
 
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
 
   // novo chater
   chaters[socket.id] = {
@@ -32,13 +32,29 @@ io.on('connection', (socket) => {
   //aviso connect
   console.log(`${chaters[socket.id].name} entro bichao`);
 
-  
-  
+  console.log(chaters)
+
   // aviso desconect
   socket.on('disconnect', () => {
-    console.log(`${chaters[socket.id].name} entro bichao`);
+    console.log(`${chaters[socket.id].name} saiu bichao`);
+    delete chaters[socket.id]
+    // console.log('deleto ' s)
+    io.emit('nickname', chaters)
   });
+
+  // lista de usuario on  
+  io.emit('nickname', chaters)
+  // const list = await CreateHist.historyRead();
 });
+
+// editar nick
+io.on('connection', (socket) => {
+  socket.on('nickname', (nickname) => {
+    chaters[socket.id].name = nickname;
+    io.emit('nickname', chaters)
+  })
+
+})
 
 
 // envio de mensagem
@@ -53,7 +69,7 @@ io.on('connection', (socket) => {
     console.log(`bichao o ${nickname} mandou a braba: ${chatMessage}`)
 
     
-    // CreateHist.createMessage(chatMessage, nickname);
+    CreateHist.createMessage(chatMessage, nickname);
   })
 
 })

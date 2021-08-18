@@ -17,15 +17,15 @@
     <div>
       <ul id="nicknames"></ul>
       <form action="" id="nickname-form">
-        <input id="select-nickname" autocomplete="off">
-        <button>Send</button>
+        <input data-testid="nickname-box" id="select-nickname" autocomplete="off">
+        <button data-testid="nickname-button">Send</button>
       </form>
     </div>
     <div>
       <ul id="message"></ul>
       <form action="" id="form">
-        <input id="input" autocomplete="off" />
-        <button>Send</button>
+        <input data-testid="message-box" id="input" autocomplete="off" />
+        <button data-testid="send-button" >Send</button>
       </form> 
     </div>
    
@@ -77,6 +77,7 @@
         
         namesList.forEach((nick) => {
           const lItem = document.createElement('li');
+          lItem.setAttribute('data-testid', 'online-user')
           lItem.textContent = nick;
           nicknames.appendChild(lItem);
         });
@@ -86,6 +87,7 @@
         console.log(message)
         const item = document.createElement('li');
         item.textContent = message;
+        item.setAttribute('data-testid', 'message')
         messages.appendChild(item);
       });
     </script>   
