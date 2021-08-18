@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebChat</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
+</head>
+<body>
+    <h1 class="title">WebChat</h1>
+    <fieldset class="nick">
+        <span id="user">Olá, </span>
+        <div>
+            <input type="text" name="username" id="nickInput" data-testid="nickname-box" placeholder="Digite o seu nome de usuário">
+            <button id="nickBtn" data-testid="nickname-button">Enviar</button>
+        </div>
+    </fieldset>
+    <fieldset class="msgForm">
+        <input id="messageInput" type="text" data-testid="message-box" placeholder="Digite a sua mensagem">
+        <button id="messageBtn" data-testid="send-button">Enviar</button>
+    </fieldset>
+    <div class="allContainer">
+        <ul id="usersContainer" class="container usersContainer">Online:</ul>
+        <ul id="msgContainer" class="container msgContainer">
+            <% history.forEach((msg) => { %>
+                <li data-testid="message"><%= msg %></li>
+              <% }) %>
+        </ul>
+    </div>
+   <script src="script.js"></script>
+</body>
+</html>
