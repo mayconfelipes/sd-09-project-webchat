@@ -8,6 +8,21 @@
 </head>
 <body>
   <h1>t9ers webchat</h1>
+  <main>
+    <form>
+      <input type="text" data-testid="nickname-box">
+      <button data-testid="nickname-button">salvar</button>
+    </form>
+    <p data-testid="online-user"></p>
+    <div>
+      <p data-testid="message"></p>
+    </div>
+    <form>
+      <input type="text" data-testid="message-box">
+      <button type="submit" data-testid="send-button">enviar</button>
+    </form>
+  </main>
+
   <script src="/socket.io/socket.io.js"></script>
   <script>
 			const socket = window.io();
