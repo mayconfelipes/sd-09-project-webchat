@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <title>Web Chat Project</title>
+  </head>
+  <body>
+    <header>
+      <h1>Web Chat</h1>
+    </header>
+    <div>
+      <input type="text" id="nicknameInput" data-testid="nickname-box" />
+      <button type="button" id="nicknameBtn" data-testid="nickname-button">
+        Alterar nome de usuário
+      </button>
+    </div>
+    <div>
+      <input type="text" id="input" data-testid="message-box" />
+      <button type="submit" id="sendMessage" data-testid="send-button">
+        Enviar messagem
+      </button>
+    </div>
+    <div>
+      <h3>Usuários:</h3>
+      <ul id="users"></ul>
+    </div>
+    <ul id="messages"></ul>
+    <script>
+      const socket = window.io("http://localhost:3000");
+      let nickname = `User-${Math.random().toString().slice(2, 13)}`;
+      const bttn = document.getElementById("sendMessage");
+      const input = document.getElementById("input");
+      const btnNickname = document.getElementById("nicknameBtn");
+      const nicknameInput = document.getElementById("nicknameInput");
+      socket.emit("login", nickname);
+
+      const createLi = (message) => {
+        const ul = document.getElementById("messages");
+        const li = document.createElement("li");
+        li.setAttribute("data-testid", "message");
+        const liText = document.createTextNode(message);
+        li.appendChild(liText);
+        ul.appendChild(li);
+      };
+      const ul = document.getElementById("users");
+
+      const listUsers = (user) => {
+        const li = document.createElement("li");
+        li.setAttribute("data-testid", "online-user");
+        const liText = document.createTextNode(user);
+        li.appendChild(liText);
+        if (nickname === user) {
+          ul.insertBefore(li, ul.firstChild);
+        } else {
+          ul.appendChild(li);
+        }
+      };
+
+      const chatMessage = () => {
+        socket.emit("message", { chatMessage: input.value, nickname });
+        input.value = "";
+      };
+      bttn.addEventListener("click", chatMessage);
+
+      const changeNickname = () => {
+        nickname = nicknameInput.value;
+        socket.emit("login", nicknameInput.value);
+        nicknameInput.value = "";
+      };
+      btnNickname.addEventListener("click", changeNickname);
+
+      socket.on("message", (message, nickname) => createLi(message));
+      socket.on("users", (users) => {
+        ul.innerHTML = "";
+        users.forEach((user) => listUsers(user.nickname));
+      });
+    </script>
+  </body>
+</html>
