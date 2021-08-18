@@ -6,7 +6,6 @@ window.onload = () => {
 
 const formUser = document.querySelector('#chatUser');
 const inputNickname = document.querySelector('#nickname-box');
-const nicknamesList = document.querySelector('#nickname-list');
 
 let userName = '';
 
@@ -40,12 +39,18 @@ const createMessage = (message) => {
   return 0;
 };
 
-const addUser = (user) => {
-  const li = document.createElement('li');
-  li.setAttribute('data-testid', 'online-user');
-  li.className = user;
-  li.innerText = user;
-  nicknamesList.appendChild(li);
+const addUser = (userList) => {
+  const nicknamesList = document.querySelector('#nickname-list');
+  nicknamesList.innerHTML = '';
+
+  userList.map((user) => {
+    const li = document.createElement('li');
+    li.setAttribute('data-testid', 'online-user');
+    const nick = user[1];
+    li.className = nick;
+    li.innerText = nick;
+    nicknamesList.appendChild(li);
+  });
   return null;
 };
 
@@ -60,27 +65,15 @@ socket.on('restoreChat', (messageList) => {
 
 socket.on('message', (message) => createMessage(message));
 
-socket.on('newUser', (userList) => {
-  nicknamesList.innerHTML = '';
-  userList.map((user) => addUser(user[1]));
-  return 0;
-});
+socket.on('newUser', (userList) => addUser(userList));
 
-socket.on('changeName', (userList) => {
-  nicknamesList.innerHTML = '';
-  userList.map((user) => addUser(user[1]));
-});
+socket.on('changeName', (userList) => addUser(userList));
 
 socket.on('online', (userList) => {
-  nicknamesList.innerHTML = '';
   const userId = userList[userList.length - 1];
   userList.pop();
   const newList = [userId, ...userList];
-  newList.map((user) => addUser(user[1]));
-  return 0;
+  addUser(newList);
 });
 
-socket.on('offline', (userList) => {
-  nicknamesList.innerHTML = '';
-  userList.map((user) => addUser(user[1]));
-});
+socket.on('offline', (userList) => addUser(userList));
