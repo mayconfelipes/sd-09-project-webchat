@@ -26,12 +26,12 @@ const createUser = (users) => {
   const liUser = document.createElement('li');
   liUser.setAttribute(dataTestId, 'online-user');
   ulUser.appendChild(liUser);
-  liUser.innerText = nickname;
+  liUser.innerText = `Meu usuário: ${nickname}`;
 
   users.forEach((newUser) => {
     if (newUser !== nickname) {
       const li = document.createElement('li');
-      li.innerText = newUser;
+      li.innerText = `Outro usuário: ${newUser}`;
       li.setAttribute(dataTestId, 'online-user');
       ulUser.appendChild(li);
     }
@@ -48,6 +48,7 @@ socket.on('nickname', (users) => {
 
 const createMessage = (message) => {
   const li = document.createElement('li');
+  li.className = 'message';
   li.innerText = message;
   li.setAttribute(dataTestId, 'message');
   ulMessage.appendChild(li);
