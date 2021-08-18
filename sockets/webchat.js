@@ -1,14 +1,17 @@
-const moment = require('moment'); 
+const moment = require('moment');
+const { getAllMsgs, addMsg } = require('../models/messagesModel');
 
 const connectedUsers = {};
 
 const webchat = (io) => {
-  io.on('connection', (socket) => {
+  io.on('connection', async (socket) => {
+    socket.emit('showAllMsgs', await getAllMsgs());
     connectedUsers[socket.id] = socket.id.substring(0, 16);
     io.emit('listUsers', Object.values(connectedUsers));
 
-    socket.on('message', ({ chatMessage: message, nickname }) => {
+    socket.on('message', async ({ chatMessage: message, nickname }) => {
       const timestamp = moment().format('DD-MM-yyyy HH:mm:ss A');
+      await addMsg({ message, nickname, timestamp });
       io.emit('message', `${timestamp} - ${nickname}: ${message}`);
     });
 

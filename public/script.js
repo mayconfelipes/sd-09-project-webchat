@@ -28,11 +28,20 @@ nicknameBtn.addEventListener('click', (e) => {
   }
 });
 
-client.on('message', (formattedMsg) => {
+const appendMessage = (message) => {
   const li = document.createElement('li');
-  li.innerHTML = formattedMsg;
+  li.innerHTML = message;
   li.dataset.testid = 'message';
   messagesList.append(li);
+};
+
+client.on('message', (formattedMsg) => appendMessage(formattedMsg));
+
+client.on('showAllMsgs', (allMsgs) => {
+  allMsgs.forEach(({ message, nickname: nick, timestamp }) => {
+    const formattedMsg = `${timestamp} - ${nick}: ${message}`;
+    appendMessage(formattedMsg);
+  });
 });
 
 client.on('listUsers', (usersList) => {
