@@ -2,6 +2,7 @@ const socket = window.io();
 
 let userNick = '';
 let onlineUsers = [];
+
 const messageBtn = document.querySelector('#messageBtn');
 const messageInput = document.querySelector('#messageInput');
 const msgContainer = document.querySelector('#msgContainer');
@@ -10,9 +11,11 @@ const nickInput = document.querySelector('#nickInput');
 const usersContainer = document.querySelector('#usersContainer');
 const DATA_TEST_ID = 'data-testid';
 
+const checkUserExists = () => document.querySelector('#myUser');
+
 const createNick = ({ nick }) => {
-    const userId = () => (document.querySelector('#myUser'));
-    if (!userId()) {
+    const userId = checkUserExists();
+    if (!userId) {
       userNick = nick;
       const user = document.querySelector('#user');
       const nickname = document.createElement('span');
@@ -25,10 +28,11 @@ const createNick = ({ nick }) => {
 
   const listUsers = ({ users, noUser = false }) => {
     onlineUsers = users;
+  
     if (noUser) userNick = '';
     usersContainer.innerHTML = '';
     
-    if (userNick !== '') {
+    if (userNick) {
       const liMyUser = document.createElement('li');
       liMyUser.setAttribute(DATA_TEST_ID, 'online-user');
       liMyUser.innerText = userNick;
@@ -47,9 +51,9 @@ const createNick = ({ nick }) => {
 
   const updateNick = ({ nick }) => {
     userNick = nick;
-    const userId = () => (document.querySelector('#myUser'));
-    if (!userId()) createNick(nick);
-    userId().innerHTML = nick;
+    const userId = checkUserExists();
+    if (!userId) createNick(nick);
+    userId.innerHTML = nick;
     nickInput.value = '';
     return null;
   };
