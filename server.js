@@ -6,7 +6,7 @@ const express = require('express');
 const { Server } = require('socket.io');
 const socket = require('./sockets/chat');
 
-const { PORT } = process.env;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 const server = http.createServer(app);
