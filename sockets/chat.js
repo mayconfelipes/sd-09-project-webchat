@@ -27,7 +27,7 @@ module.exports = (io) => io.on('connection', async (socket) => {
 
   socket.on('message', ({ chatMessage, nickname }) => {
     Messages.create(chatMessage, userList.get(random) || random, moment().format());
-    io.emit('message', `${moment()} ${nickname || userList.get(random)}: ${chatMessage}`);
+    io.emit('message', `${moment().format()} ${nickname || userList.get(random)}: ${chatMessage}`);
   });
 
   socket.on('disconnect', () => { userList.delete(random); io.emit('offline', [...userList]); });
