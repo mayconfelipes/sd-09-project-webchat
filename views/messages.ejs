@@ -2,24 +2,37 @@
 <html>
   <head>
     <title>Web Chat</title>
+    <style>
+      .div-users {
+        background-color: red;
+      }
+      .div-messages {
+        background-color: blue;
+      }
+    </style>
   </head>
   <body>
     <h1>Web Chat</h1>
-    <ul id="list">
-      <% allMessages.forEach(message=> { %>
-        <li>
-          <%= message.message %>
-        </li>
-      <%})%>
-    </ul>
+    <div class="div-messages">
+      <ul id="list">
+        <% allMessages.forEach(message=> { %>
+          <li data-testid="message">
+            <%= message.message %>
+          </li>
+        <%})%>
+      </ul>
+    </div>
+    <div class="div-users">
+      <ul id="users">
+      </ul>
+    </div>
     <input
-    name="chat"
-    type="text"
-    id="nickname-box"
-    data-testid="nickname-box"
+      name="nickname"
+      type="text"
+      id="nickname-box"
+      data-testid="nickname-box"
     />
     <button
-      id="send-button"
       id="nickname-button"
       data-testid="nickname-button"
     >
@@ -40,28 +53,50 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       const socket = window.io('http://localhost:3000');
+      let nickname = '';
+      socket.emit('initialize');
+      socket.on('myNickname', (initialNickname) => {
+        nickname = initialNickname;
+      });
 
-      const createList = (message) => {
-        const ul = document.getElementById('list');
+      const createList = (data, id, dataTestid) => {
+        const ul = document.getElementById(id);
         if (!ul) return;
 
         const li = document.createElement('li');
-        const liText = document.createTextNode(message);
-        li.set
+        const liText = document.createTextNode(data);
+        li.setAttribute('data-testid', dataTestid);
 
         li.appendChild(liText);
         ul.appendChild(li);
       };
 
-      const submitButton = document.querySelector('#send-button');
-      submitButton.addEventListener('click', () => {
-        const nickname = 'Jhon';
-        const chatMessage = document.querySelector('#message-box').value;
-        socket.emit('message', { chatMessage, nickname });
+      const editName = document.querySelector('#nickname-button');
+      editName.addEventListener('click', () => {
+        const newNickname = document.querySelector('#nickname-box').value;
+        nickname = newNickname;
+        socket.emit('editNickname', nickname);
       })
 
+      const submitButton = document.querySelector('#send-button');
+      submitButton.addEventListener('click', () => {
+        const chatMessage = document.querySelector('#message-box').value;
+        socket.emit('message', { chatMessage, nickname });
+      });
+
       socket.on('message', (message) => {
-        createList(message);
+        createList(message, 'list', 'message');
+      });
+
+      socket.on('usersList', (onlineUsers) => {
+        console.log(onlineUsers);
+        const users = onlineUsers.filter((user) => user.nickname !== nickname);
+        console.log(users);
+        const listUsers = document.querySelector('#users');
+        listUsers.innerText = '';
+        console.log(listUsers);
+        createList(nickname, 'users', 'online-user')
+        users.map((user) => createList(user.nickname, 'users', 'online-user'));
       });
     </script>
   </body>

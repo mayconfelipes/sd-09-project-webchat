@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const getAllMessages = async () => {
   const result = await connection()
-    .then((db) => db.collection(process.env.DB_NAME)
+    .then((db) => db.collection('messages')
       .find({}).toArray());
 
   return result;
