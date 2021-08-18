@@ -8,8 +8,15 @@ module.exports = (io) => io.on('connection', (socket) => {
     const hours = fullDate.getHours();
     const minutes = fullDate.getMinutes();
 
-    const usrMsg = `${day}-${month}-${year} ${hours}:${minutes} ${nickname}: ${chatMessage}`;
-    console.log(`${usrMsg}`);
+    const usrMsg = `
+      ${day}-${month}-${year} ${hours}:${minutes} ${nickname}: ${chatMessage}
+    `;
     io.emit('message', usrMsg);
+  });
+
+  socket.emit('wellcome', 'Cheguei');
+
+  socket.on('changeName', () => {
+    socket.emit('changeName', 'Nome alterado com sucesso :)');
   });
 });

@@ -6,12 +6,19 @@
   </head>
   <body>
     <div class="inputName" action="">
-      <input id="newName" autocomplete="off" placeholder="Digite seu novo nome de usuário" />
-      <button id="changeName">Change</button>
+      <input
+       id="newName"
+       data-testid="nickname-box"
+       autocomplete="off"
+       placeholder="Digite seu novo nome de usuário"
+      />
+      <button id="changeName" data-testid="nickname-button">Change</button>
     </div>
 
     <div>
-      <ul id="listUsers"></ul>
+      <ul id="usersList">
+        Connected users:
+      </ul>
     </div>
 
     <div>
@@ -19,8 +26,13 @@
     </div>
 
     <div class="inputChat" action="">
-      <input id="messageInput" autocomplete="off" placeholder="Digite sua mensagem" />
-      <button id="sendMsg">Send</button>
+      <input
+        id="messageInput"
+        data-testid="message-box"
+        autocomplete="off"
+        placeholder="Digite sua mensagem"
+      />
+      <button id="sendMsg" data-testid="send-button">Send</button>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src='./js/chat.js'></script>

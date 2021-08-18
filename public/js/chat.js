@@ -2,11 +2,65 @@ const socket = window.io();
 
 const chatBtn = document.querySelector('#sendMsg');
 const inputMessage = document.querySelector('#messageInput');
+const newName = document.querySelector('#newName');
+const changeName = document.querySelector('#changeName');
+
+let newNick = '';
+const allUsersConnected = [];
+
+const createRandomName = (length) => {
+  let result = '';
+  const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (let i = 0; i < length; i += 1) {
+    result += validChars.charAt(Math.floor(Math.random() * validChars.length));
+  }
+
+  return result;
+};
+
+const connectedUsers = () => {
+  const usersList = document.querySelector('#usersList');
+
+  if (!newNick) newNick = createRandomName(16);
+
+  allUsersConnected.push({
+    userId: socket.id,
+    nickname: newNick,
+    chatMessage: [],
+  });
+  console.log(allUsersConnected);
+
+  const li = document.createElement('li');
+  li.innerText = newNick;
+  li.setAttribute('data-testid', 'online-user');
+  usersList.appendChild(li);
+};
+
+socket.on('wellcome', () => connectedUsers());
+
+changeName.addEventListener('click', (event) => {
+  event.preventDefault();
+
+
+  newNick = newName.value;
+
+  socket.emit('changeName', {
+    nickname: newNick,
+    chatMessage: inputMessage.value,
+  });
+
+  inputMessage.value = '';
+  return false;
+});
 
 chatBtn.addEventListener('click', (event) => {
   event.preventDefault();
+
+  if (!newNick) newNick = createRandomName(16);
+
   socket.emit('message', {
-    nickname: socket.id,
+    nickname: newNick,
     chatMessage: inputMessage.value,
   });
   inputMessage.value = '';
@@ -17,6 +71,7 @@ const createMessage = (message) => {
   const messageUl = document.querySelector('#messages');
   const li = document.createElement('li');
   li.innerText = message;
+  li.setAttribute('data-testid', 'message');
   messageUl.appendChild(li);
 };
 
