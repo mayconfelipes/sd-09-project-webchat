@@ -75,13 +75,14 @@ socket.on('connect', () => {
     .then((chat) => renderMessage(chat));
   socket.emit('createUser', userName);
   });
-socket.on('userListConnect', (arr) => {
-  renderUserList(arr);
-});
-socket.on('updateListDisconnect', (usersList) => {
-  userList.innerHTML = '';
+socket.on('userListConnect', (usersList) => {
   renderUserList(usersList);
 });
-socket.on('updateUserName', (list) => {
-  renderUserList(list);
+
+socket.on('updateListDisconnect', (usersList) => {
+  renderUserList(usersList);
+});
+
+socket.on('updateUserName', (usersList) => {
+  renderUserList(usersList);
 });
