@@ -19,4 +19,6 @@ const getNickName = () => {
   return nick;
 };
 
-localStorage.setItem('nickname', getNickName());
+if (!localStorage.getItem('nickname')) {
+  localStorage.setItem('nickname', getNickName());
+}
