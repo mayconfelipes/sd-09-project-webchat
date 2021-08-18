@@ -37,11 +37,12 @@ io.on('connection', async (socket) => {
   // lista de usuario on  
   io.emit('nickname', chaters);
 
+  // historico
   const list = await CreateHist.historyRead();
-  list.forEach((message) => {
-    const { timestamp, nickname, chatMessage } = message;
+  list.forEach((history) => {
+    const { timestamp, nickname, chatMessage } = history;
     const msg = `${timestamp} - ${nickname}: ${chatMessage}`;
-    io.emit('message', msg);
+    socket.emit('history', msg);
   });
 });
 
@@ -64,6 +65,7 @@ io.on('connection', (socket) => {
     io.emit('message', msg);
 
     console.log(`bichao o ${nickname} mandou a braba: ${chatMessage}`);
+
     CreateHist.createMessage(chatMessage, nickname);
   });
 });

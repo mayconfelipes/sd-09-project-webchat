@@ -9,7 +9,7 @@
         background-color: aquamarine;
       }
     </style>
-    <title>Socket.IO chat</title>
+    <title>MegaChat socket.IO</title>
     <!-- <link rel="stylesheet" href="style.css"> -->
   </head>
   
@@ -34,7 +34,7 @@
     <script>
       const socket = io();
 
-      const nicknames = document.getElementById('nicknames')
+      const nicknames = document.getElementById('nicknames');
       const nicknameForm = document.getElementById('nickname-form');
       const nicknameInput = document.getElementById('select-nickname');
     
@@ -42,7 +42,7 @@
       const form = document.getElementById('form');
       const input = document.getElementById('input');
     
-      addEventListener('submit', function(e) {
+      addEventListener('submit', function(e) {       
         e.preventDefault();
         if (input.value) {
           let chatMessage = input.value;
@@ -51,10 +51,10 @@
           input.value = '';
         };
 
-        if (nicknameInput.value){
+        if (nicknameInput.value) {
           socket.emit('nickname', nicknameInput.value);
           nicknameInput.value = '';
-        }
+        };
       });
 
       socket.on('nickname', function(chaters) {
@@ -62,12 +62,13 @@
         const usuarioAtual = chaters[socket.id];
         let namesList = [];
         
+        // let aaaa = new Map(chaters)
         Object.values(chaters).forEach((element) => {
           if (usuarioAtual.name === element.name){
             namesList.unshift(usuarioAtual.name);
-          } else {
+            return;
+          };
             namesList.push(element.name);
-          }
         });
         
         namesList.forEach((nick) => {
@@ -80,11 +81,18 @@
         });
       })
 
+      socket.on('history', function(listMenssages) {
+          const item = document.createElement('li');
+          item.textContent = listMenssages;
+          item.setAttribute('data-testid', 'message');
+          messages.appendChild(item);
+      })
+
       socket.on('message', function(message) {
-        const item = document.createElement('li');
-        item.textContent = message;
-        item.setAttribute('data-testid', 'message');
-        messages.appendChild(item);
+          const item = document.createElement('li');
+          item.textContent = message;
+          item.setAttribute('data-testid', 'message');
+          messages.appendChild(item);
       });
     </script>
   </body>

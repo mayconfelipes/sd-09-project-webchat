@@ -8,7 +8,7 @@ await connection()
 
 const historyRead = async () => {
   const list = await connection()
-    .then((db) => db.collection('messages').find().project({
+    .then((db) => db.collection('messages').aggregate().project({
       _id: 0, chatMessage: '$message', nickname: 1, timestamp: 1,
     }).toArray());
   
