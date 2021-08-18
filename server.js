@@ -44,7 +44,8 @@ io.on('connection', async (socket) => {
 
   // lista de usuario on  
   io.emit('nickname', chaters)
-  // const list = await CreateHist.historyRead();
+  const list = await CreateHist.historyRead();
+  io.emit('message', list)
 });
 
 // editar nick
