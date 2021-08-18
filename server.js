@@ -1,5 +1,5 @@
 require('dotenv').config();
-const path = require('path');
+// const path = require('path');
 const express = require('express');
 
 const app = express();
@@ -11,14 +11,16 @@ const io = require('socket.io')(http, {
     methods: ['GET', 'POST'],
   },
 });
-
+const chatController = require('./controllers/chatController');
 const ioChat = require('./socket/messages');
 
 const PORT = process.env.PORT || 3000;
 
 ioChat(io);
 
-app.get('/', (_, res) => res.sendFile(path.join(__dirname, '/views/index.html')));
-// app.use('/', chatController);
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
+app.use('/', chatController);
 
 http.listen(PORT, () => console.log('servidor na porta 3000'));

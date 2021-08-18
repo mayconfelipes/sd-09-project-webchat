@@ -28,6 +28,13 @@
       <ul id="users"></ul>
     </div>
     <ul id="messages"></ul>
+    <ul>
+      <% messages.forEach((message) => { %>
+      <li>
+        <%= `${message.timestamp} - ${message.nickname}: ${message.message}` %>
+      </li>
+      <% }) %>
+    </ul>
     <script>
       const socket = window.io("http://localhost:3000");
       let nickname = `User-${Math.random().toString().slice(2, 13)}`;
