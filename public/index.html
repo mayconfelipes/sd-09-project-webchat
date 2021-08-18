@@ -12,7 +12,7 @@
   <form id="chat">
     <div class="top-itens">
       <input type="text" name="username" placeholder="Digite um nick" id="input-nick" data-testid="nickname-box">
-      <button data-testid="nickname-button">Salvar</button>
+      <button data-testid="nickname-button" id="salva-nick">Salvar</button>
     </div>
     <div class="horizon">
       <div class="nick" id="nicks" data-testid="online-user"></div>
@@ -32,6 +32,7 @@
   const nicks = document.getElementById('nicks');
   const messagebox = document.getElementById('mess');
   const inputMess = document.getElementById('input-message');
+  const btnSalvar = document.getElementById('salva-nick');
   
   
   const  renderMessage = (mess) => {
@@ -41,8 +42,8 @@
     messagebox.appendChild(newelEmente);
   }; 
   
-  socket.on('previousmessage', (messages) =>{
-    if(messages.length >= 1){ messages.forEach(oneMessage => {
+  socket.on('previousmessage', (messages) => {
+      if(messages.length >= 1){ messages.forEach(oneMessage => {
       renderMessage(oneMessage);
     })};
   });
@@ -52,10 +53,11 @@
   socket.on('newnick', (nick)=>{
     const ne = document.createElement('div');
     ne.innerText = nick;
-    //localStorage.setItem(`${nick}`, `${nick}`);
     nicks.appendChild(ne);
   })
   
+  btnSalvar.addEventListener('click', (e)=>{e.preventDefault()})
+
   frm.addEventListener( 'submit', (e)=> {
     e.preventDefault();
     
@@ -66,7 +68,7 @@
     let messageObject = { nickname, chatMessage };
     let messageText= `${timeLocal} - ${nickname}: ${chatMessage}`;
     
-    socket.emit('message', messageObject );
+    socket.emit('message', messageObject);
     inputMess.value = '';
     
     

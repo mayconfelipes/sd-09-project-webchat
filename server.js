@@ -6,6 +6,12 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
 
+const {
+  fromDb,
+  insertOne,
+} = require('./models/midwaresFunction'); 
+// const { promiseImpl } = require('ejs');
+
 const PORT = 3000;
 
 app.use(cors());
@@ -20,27 +26,25 @@ app.use('/', (_req, res) => {
 res.render('index.html');
 });
 
-const messages = [];
-
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   console.log(`socket conectado com o ID: ${socket.id}`);
+  const message = await fromDb();
   // gerando nick para o req2
   const geranick = (id) => {
-    if (id) { socket.emit('newnick', id.slice(0, 16)); }
-    return false;
+    if (id) { socket.emit('newnick', id.slice(0, 16)); } return false;
   };  
-    
   geranick(socket.id);
   // enviando historico de mensagens ao front.
-  socket.emit('previousmessage', messages);
+  console.log('se', message);
+  socket.emit('previousmessage', message);
  
   // esperando evento message in
   socket.on('message', ({ chatMessage, nickname }) => { 
     const time = new Date();
     const timeLocal = time.toLocaleString('pt-BR').replace(' ', '/').split('/').join('-');
     const payload = `${timeLocal} - ${nickname}: ${chatMessage}`;
-  
-    messages.push(payload);
+    const objmess = { timestamp: timeLocal, nickname, message: chatMessage };
+    insertOne(objmess);
    
     // message out a todos os clientes
     io.emit('message', payload);
