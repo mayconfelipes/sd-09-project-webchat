@@ -12,7 +12,6 @@ const CreateHist = require('./models/messageModel');
 const PORT = 3000;
 
 const chaters = {};
-// let name = '';
 
 app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/index.html`);
@@ -22,7 +21,7 @@ io.on('connection', async (socket) => {
   // novo chater
   chaters[socket.id] = {
     chatMessage: '',
-    name: socket.id.slice(0, 17),
+    name: socket.id.slice(0, 16),
   };
   
   // aviso connect
