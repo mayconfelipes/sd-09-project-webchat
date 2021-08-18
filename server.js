@@ -1,10 +1,8 @@
-// Faça seu código aqui
 const app = require('express')();
 const cors = require('cors');
 const express = require('express');
 const http = require('http').createServer(app);
 const path = require('path');
-const moment = require('moment');
 
 const PORT = 3000;
 
@@ -16,24 +14,8 @@ const io = require('socket.io')(http, {
 });
 
 app.use(cors());
-const chatController = require('./controller/chatController');
 
-io.on('connection', async (socket) => {
-  console.log(`${socket.id} se conectou`);
-  
-  const chatHistory = await chatController.getAll();
-  const messages = chatHistory
-    .map(({ timestamp, nickname, message }) => `${timestamp} - ${nickname}: ${message}`);
-  
-  socket.emit('newConnection', messages);
-  socket.on('disconnect', () => console.log(`${socket.id} se desconectou`));
-  socket.on('message', ({ chatMessage, nickname }) => {
-    const time = moment().format('DD-MM-yyyy HH:mm:ss A');
-    const newMessage = `${time} ${nickname} ${chatMessage}`;
-    io.emit('message', newMessage);
-    chatController.saveMessage(chatMessage, nickname, time);
-  });
-});
+require('./sockets/webChat')(io);
 
 app.use(express.static(path.join(__dirname, '/public/')));
 

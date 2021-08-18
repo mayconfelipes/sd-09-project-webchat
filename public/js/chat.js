@@ -5,27 +5,23 @@ const userForm = document.querySelector('#user-form');
 const messageInput = document.querySelector('#messageInput');
 const nickNameInput = document.querySelector('#nickNameInput');
 const messagesField = document.querySelector('#messages');
-const userNameField = document.querySelector('#online-users');
 const onlineUsersField = document.querySelector('#online-users');
 const testId = 'data-testid';
 
-// https://www.codegrepper.com/code-examples/javascript/how+to+generate+random+string+in+javascript
+let nickname = '';
 
-const getRandomString = (length) => {
-  const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < length; i += 1) {
-      result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
-  }
-  return result;
+const setNickname = (string) => {
+  const userNick = document.createElement('li');
+  userNick.innerText = string;
+  userNick.setAttribute(testId, 'online-user');
+  onlineUsersField.appendChild(userNick);
+  localStorage.setItem(`${socket.id}`, string);
 };
 
 messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  const storeNickname = localStorage.getItem(`${socket.id}`);
-
-  socket.emit('message', { chatMessage: messageInput.value, nickname: storeNickname });
+  socket.emit('message', { chatMessage: messageInput.value, nickname });
   messageInput.value = '';
 });
 
@@ -33,7 +29,7 @@ userForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
   const userNickname = nickNameInput.value;
-  userNameField.firstElementChild.innerText = userNickname;
+  nickname = userNickname;
   localStorage.setItem(`${socket.id}`, userNickname);
   socket.emit('nickname', userNickname);
   nickNameInput.value = '';
@@ -46,27 +42,19 @@ socket.on('newConnection', (chatHistory) => {
     msgItem.innerText = msg;
     messagesField.appendChild(msgItem);
   });
-
-  // connectedUsers.forEach((user) => {
-  //   const connUser = document.createElement('li');
-  //   connUser.innerText = user;
-  //   onlineUsersField.appendChild(connUser);
-  // });
-
-  const newNickName = getRandomString(16);
-  localStorage.setItem(`${socket.id}`, newNickName);
-  const me = document.createElement('li');
-  me.setAttribute(testId, 'online-user');
-  me.setAttribute('id', 'online-user');
-  me.innerText = newNickName;
-  onlineUsersField.appendChild(me);
-  socket.emit('userConnected', newNickName);
 });
 
-socket.on('userConnected', (userNick) => {
-  const newUser = document.createElement('li');
-  newUser.innerText = userNick;
-  onlineUsersField.appendChild(newUser);
+socket.on('updateOnlineUsers', (users) => {
+  onlineUsersField.innerHTML = '';
+  if (!nickname) {
+    nickname = users[users.length - 1];
+  }
+
+  setNickname(nickname);
+  const otherUsers = users.filter((user) => user !== nickname);
+  otherUsers.forEach((user) => {
+    setNickname(user);
+  });
 });
 
 socket.on('message', (message) => {
@@ -75,9 +63,3 @@ socket.on('message', (message) => {
   incomingMessage.innerText = message;
   messagesField.appendChild(incomingMessage);
 });
-
-// socket.on('userConnected', (nick) => {
-//   const newUser = document.createElement('li');
-//   newUser.innerText = nick;
-//   onlineUsersField.appendChild(newUser);
-// });
