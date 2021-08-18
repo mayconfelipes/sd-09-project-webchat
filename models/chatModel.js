@@ -12,7 +12,21 @@ const getAllMessagesDB = async () => {
   return messages;
 };
 
+/* const updateOnlineUserDB = async (id, nickname) => {
+  const db = await connection();
+  const user = db.collection('users').updateOne({ $set: { id, nickname } }, { upsert: true });
+  return user;
+};
+
+const getAllOnlineUsers = async () => {
+  const db = await connection();
+  const users = db.collection('users').find({}).toArray();
+  return users;
+}; */
+
 module.exports = {
   createMessageDB,
   getAllMessagesDB,
+  // updateOnlineUserDB,
+  // getAllOnlineUsers,
 };

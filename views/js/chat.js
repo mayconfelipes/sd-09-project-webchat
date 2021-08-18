@@ -2,20 +2,10 @@ const socket = window.io();
 
 const message = { chatMessage: '', nickname: '' };
 
-const createUsersList = (nickname) => {
-  const usersUl = document.querySelector('#users');
-  const li = document.createElement('li');
-  li.innerText = nickname;
-  li.className = 'list-group-item success mb-2';
-  usersUl.appendChild(li);
-};
-
 document.querySelector('#save-user').addEventListener('click', () => {
   const nicknameInput = document.querySelector('#nickname');
   message.nickname = nicknameInput.value;
   socket.emit('nickname', nicknameInput.value);
-
-  createUsersList(nicknameInput.value);
   nicknameInput.value = '';
   return false;
 });
@@ -25,7 +15,6 @@ document.querySelector('#send-msg').addEventListener('click', () => {
   message.chatMessage = messageInput.value;
   socket.emit('chatMessage', messageInput.value);
   socket.emit('message', message);
-  messageInput.value = '';
   return false;
 });
 
@@ -38,23 +27,31 @@ const createMessages = (msg) => {
   messagesUl.appendChild(li);
 };
 
-const createAndAppendOnlineUser = (innerText) => {
-  const ul = document.querySelector('#online-user');
+const createOnlineUser = (userId) => {
+  const ul = document.querySelector('#online-ul');
   const li = document.createElement('li');
   li.className = 'list-group-item list-group-item';
   li.setAttribute('data-testid', 'online-user');
-  li.innerText = innerText;
-  ul.appendChild(li);
+  li.innerText = userId;
+
+  if (socket.id.slice(0, 16) === userId) {
+    ul.prepend(li);
+  } else {
+    ul.appendChild(li);
+  }
 };
 
 socket.on('message', (formatedMsg) => createMessages(formatedMsg));
 
-socket.on('usersConnected', (onlineUsers) => {
-  onlineUsers
-    .forEach(({ randoNickname }) => createAndAppendOnlineUser(randoNickname));
+socket.on('usersConnectedId', (onlineClientsId) => {
+  const ul = document.querySelector('#online-ul');
+  ul.innerHTML = '';
+  onlineClientsId.forEach((userId) => createOnlineUser(userId));
 });
 
 socket.on('historyMessages', (historyMessages) => {
+  const messagesUl = document.querySelector('#messages');
+  messagesUl.innerHTML = '';
   historyMessages
     .forEach(({ message: msg, nickname, timestamp }) => {
       createMessages(`${timestamp} - ${nickname}: ${msg}`);
