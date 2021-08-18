@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trybe - WebChat</title>
+</head>
+
+<body>
+  <header>
+    <h1>TESTE</h1>
+  </header>
+
+  <form id='messageForm'>
+    <input type="message" id="messageInput">
+    <button id='sendMessageButton'>Enviar</button>
+  </form>
+
+  <ul id='messages'></ul>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    let nickname = '';
+
+    const button = document.querySelector('#sendMessageButton');
+    const form = document.querySelector('#messageForm');
+    const message = document.querySelector('#messageInput');
+
+    const createMessage = (message) => {
+      const messagesUl = document.querySelector('#messages');
+
+      const li = document.createElement('li');
+
+      li.innerText = message;
+      messagesUl.appendChild(li);
+    };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      socket.emit('message', { chatMessage: message.value , nickname });
+      message.value = '';
+
+      return false;
+    });
+
+    socket.on('message', (mensagem) => createMessage(mensagem));
+
+    window.onbeforeunload = function (event) {
+      socket.disconnect();
+    };
+  </script>
+</body>
+
+</html>
