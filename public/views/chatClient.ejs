@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebChat</title>
+  <link rel="stylesheet" type="text/css" href="../css/chat.css">
+  <script src="..//helpers/usersFunctions.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+ 
+</head>
+<body>
+
+  <div id="content">
+    <div id="content-usuarios">
+
+      <form id="form-usuarios" action="">
+      <input data-testid="nickname-box" autocomplete="off" placeholder="Alterar nickname" />
+      <button data-testid="nickname-button">Salvar</button>
+      </form>
+  
+      <ul id="usuarios">
+        <li>Usuario 1</li>
+        <li>Usuario 2</li>
+        <li>Usuario 3</li>
+      </ul>
+
+    </div>
+  
+  <ul id="mensagens">
+    <li> Mensagens 1</li>
+    <li> Mensagens 2</li>
+    <li> Mensagens 3</li>
+  </ul>
+</div>
+
+  <form id="form-messages" action="">
+    <input data-testid="message-box" id="mensagemInput" autocomplete="off" placeholder="Digite uma nova mensagem aqui"/>
+    <button data-testid="send-button">Enviar</button>
+  </form>
+
+  <script>
+    const socket = io();
+    const form = document.querySelector('#form-messages')
+    const inputMessage = document.querySelector('#mensagemInput')
+
+    let nickname = createNickname(16);
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      socket.emit('message', { chatMessage: inputMessage.value, nickname})
+      inputMessage.value='';
+      return false;
+  })
+
+  // listar o histórico
+  socket.on('listAllMessages', (arrayMessagens) => {
+    return arrayMessagens.map((message) => createMessage(message)); 
+  })
+  socket.on('message', ({message}) => createMessage(message));
+  // recebendo como parâmetro o name e repassando para variavel nickname
+  socket.on('createNickname', (name) => { nickname = name });
+  </script>
+</body>
+</html>
