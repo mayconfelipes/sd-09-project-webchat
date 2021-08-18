@@ -30,7 +30,9 @@ module.exports = (io) => io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    const logOutUser = onlineUsers.indexOf(socket.id);
+    // Solução obtida no Stack Overflow
+    // https://pt.stackoverflow.com/questions/396647/busca-em-array-com-objeto-e-like-no-javascript-para-retornar-o-index-achado
+    const logOutUser = onlineUsers.findIndex((user) => user.id === socket.id);
     onlineUsers.splice(logOutUser, 1);
     io.emit('usersList', onlineUsers);
   });
