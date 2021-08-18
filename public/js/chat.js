@@ -50,6 +50,7 @@ const addUser = (userList) => {
     li.className = nick;
     li.innerText = nick;
     nicknamesList.appendChild(li);
+    return 0;
   });
   return null;
 };
