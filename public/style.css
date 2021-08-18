@@ -1,0 +1,114 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  align-items: center;
+  background-color: #314159;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+main {
+  background-color: whitesmoke;
+  display: grid;
+  grid-template: 4rem auto 5rem / calc(100% / 3) auto;
+  grid-template-areas: 'header header'
+    'users messages'
+    'users sendmsg';
+  height: 45rem;
+  width: 75rem;
+}
+
+ul {
+  list-style-type: none;
+  width: 100%;
+}
+
+header {
+  align-items: center;
+  background-color: black;
+  display: flex;
+  grid-area: header;
+  justify-content: center;
+}
+
+h1 {
+  color: white;
+}
+
+form {
+  align-items: center;
+  background-color: #bbb;
+  display: flex;
+  gap: 0.5rem;
+  grid-area: sendmsg;
+  width: 100%;
+}
+
+form > input {
+  flex-grow: 1;
+  margin-left: 0.5rem;
+}
+
+form > button {
+  margin-right: 0.5rem;
+}
+
+aside {
+  background-color: grey;
+  display: flex;
+  flex-direction: column;
+  grid-area: users;
+}
+
+aside > form {
+  align-items: center;
+  background-color: #ccc;
+  display: flex;
+  gap: 0.5rem;
+  height: 4rem;
+  width: 100%;
+}
+
+aside > form > input {
+  flex-grow: 1;
+  margin-left: 0.5rem;
+}
+
+aside > form > button {
+  margin-right: 0.5rem;
+}
+
+aside > ul {
+  flex-grow: 1;
+}
+
+aside > ul > li {
+  border-bottom: 1px solid whitesmoke;
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 800;
+  height: max-content;
+  padding: 0.8rem;
+}
+
+section {
+  background-color: lightgrey;
+  display: flex;
+  grid-area: messages;
+}
+
+section > ul > li {
+  border-bottom: 1px solid grey;
+  display: block;
+  height: max-content;
+  padding: 0.3rem;
+}
+
+section > ul > li:nth-child( even ) {
+  background-color: whitesmoke;
+}
