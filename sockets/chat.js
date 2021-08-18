@@ -1,6 +1,8 @@
 const moment = require('moment');
 const Messages = require('../models/chat');
 
+moment.defaultFormat = 'DD-MM-YYYY HH:mm:ss';
+
 // https://javascript.info/map-set#set
 const userList = new Map();
 
@@ -25,7 +27,7 @@ module.exports = (io) => io.on('connection', async (socket) => {
 
   socket.on('message', ({ chatMessage, nickname }) => {
     Messages.create(chatMessage, userList.get(random) || random, moment().format());
-    io.emit('message', `${moment().format('DD-MM-YYYY HH:mm:ss')} ${nickname || userList.get(random)}: ${chatMessage}`);
+    io.emit('message', `${moment()} ${nickname || userList.get(random)}: ${chatMessage}`);
   });
 
   socket.on('disconnect', () => { userList.delete(random); io.emit('offline', [...userList]); });
