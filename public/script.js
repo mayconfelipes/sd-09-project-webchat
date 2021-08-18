@@ -44,12 +44,17 @@ client.on('showAllMsgs', (allMsgs) => {
   });
 });
 
-client.on('listUsers', (usersList) => {
-  nicknamesList.innerHTML = '';
-  usersList.forEach((user) => {
-    const li = document.createElement('li');
-    li.innerHTML = user;
+const appendNickname = (nick) => {
+  const li = document.createElement('li');
+    li.innerHTML = nick;
     li.dataset.testid = 'online-user';
     nicknamesList.append(li);
-  });
+};
+
+client.on('listUsers', (usersList) => {
+  nicknamesList.innerHTML = '';
+  if (!nickname) { nickname = usersList[usersList.length - 1]; }
+  appendNickname(nickname);
+  const otherUsers = usersList.filter((user) => user !== nickname);
+  otherUsers.forEach((user) => appendNickname(user));
 });
