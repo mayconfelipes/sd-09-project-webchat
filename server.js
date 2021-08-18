@@ -5,7 +5,7 @@ const app = express();
 const path = require('path');
 const bodyParser = require('body-parser').json();
 
-const { PORT } = process.env;
+const PORT = 3000;
 
 const socketServer = require('http').createServer(app);
 const io = require('socket.io')(socketServer);
