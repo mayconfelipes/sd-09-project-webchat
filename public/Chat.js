@@ -11,7 +11,7 @@ const createRandomNick = () => {
   for (let i = 0; i < 16; i += 1) {
     result.push(cc[Math.floor(Math.random() * cc.length)]);
   }
-  
+
   return result.join('');
 };
 
@@ -67,7 +67,6 @@ createNewUser(userNick);
 socket.on('message', (message) => createMsg(message));
 
 socket.on('onlineUser', (users) => {
-
   const onlineUsers = document.querySelector('#online-users');
 
   onlineUsers.innerHTML = '';
