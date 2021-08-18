@@ -15,7 +15,14 @@ const createMessage = (message) => {
   messagesUl.appendChild(li);
 };
 
+const getDataHora = () => {
+  const data = new Date().toLocaleDateString('pt-br').split('/').join('-');
+  const hora = new Date().toLocaleTimeString('pt-br');
+  return `${data} ${hora}`;
+};
+
   module.exports = {
     createNickname,
     createMessage,
+    getDataHora,
   };
