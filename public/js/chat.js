@@ -42,7 +42,6 @@ socket.on('wellcome', () => connectedUsers());
 changeName.addEventListener('click', (event) => {
   event.preventDefault();
 
-
   newNick = newName.value;
 
   socket.emit('changeName', {
