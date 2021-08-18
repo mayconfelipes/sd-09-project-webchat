@@ -1,6 +1,7 @@
 const app = require('express')();
 const http = require('http').createServer(app);
 const cors = require('cors');
+const { update } = require('lodash');
 const moment = require('moment');
 
 moment.updateLocale('en', {
@@ -47,24 +48,24 @@ const userMessageEvent = (socket) => (data) => {
     io.emit('message', message, socket.id);
 };
 
+const updateUserNicknameEvent = (socket) => (nickName) => {
+  users.map((user) => {
+    if (user.userId === socket.id) {
+      users.splice(users.indexOf(user), 1);
+      const userUpdated = { nickname: nickName, userId: socket.id };
+
+      return users.push(userUpdated);
+    }
+
+    return users;
+  });
+  io.emit('updateUserName', users);
+};
+
 io.on('connection', (socket) => {
   socket.on('userLogin', userLoginEvent(socket));
 
   socket.on('message', userMessageEvent(socket));
 
-  socket.on('updateUserName', (nickName) => {
-    console.log(nickName);
-
-    users.map((user) => {
-      if (user.userId === socket.id) {
-        users.splice(users.indexOf(user), 1);
-        const userUpdated = { nickname: nickName, userId: socket.id };
-
-        return users.push(userUpdated);
-      }
-
-      return users;
-    });
-    io.emit('updateUserName', users);
-  });
+  socket.on('updateUserName', updateUserNicknameEvent(socket));
 });
