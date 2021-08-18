@@ -5,7 +5,6 @@ const cors = require('cors');
 const express = require('express');
 const { Server } = require('socket.io');
 const socket = require('./sockets/chat');
-const { findAll } = require('./models/messageModel');
 
 const { PORT } = process.env;
 
@@ -18,15 +17,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (_req, res) => {
   res.render('index.html');
-});
-
-app.get('/test', async (_req, res) => {
-  try {
-    const result = await findAll();
-    return res.send(result);
-  } catch (error) {
-    console.log(error);    
-  }
 });
 
 socket(io);
