@@ -15,7 +15,7 @@
 <body>
   <form id="chat">
     <input type="text" id="inputName" data-testid="nickname-box" name="username" placeholder="Digite seu NickName">
-    <button type="button" id="namesButton" data-testid="nickname-button" onclick=changeNickname()>Salvar</button>
+    <button type="button" id="namesButton" data-testid="nickname-button">Salvar</button>
     <div class="container">
       <div class="messages" id="messages"></div>
       <div class="nickNames"></div>
@@ -41,12 +41,6 @@
           </div>`)
     }
 
-    const changeNickname = () => {
-      localStorage.setItem('nickname', getEl('inputName').value)
-    }
-
-    // renderNickNames(localStorage.nickname)
-
     socket.on('previousMessage', (messages) => {
       for (item of messages) {
         renderMessage(item.message);
@@ -63,7 +57,7 @@
       renderMessage(message);
     })
 
-// https://pt.stackoverflow.com/questions/441373/como-remover-todos-os-elementos-de-uma-div-em-javascript
+    // https://pt.stackoverflow.com/questions/441373/como-remover-todos-os-elementos-de-uma-div-em-javascript
     socket.on('receivedNames', (names) => {
       $('.nickNames').empty();
       for (item of names) {
@@ -71,7 +65,7 @@
       }
     })
 
-    socket.on('nickname', () => socket.emit('sendName', localStorage.nickname))
+    socket.on('nickname', () => socket.emit('sendName', {nickname: localStorage.nickname, id: socket.id}))
 
     $('#chat').submit((event) => {
       event.preventDefault();
@@ -87,9 +81,10 @@
     const namesButton = getEl('namesButton');
 
     namesButton.addEventListener('click', () => {
-      const nickname = $('input[name=username]').val();
-      renderNickNames(nickname);
-      socket.emit('sendName', nickname)
+      const oldName = localStorage.getItem('nickname');
+      const newName = $('input[name=username]').val();
+      localStorage.nickname = newName;
+      socket.emit('changeName', { oldName, newName })
     });
 
   </script>

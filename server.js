@@ -1,5 +1,6 @@
 const express = require('express');
 const { join } = require('path');
+const cors = require('cors');
 
 const app = express();
 const http = require('http').createServer(app);
@@ -13,7 +14,7 @@ const io = require('socket.io')(http,
 });
 
 const PORT = process.env.PORT || 3000;
-
+app.use(cors());
 app.use(express.static(join(__dirname, 'public')));
 app.set('views', join(__dirname, 'public'));
 //  Um diretório ou uma matriz de diretórios para as visualizações do aplicativo.
@@ -27,7 +28,8 @@ app.use('/', (req, res) => {
   res.render('index.html');
 });
 
-require('./sockets/server')(io);
+require('./sockets/server-messages')(io);
+require('./sockets/server-names')(io);
 
 http.listen(PORT, () => {
   console.log('O Pai tá ON!!');
