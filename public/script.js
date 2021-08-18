@@ -31,7 +31,7 @@ nicknameBtn.addEventListener('click', (e) => {
 const appendMessage = (message) => {
   const li = document.createElement('li');
   li.innerHTML = message;
-  li.dataset.testid = 'message';
+  li.dataset.testid = 'message'; // https://developer.mozilla.org/pt-BR/docs/Learn/HTML/Howto/Use_data_attributes
   messagesList.append(li);
 };
 

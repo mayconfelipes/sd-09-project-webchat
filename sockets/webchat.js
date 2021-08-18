@@ -6,11 +6,11 @@ const connectedUsers = {};
 const webchat = (io) => {
   io.on('connection', async (socket) => {
     socket.emit('showAllMsgs', await getAllMsgs());
-    connectedUsers[socket.id] = socket.id.substring(0, 16);
+    connectedUsers[socket.id] = socket.id.substring(0, 16); // https://www.w3schools.com/jsref/jsref_substring.asp
     io.emit('listUsers', Object.values(connectedUsers));
 
     socket.on('message', async ({ chatMessage: message, nickname }) => {
-      const timestamp = moment().format('DD-MM-yyyy HH:mm:ss A');
+      const timestamp = moment().format('DD-MM-yyyy HH:mm:ss A'); // https://momentjs.com/docs/#/displaying/
       await addMsg({ message, nickname, timestamp });
       io.emit('message', `${timestamp} - ${nickname}: ${message}`);
     });
