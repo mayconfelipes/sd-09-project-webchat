@@ -24,20 +24,9 @@ body {
   padding: 15px 10px;
 }
 
-#msgContainer {
-  background-color: #f2f5f8;
-  border-bottom-right-radius: 5px;
-  border-top-right-radius: 5px;
-}
-
 .usersContainer li {
   color: white;
   padding-bottom: 20px;
-}
-
-#msgContainer li {
-  background-color: white;
-  font-size: larger;
 }
 
 .msgForm {
@@ -55,8 +44,8 @@ body {
   background: rgb(37, 211, 102);
   border: none;
   border-radius: 5px;
-  cursor: pointer;
   color: white;
+  cursor: pointer;
   padding: 12px;
 }
 
@@ -78,12 +67,6 @@ body {
   padding: 8px;
 }
 
-#nickInput {
-  border-radius: 7px;
-  padding: 10px;
-  width: 60%;
-}
-
 .title {
   background-color: rgb(18, 140, 126);
   color: white;
@@ -98,11 +81,6 @@ body {
   width: 40px;
 }
 
-#user {
-  font-size: medium;
-  font-style: oblique;
-}
-
 .usersContainer {
   background-color: rgb(7, 94, 84);
   border-bottom-right-radius: 5px;
@@ -113,5 +91,5 @@ body {
 }
 
 
-/*  academic honesty:  https://github.com/tryber/sd-09-project-webchat/pull/60/files 
-https://codepen.io/drehimself/pen/KdXwxR*/
+/*  academic honesty:  https://github.com/tryber/sd-09-project-webchat/pull/60/files
+https://codepen.io/drehimself/pen/KdXwxR */
