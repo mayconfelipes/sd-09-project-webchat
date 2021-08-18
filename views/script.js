@@ -66,13 +66,6 @@ const createNick = ({ nick }) => {
     messageInput.value = '';
   });
 
-  const addMessage = (message) => {
-    const msg = document.createElement('li');
-    msg.setAttribute(DATA_TEST_ID, 'message');
-    msg.innerText = message;
-    msgContainer.appendChild(msg);
-  };
-
   const removeNickname = ({ users }) => {
     userNick = '';
     listUsers({ users, noUser: true });
@@ -81,5 +74,12 @@ const createNick = ({ nick }) => {
   socket.on('connected', ({ nick, users }) => [createNick({ nick }), listUsers({ users })]);
   socket.on('onlineUsers', listUsers);
   socket.on('refreshUsers', listUsers);
-  socket.on('message', addMessage);
+
+  socket.on('message', (message) => {
+    const newMessage = document.createElement('li');
+    newMessage.setAttribute(DATA_TEST_ID, 'message');
+    newMessage.innerText = message;
+    msgContainer.appendChild(newMessage);
+  });
+
   socket.on('disconnectUser', removeNickname);
