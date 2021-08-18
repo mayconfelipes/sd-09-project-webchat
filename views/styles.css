@@ -1,9 +1,5 @@
-
-@import url('https://fonts.googleapis.com/css?family=Lato:400,700');
-
 * {
   box-sizing: border-box;
-  font-family: Lato;
   margin: 0;
   padding: 0;
 }
@@ -30,8 +26,8 @@ body {
 
 #msgContainer {
   background-color: #f2f5f8;
-  border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 .usersContainer li {
@@ -77,8 +73,8 @@ body {
   background: rgb(37, 211, 102);
   border: none;
   border-radius: 5px;
-  cursor: pointer;
   color: white;
+  cursor: pointer;
   padding: 8px;
 }
 
@@ -103,9 +99,8 @@ body {
 }
 
 #user {
-  font-style: oblique;
   font-size: medium;
-  font-weight: bold;
+  font-style: oblique;
 }
 
 .usersContainer {
@@ -114,10 +109,9 @@ body {
   border-top-right-radius: 5px;
   float: left;
   padding: 20px;
-  width: 260px;;
+  width: 260px;
 }
 
 
 /*  academic honesty:  https://github.com/tryber/sd-09-project-webchat/pull/60/files 
-https://codepen.io/drehimself/pen/KdXwxR
-*/
+https://codepen.io/drehimself/pen/KdXwxR*/
