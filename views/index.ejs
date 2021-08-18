@@ -6,8 +6,12 @@
   </head>
   <body>
     <ul id="messages"></ul>
+    <button data-testid="nickname-button" id="button-user">Enviar Nickname</button>
+    <ul id="users"></ul>
+    <input data-testid="nickname-box" id="input-user" type="text">
     <form action="">
-      <input id="messageInput" autocomplete="off" /><button>Send</button>
+      <input id="messageInput" autocomplete="off" data-testid="message-box" />
+      <button data-testid="send-button">Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/client.js"></script>

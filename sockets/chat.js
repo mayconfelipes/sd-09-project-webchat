@@ -7,4 +7,8 @@ module.exports = (io) => io.on('connection', (socket) => {
     // console.log(`Message ${message}`);
     io.emit('message', `${data} ${nickname} ${chatMessage}`);
   });
+  socket.on('user', (user) => {
+    console.log(user);
+  });
+  socket.emit('nicknameSlice', socket.id.slice(0, 16));
 });
