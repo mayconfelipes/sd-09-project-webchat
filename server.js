@@ -14,6 +14,10 @@ const io = require('socket.io')(server, {
   },
 });
 
+const ioWebChat = require('./socket/webchat');
+
+ioWebChat(io);
+
 const webchatController = require('./controller/webchat');
 
 app.use(express.static(path.join(__dirname, 'public')));
