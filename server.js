@@ -3,7 +3,6 @@ const moment = require('moment');
 
 const app = express();
 const cors = require('cors');
-const path = require('path');
 
 const http = require('http').createServer(app);
 const io = require('socket.io')(http, {
@@ -14,9 +13,6 @@ const io = require('socket.io')(http, {
 });
 
 const chatModel = require('./models/chatModel');
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static('public'));
 
@@ -44,7 +40,7 @@ io.on('connection', async (socket) => {
   });
 });
 
-app.get('/', (_req, res) => res.render('index'));
+app.get('/', (_req, res) => res.sendFile(`${__dirname}/views/index.html`));
 
 const PORT = 3000;
 

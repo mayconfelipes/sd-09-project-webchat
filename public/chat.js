@@ -39,7 +39,6 @@ const createUser = (users) => {
 };
 
 socket.on('userDisconnect', (dropUser) => {
-  console.log(dropUser);
   createUser(dropUser);
 });
 
