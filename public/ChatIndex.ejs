@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webchat</title>
+</head>
+<body>
+  <h1 style="text-align: center;" >¿Whats Up?</h1>
+  <form style="text-align: center;">
+    <input type="text" data-testid="nickname-box" placeholder="TYPE YOUR NICK" id="nickname-box">
+    <button type="button" data-testid="nickname-button" id="nickname-button">Salvar</button>
+  </form>
+  <br>
+  <fieldset>
+    <div>
+      <p>ONLINE USERS</p>
+      <ul id="online-users"></ul>
+    </div>
+    <h3 style="text-align: center;" > CHAT </h3>
+    <div>
+      <ul id="chat-list"></ul>
+      <form style="text-align: center;">
+        <input type="text" data-testid="message-box" id="message-box" placeholder="TYPE HERE...">
+        <button type="button" data-testid="send-button" id="send-button">Enviar</button>
+      </form>
+      </div>
+    </fieldset>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="Chat.js"></script>
+</body>
+</html>
