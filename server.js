@@ -27,30 +27,12 @@ io.on('connection', async (socket) => {
   // aviso connect
   console.log(`${chaters[socket.id].name} entro bichao`);
 
-  // aviso desconect
-  socket.on('disconnect', () => {
-    console.log(`${chaters[socket.id].name} saiu bichao`);
-    delete chaters[socket.id];
-    io.emit('nickname', chaters);
-  });
-
-  // lista de usuario on  
-  io.emit('nickname', chaters);
-
   // historico
   const list = await CreateHist.historyRead();
   list.forEach((history) => {
     const { timestamp, nickname, chatMessage } = history;
     const msg = `${timestamp} - ${nickname}: ${chatMessage}`;
     socket.emit('history', msg);
-  });
-});
-
-// editar nick
-io.on('connection', (socket) => {
-  socket.on('nickname', (nickname) => {
-    chaters[socket.id].name = nickname;
-    io.emit('nickname', chaters);
   });
 });
 
@@ -72,4 +54,26 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, () => {
   console.log(`vrawwwwwww na porta : ${PORT}`);
+});
+
+// editar nick
+io.on('connection', (socket) => {
+  socket.on('nickname', (nickname) => {
+    chaters[socket.id].name = nickname;
+    io.emit('nickname', chaters);
+  });
+});
+
+// aviso desconect
+io.on('connection', (socket) => {
+  socket.on('disconnect', () => {
+    console.log(`${chaters[socket.id].name} saiu bichao`);
+    delete chaters[socket.id];
+    io.emit('nickname', chaters);
+  });
+});
+
+// lista de usuario on  
+io.on('connection', () => {
+  io.emit('nickname', chaters);
 });

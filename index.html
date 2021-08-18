@@ -8,6 +8,10 @@
       body {
         background-color: aquamarine;
       }
+
+      li {
+        list-style-type: none;
+      }
     </style>
     <title>MegaChat socket.IO</title>
     <!-- <link rel="stylesheet" href="style.css"> -->
@@ -15,21 +19,21 @@
   
   <body>
     <div>
-      <ul id="nicknames"></ul>
-      <form action="" id="nickname-form">
-        <input data-testid="nickname-box" id="select-nickname" autocomplete="off">
-        <button data-testid="nickname-button">Send</button>
-      </form>
-    </div>
-    <div>
       <ul id="message"></ul>
       <form action="" id="form">
         <input data-testid="message-box" id="input" autocomplete="off" />
         <button data-testid="send-button" >Send</button>
       </form> 
     </div>
+    <div>
+      <form action="" id="nickname-form">
+        <input data-testid="nickname-box" id="select-nickname" autocomplete="off">
+        <button data-testid="nickname-button">Send</button>
+      </form>
+      <ul id="nicknames"></ul>
+    </div>
+    
    
-
     <script src="/socket.io/socket.io.js"></script>
     <script>
       const socket = io();
@@ -56,30 +60,13 @@
           nicknameInput.value = '';
         };
       });
-
-      socket.on('nickname', function(chaters) {
-        nicknames.innerHTML = '';
-        const usuarioAtual = chaters[socket.id];
-        let namesList = [];
-        
-        // let aaaa = new Map(chaters)
-        Object.values(chaters).forEach((element) => {
-          if (usuarioAtual.name === element.name){
-            namesList.unshift(usuarioAtual.name);
-            return;
-          };
-            namesList.push(element.name);
-        });
-        
-        namesList.forEach((nick) => {
-          const lItem = document.createElement('li');
-          if (nick === namesList[0]) {
-            lItem.setAttribute('data-testid', 'online-user');
-          }
-          lItem.textContent = nick;
-          nicknames.appendChild(lItem);
-        });
-      })
+      
+      socket.on('message', function(message) {
+          const item = document.createElement('li');
+          item.textContent = message;
+          item.setAttribute('data-testid', 'message');
+          messages.appendChild(item);
+      });
 
       socket.on('history', function(listMenssages) {
           const item = document.createElement('li');
@@ -88,12 +75,34 @@
           messages.appendChild(item);
       })
 
-      socket.on('message', function(message) {
-          const item = document.createElement('li');
-          item.textContent = message;
-          item.setAttribute('data-testid', 'message');
-          messages.appendChild(item);
-      });
+      socket.on('nickname', function(chaters) {
+        nicknames.innerHTML = '';
+        const usuarioAtual = chaters[socket.id];
+        let namesList = [];
+        
+        Object.values(chaters).forEach((element) => {
+          if (usuarioAtual.name === element.name){
+            namesList.unshift(usuarioAtual.name);
+            return;
+          };
+            namesList.push(element.name);
+        });
+
+        latItem = namesList.length - 1;
+        
+        namesList.forEach((nick) => {
+          const lItem = document.createElement('li');
+          if (nick === namesList[0]) {
+          lItem.setAttribute('data-testid', 'online-user');
+          }
+          // if (nick === namesList[latItem]) {
+          //   lItem.setAttribute('data-testid', 'online-user');
+          // }
+          lItem.textContent = nick;
+          nicknames.appendChild(lItem);
+        });
+      })
+
     </script>
   </body>
 </html>
