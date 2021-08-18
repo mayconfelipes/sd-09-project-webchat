@@ -1,19 +1,19 @@
 const app = require('express')();
 const http = require('http').createServer(app);
 const cors = require('cors');
-const { update } = require('lodash');
 const moment = require('moment');
-
-moment.updateLocale('en', {
-  longDateFormat: {
-      L: 'MM-DD-YYYY',
-  },
-});
-
 const io = require('socket.io')(http, {
   cors: {
     origin: 'http://localhost:3000',
     method: ['GET', 'POST', 'PUT'],
+  },
+});
+const ChatMessage = require('./models/chatMessages');
+const ChatMessageControllers = require('./controller/chatMessages');
+
+moment.updateLocale('en', {
+  longDateFormat: {
+      L: 'MM-DD-YYYY',
   },
 });
 
@@ -23,9 +23,7 @@ app.set('view engine', 'ejs');
 
 app.set('views', './views');
 
-app.get('/', (req, res) => {
-  res.status(200).render('chat');
-});
+app.get('/', ChatMessageControllers.listMessages);
 
 http.listen(3000, () => {
   console.log('Conectado...');
@@ -44,7 +42,9 @@ const userLoginEvent = (socket) => (user) => {
 
 const userMessageEvent = (socket) => (data) => {
   const { chatMessage, nickname } = data;
-    const message = `${moment().format('L LTS')} - ${nickname}: ${chatMessage}`;
+    const timestamp = moment().format('L LTS');
+    ChatMessage.saveMessage(chatMessage, nickname, timestamp);
+    const message = `${timestamp} - ${nickname}: ${chatMessage}`;
     io.emit('message', message, socket.id);
 };
 

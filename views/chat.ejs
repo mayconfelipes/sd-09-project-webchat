@@ -20,7 +20,13 @@
       <button data-testid="send-button">Enviar</button>
     </form>
 
-    <ul id="messages"></ul>
+    <ul id="messages">
+      <% if (messages) { %>
+        <% messages.forEach((message) => { %>
+          <li data-testid="message"><%= `${message.timestamp} - ${message.nickname} ${message.message}` %> </li>
+          <% }) %>
+     <% } %>
+    </ul>
 
     <script>
 
