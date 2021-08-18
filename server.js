@@ -7,11 +7,11 @@ const http = require('http').createServer(app);
 
 const io = require('socket.io')(http,
   {
-  cors: {
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST'],
-  },
-});
+    cors: {
+      origin: 'http://localhost:3000',
+      methods: ['GET', 'POST'],
+    },
+  });
 
 const PORT = process.env.PORT || 3000;
 app.use(cors());
