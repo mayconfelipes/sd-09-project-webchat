@@ -26,7 +26,7 @@
   <script src="js/getNickName.js"></script>
   <script>
     const socket = io('localhost:3000')
-
+    let myNickName = getNickName();
     const renderMessage = (message) => {
       $('.messages').append(
         `<div data-testid="message"  class="message">
@@ -37,9 +37,10 @@
     const renderNickNames = (username) => {
       $('.nickNames').append(
         `<div class="message">
-         <strong data-testid="online-user">${username}</strong>
-          </div>`)
+              <strong data-testid="online-user">${username}</strong>
+              </div>`)
     }
+    renderNickNames(myNickName)
 
     socket.on('previousMessage', (messages) => {
       messages.forEach(element => {
@@ -62,19 +63,19 @@
     // metodo empty - JQuery https://api.jquery.com/empty/
     socket.on('receivedNames', (names) => {
       $('.nickNames').empty();
-      renderNickNames(localStorage.nickname)
+      renderNickNames(myNickName)
       const nicknames = names.map(nick)
-      nicknames.splice(nicknames.indexOf(localStorage.nickname), 1);
+      nicknames.splice(nicknames.indexOf(myNickName), 1);
       nicknames.forEach(element => {
         renderNickNames(element);
       })
     })
 
-    socket.on('nickname', () => socket.emit('sendName', { nickname: localStorage.nickname, id: socket.id }))
+    socket.on('nickname', () => socket.emit('sendName', { nickname: myNickName, id: socket.id }))
 
     $('#chat').submit((event) => {
       event.preventDefault();
-      const nickname = localStorage.nickname;
+      const nickname = myNickName;
       const chatMessage = $('input[name=message]').val();
       const messageObject = {
         chatMessage, nickname
@@ -86,9 +87,11 @@
     const namesButton = getEl('namesButton');
 
     namesButton.addEventListener('click', () => {
-      const oldName = localStorage.getItem('nickname');
+      $('.nickNames').empty();
+      const oldName = myNickName;
       const newName = $('input[name=username]').val();
-      localStorage.nickname = newName;
+      myNickName = newName;
+      renderNickNames(myNickName)
       socket.emit('changeName', { oldName, newName })
     });
 
