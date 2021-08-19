@@ -42,9 +42,9 @@
     }
 
     socket.on('previousMessage', (messages) => {
-      for (item of messages) {
-        renderMessage(item.message);
-      }
+      messages.forEach(element => {
+        renderMessage(element.message);
+      });
     })
 
     socket.on('previousNames', (messages) => {
@@ -57,20 +57,20 @@
       renderMessage(message);
     })
 
+    const nick = (item) => item.nickname;
     // https://pt.stackoverflow.com/questions/441373/como-remover-todos-os-elementos-de-uma-div-em-javascript
     // metodo empty - JQuery https://api.jquery.com/empty/
     socket.on('receivedNames', (names) => {
       $('.nickNames').empty();
-      console.log(names)
-      names.splice(names.indexOf(localStorage.nickname),1);
-      names.splice(0,0,localStorage.nickname)
-      console.log(names)
-      for (item of names) {
-        renderNickNames(item);
-      }
+      renderNickNames(localStorage.nickname)
+      const nicknames = names.map(nick)
+      nicknames.splice(nicknames.indexOf(localStorage.nickname), 1);
+      nicknames.forEach(element => {
+        renderNickNames(element);
+      })
     })
 
-    socket.on('nickname', () => socket.emit('sendName', {nickname: localStorage.nickname, id: socket.id}))
+    socket.on('nickname', () => socket.emit('sendName', { nickname: localStorage.nickname, id: socket.id }))
 
     $('#chat').submit((event) => {
       event.preventDefault();
