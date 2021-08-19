@@ -10,6 +10,7 @@ const createNickname = (qtdWorks) => {
 };
 
 const createMessage = (message) => {
+  console.log('Passei aqui', message);
   const messageUl = document.querySelector('.messages');
   const li = document.createElement('li');
   li.innerText = message;

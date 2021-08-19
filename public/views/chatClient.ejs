@@ -63,7 +63,7 @@
   socket.on('listAllMessages', (arrayMessagens) => {
     return arrayMessagens.map((message) => createMessage(message)); 
   })
-  socket.on('message', ({message}) => createMessage(message));
+  socket.on('message', (message) => createMessage(JSON.parse(message)));
   // recebendo como parâmetro o name e repassando para variavel nickname
   socket.emit('saveNickname', nickname);
   // escutando listAllUsers e criando a lista de usuários

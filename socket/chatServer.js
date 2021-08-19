@@ -14,7 +14,7 @@ const saveNickname = (io, nickname) => {
 const mountMessage = (io, { chatMessage, nickname }) => { // io, aqui e para emitir informação
   const message = `${getDataHora()} - ${nickname}: ${chatMessage}`;
   arrayMessages.push(message);
-  io.emit('message', { message });
+  io.emit('message', JSON.stringify(message));
 };
 
 const alterNickname = (io, { OldNickname, newNickname }) => {
