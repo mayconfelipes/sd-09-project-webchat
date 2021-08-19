@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/css/chat.css">
+</head>
+<body>
+  <main>
+    <div class='sections'>
+      <section>
+        <form class="nickname-form">
+          <input 
+            type="text"
+            id="nickname"
+            placeholder="Insira seu nickname"
+            data-testid="nickname-box"
+          >
+          <button id="save-nickname" data-testid="nickname-button">Salvar</button>
+        </form>
+        <div class="users-container">
+          <p>Usuários logados:</p>
+          <ul id="users" class="users"><ul>
+        </div>
+      </section>
+      <section class="messages-container">
+        <ul id="messages" class="messages"></ul>
+      </section>
+    </div>
+    <div class="message-input-container">
+      <input type="text" id="message-input" class="message-input" data-testid="message-box"></input>
+      <button id="send-message" data-testid="send-button">Enviar</button>
+    </div>
+  </main>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+body {
+  background-color: white;
+  font-family: Zen Loop, cursive;
+  font-size: 24px;
+  font-weight: 800;
+  margin: auto;
+  max-width: 800px;
+}
+
+.container {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 20px;
+  padding: 20px;
+}
+
+.chats {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 20px;
+}
+
+.usersInfo {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 20px;
+}
+
+.userInfoInput {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 20px;
+}
+
+.userInfoInput input {
+  border: 4px double #515151;
+  height: 40px;
+  width: 80%;
+}
+
+.userInfoInput button {
+  height: 40px;
+}
+
+.allusers {
+  border: 4px double #515151;
+  height: 100%;
+}
+
+.messages {
+  border: 4px double #515151;
+  min-height: 300px;
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 20px;
+  width: 100%;
+}
+
+.form input {
+  border: 4px double #515151;
+  height: 40px;
+  width: 80%;
+}
+
+.form button {
+  border: 4px double #515151;
+  height: 40px;
+  width: 20%;
+}
