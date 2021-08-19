@@ -23,8 +23,8 @@ function ioWebchat(io) {
   });
       
   socket.on('disconnect', () => {
-    const userIndex = onlineUsers.findIndex((u) => u.userId === userId);
-    onlineUsers.splice(userIndex, 1); io.emit('disconnectUser', { users: onlineUsers });
+    onlineUsers.filter((user) => user.id !== userId);
+    io.emit('disconnectUser', { users: onlineUsers });
   });
   });   
 }
