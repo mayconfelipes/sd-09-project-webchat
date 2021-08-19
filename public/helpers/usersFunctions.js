@@ -14,6 +14,7 @@ const createMessage = (message) => {
   const li = document.createElement('li');
   li.innerText = message;
   li.setAttribute(ATTRIBUTEDATATESTID, 'message');
+  li.className = 'listMessages';
   messageUl.appendChild(li);
 };
 

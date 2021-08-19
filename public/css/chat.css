@@ -1,11 +1,7 @@
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font: 13px Helvetica, Arial;
 }
 
 ul {
@@ -13,79 +9,79 @@ ul {
 }
 
 #content {
-  display:flex;
+  display: flex;
 }
 
-#content #content-users {
+#content-users {
   flex-basis: calc(30% - 20px);
   margin: 0 10px;
 }
 
-#content #messages {
+#messages {
   flex-basis: calc(70% - 20px);
   margin: 0 10px;
 }
 
 #form-messages {
-  background: rgb(44, 196, 143);
+  background: rgb( 44, 196, 143 );
+  bottom: 0;
   padding: 1px;
   position: fixed;
-  bottom: 0;
   width: 100%;
 }
 
-#form-messages input {
+#message-input {
   border: 0;
+  margin-right: 0.5%;
   padding: 3px;
   width: 90%;
-  margin-right: 0.5%;
 }
 
-#form-messages button {
-  width: 9%;
-  background: rgb(20, 173, 120);
+#btnMessages {
+  background: rgb( 20, 173, 120 );
   border: none;
-  padding: 5px;
-  cursor: pointer;
   color: white;
+  cursor: pointer;
   font-weight: 700;
+  padding: 5px;
+  width: 9%;
 }
 
-#form-messages button:hover {
-background-color: rgb(82, 198, 157);;
+#btnMessages:hover {
+  background-color: rgb( 82, 198, 157 );;
 }
 
 #form-users {
-  background: rgb(247, 144, 114);
+  background: rgb( 247, 144, 114 );
   padding: 1px;
   width: 100%;
 }
 
-#form-users input {
+#input-users {
   border: 0;
+  margin-right: 0.5%;
   padding: 3px;
   width: 66%;
-  margin-right: 0.5%;
 }
 
-#form-users button {
-  width: 30%;
-  background: rgb(235, 129, 97);
+#btn-users {
+  background: rgb( 117, 111, 109 );
   border: none;
-  padding: 5px;
-  cursor: pointer;
   color: white;
+  cursor: pointer;
   font-weight: 700;
+  padding: 5px;
+  width: 30%;
 }
 
-#form-users button:hover {
-background-color: rgb(241, 159, 134);
+#btn-users:hover {
+  background-color: rgb( 241, 159, 134 );
 }
 
-#messages li {
+.listMessages {
   padding: 5px 10px;
 }
 
-#messages li:nth-child(odd) {
+.listMessages:nth-child( odd ) {
   background: #eee;
 }
