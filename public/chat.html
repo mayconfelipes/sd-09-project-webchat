@@ -9,7 +9,6 @@
   <body>
     <div>
       <div>
-        <p id="nickname-box"></p>
         <form id="form-nickname" action="">
           <input data-testid="nickname-box" id="nickname" autocomplete="off" placeholder="nickname" />
           <button data-testid="nickname-button" id="nickname-button">Salvar</button>
@@ -20,9 +19,9 @@
         <ul id="users-online"></ul>
       </div>
     </div>
-    <ul id="messages"></ul>
-    <form id="form" action="">
-      <input id="input" autocomplete="off" data-testid="message-box" />
+    <ul id="messages" class="messages"></ul>
+    <form id="form-send" class="form-send" action="">
+      <input id="input-send" class="message-box" autocomplete="off" data-testid="message-box" />
       <button data-testid="send-button" id="send-button">Send</button>
     </form>
   </body>
