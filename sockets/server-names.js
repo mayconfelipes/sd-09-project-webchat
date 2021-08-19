@@ -27,7 +27,6 @@ const onConnect = (io) => {
 const onDisconnect = (io) => {
   io.on('connection', async (socket) => {
     socket.on('disconnect', () => {
-
       nickNames = nickNames.filter((item) => item.id !== socket.id);
       socket.broadcast.emit('receivedNames', nickNames.map(nick));
       socket.emit('receivedNames', nickNames.map(nick));
