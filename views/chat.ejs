@@ -21,6 +21,7 @@
           <h1 id="my-id"></h1>
           <h1 id="my-nickname"></h1>
           <ul id="online-users">
+            <li class="me"></li>
             <% clients.forEach(({ id, nickname }) => { %>
             <li id="<%= id %>" data-testid="online-user">
               <%= nickname || id %>
@@ -50,7 +51,9 @@
     </form>
 
     <script>
-      window.onbeforeunload = function(event) { socket.disconnect(); }; 
+      window.onbeforeunload = function (event) {
+        socket.disconnect();
+      };
       const socket = io();
 
       const nicknameForm = document.querySelector('#nickname-form');
@@ -87,13 +90,24 @@
       });
 
       socket.on('login', (id) => {
-        const onlineUsers = document.querySelector('#online-users');
-        const li = document.createElement('li');
+        const myId = document.querySelector('#my-id').innerText;
 
-        li.innerText = id;
-        li.id = id;
-        li.setAttribute('data-testid', 'online-user');
-        onlineUsers.appendChild(li);
+        if (id === myId) {
+          const me = document.querySelector('.me');
+
+          me.innerText = id;
+          me.id = id;
+          me.setAttribute('data-testid', 'online-user');
+        } else {
+          const onlineUsers = document.querySelector('#online-users');
+          const li = document.createElement('li');
+
+          li.innerText = id;
+          li.id = id;
+          li.setAttribute('data-testid', 'online-user');
+
+          onlineUsers.appendChild(li);
+        }
       });
 
       socket.on('message', (message) => {
@@ -106,11 +120,8 @@
       });
 
       socket.on('nicknameUpdate', ({ id, nickname }) => {
-        const elementToBeUpdated = document.querySelector(
-          `#${id}`
-        );
+        const elementToBeUpdated = document.querySelector(`#${id}`);
 
-        console.log(id, '**************')
         const nicknameBox = document.querySelector('#nickname-box');
 
         elementToBeUpdated.innerText = nickname;
