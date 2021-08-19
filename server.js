@@ -14,7 +14,7 @@ const {
 const PORT = 3000;
 const time = new Date();
 const timeLocal = time.toLocaleString('pt-BR').replace(' ', '/').split('/').join('-');
-const online = [];
+let online = [];
 
 app.use(cors());
 
@@ -29,22 +29,23 @@ res.render('index.html');
 });
 
 io.on('connection', async (socket) => {
-  console.log(`socket conectado com o ID: ${socket.id}`);
+  // console.log(`socket conectado com o ID: ${socket.id}`);
   const message = await fromDb();
+  socket.on('disconnect', () => {
+    const sliced = socket.id.slice(0, 16); 
+    const ativo = online.filter((e) => e !== sliced); online = ativo;
+    console.log('saiu', sliced);
+    io.emit('userexit', online); 
+  });
+ 
   // gerando nick para o req2
-  const geranick = (id) => {
-    online.push(id.slice(0, 16));
-    if (id) { io.emit('newnick', online); } return 'connected';
-  };  
-  geranick(socket.id);
+  online.push(socket.id.slice(0, 16));
+  io.emit('sendonline', online);
   console.log('online', online);
   // enviando historico de mensagens ao front.
-  
-  socket.emit('previousmessage', message);
+    socket.emit('previousmessage', message);
 
-  socket.on('nickchanged', ({ old, neo }) => {
-    socket.broadcast.emit('changenick', { neo, old }); 
-});
+  socket.on('nickchanged', ({ old, neo }) => { socket.broadcast.emit('changnick', { neo, old }); });
 
   // esperando evento message in
   socket.on('message', ({ chatMessage, nickname }) => { 

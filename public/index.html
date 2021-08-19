@@ -25,7 +25,7 @@
   </form>
 </body>
 <script src="/socket.io/socket.io.js"></script>
-<script type="text/javascript" defer>
+<script type="text/javascript">
   
   const socket = io('http://localhost:3000');
   const frm = document.getElementById('chat');
@@ -34,6 +34,7 @@
   const inputMess = document.getElementById('input-message');
   const btnSalvar = document.getElementById('salva-nick');
   const inputNick = document.getElementById('input-nick');
+  const horizon = document.getElementsByClassName('horizon');
   
   
   const  renderMessage = (mess) => {
@@ -51,17 +52,33 @@
   
   socket.on('message', (message)=>{renderMessage(message)})
   
-  socket.on('newnick', (online)=>{
-    online.forEach((elem)=>{
+  socket.on('newnick', (nick)=>{
     const ne = document.createElement('div');
-    ne.innerText = elem;
-    nicks.appendChild(ne);})
+    ne.innerText = nick;
+    nicks.appendChild(ne);
   });
-  socket.on('changenick', ({neo, old}) => {
+
+  socket.on('sendonline',(online) => {
+    nicks.innerHTML = '';
+    online.forEach((e)=> { 
+      const di = document.createElement('div');
+      di.innerText = e; 
+      nicks.appendChild(di); });
+  });
+  socket.on('changnick', ({neo, old}) => {
     nicks.childNodes.forEach((e) => { if(e.innerText === old){ e.innerText = neo } }   
     ); 
   });
-  
+  // logout
+   socket.on('userexit', (o) => {
+    nicks.innerHTML ='';
+    o.forEach((e) => { 
+      const ndiv = document.createElement('div');
+      ndiv.innerText = e;
+      nicks.appendChild(ndiv) }); 
+  });
+
+
   btnSalvar.addEventListener('click', (e)=>{
     e.preventDefault();
     nicks.childNodes.forEach(
