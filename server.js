@@ -14,16 +14,21 @@ const io = require('socket.io')(server, {
   },
 });
 
+const chatController = require('./controllers/chatController');
+
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, '/view/index.html'));
 });
 
 io.on('connection', (socket) => {
   console.log(`${socket.id} is connected`);
-  socket.on('message', ({ chatMessage, nickname }) => {
+  socket.on('message', async ({ chatMessage, nickname }) => {
+    await chatController.insertMessage({ message: chatMessage, nickname, timestamp: date });
     io.emit('message', `${date} - ${nickname}: ${chatMessage}`);
   });
 });
+
+app.get('/history', chatController.getAllMessages);
 
 app.use(express.static('public'));
 
