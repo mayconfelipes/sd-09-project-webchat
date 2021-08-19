@@ -32,7 +32,7 @@ form {
 }
 
 main {
-  background-color: tomato;
+  background-color: #515151;
   border-radius: 4px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
   display: flex;
