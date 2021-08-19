@@ -19,6 +19,8 @@ const io = require('socket.io')(http, {
 const db = require('./models/chat');
 const controller = require('./controllers/chat');
 
+let usersNames = [];
+
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
@@ -31,6 +33,21 @@ io.on('connection', async (socket) => {
   socket.on('message', async ({ nickname, chatMessage }) => {
     io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
     await db.saveMessage({ chatMessage, nickname, timestamp });
+  });
+
+  socket.on('userName', (userNickname) => {
+    usersNames.push({ id: socket.id, nickname: userNickname });
+    io.emit('usersOnline', usersNames);
+  });
+
+  socket.on('changeName', (userNickname) => {
+    usersNames.find((user) => user.id === socket.id).nickname = userNickname;
+    io.emit('usersOnline', usersNames);
+  });
+
+  socket.on('disconnect', () => {
+    usersNames = usersNames.filter(({ id }) => id !== socket.id);
+    io.emit('disconnectUser', usersNames);
   });
 });
 

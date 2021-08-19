@@ -17,19 +17,22 @@ const messages = document.getElementById('messages');
 
 let userNickname = nameRandom;
 
-const renderUserOnline = () => {
-  const li = document.createElement('li');
-  li.innerText = userNickname;
-  li.setAttribute(testid, 'online-user');
-  usersOnline.appendChild(li);
+const renderUserOnline = (usersNames) => {
+  usersOnline.innerHTML = '';
+  usersNames.forEach(({ nickname }) => {
+    const user = document.createElement('li');
+    user.innerText = nickname;
+    user.setAttribute(testid, 'online-user');
+    if (userNickname === nickname) usersOnline.insertBefore(user, usersOnline.firstChild);
+    else usersOnline.appendChild(user);
+  });
 };
 
 const changeName = (e) => {
   e.preventDefault();
   if (inputNickname.value) {
     userNickname = inputNickname.value;
-    usersOnline.innerHTML = '';
-    renderUserOnline();
+    socket.emit('changeName', userNickname);
     inputNickname.value = '';
   }
 };
@@ -58,11 +61,16 @@ socket.on('connect', async () => {
     nickname,
     timestamp,
   }) => newMessage(`${timestamp} - ${nickname}: ${message}`));
+
+  socket.emit('userName', userNickname);
 });
 
 socket.on('message', (msg) => newMessage(msg));
 
-renderUserOnline();
+socket.on('usersOnline', (usersNames) => renderUserOnline(usersNames));
+
+socket.on('disconnectUser', (usersNames) => renderUserOnline(usersNames));
+
 nicknameButton.addEventListener('click', changeName);
 formNickname.addEventListener('submit', changeName);
 sendButton.addEventListener('click', sendMessage);
