@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 require('dotenv').config();
 
 const { PORT = 3000 } = process.env;
@@ -17,7 +16,7 @@ const ChatController = require('./controllers/Chat');
 const ChatModel = require('./models/Chat');
 
 const clients = [];
-const serializeId = (id) => {
+const serialize = (id) => {
   const trimId = id.slice(0, 16);
 
   return trimId;
@@ -42,12 +41,20 @@ app.use(
   }),
 );
 
+const nicknameUpdate = (socket, IO, id) => socket
+  .on('nicknameUpdate', ({ id: clientId, nickname }) => {
+    const clientToBeUpdated = clients.findIndex((cli) => cli.id === id);
+
+    clients.splice(clientToBeUpdated, 1);
+
+    clients.push({ id: clientId, nickname });
+    IO.emit('nicknameUpdate', { id: clientId, nickname });
+    ChatController.updateNickname(connection, ChatModel, { id: clientId, nickname });
+  });
+
 io.on('connection', (socket) => {
-  const id = serializeId(socket.id);
-  const client = {
-    id,
-    nickname: '',
-  };
+  const id = serialize(socket.id);
+  const client = { id, nickname: '' };
 
   clients.push(client);
 
@@ -61,24 +68,14 @@ io.on('connection', (socket) => {
     io.emit('logout', id);
   });
 
+  nicknameUpdate(socket, io, id);
+
   socket.on('message', ({ chatMessage, nickname }) => {
     const timestamp = moment().format('DD-MM-yyyy LTS');
 
     io.emit('message', `${timestamp} - ${nickname || id}: ${chatMessage}`);
 
-    ChatController.create(
-      connection, ChatModel, { id, chatMessage, nickname, timestamp },
-    );
-  });
-
-  socket.on('nicknameUpdate', ({ id: clientId, nickname }) => {
-    const clientToBeUpdated = clients.findIndex((cli) => cli.id === id);
-
-    clients.splice(clientToBeUpdated, 1);
-
-    clients.push({ id: clientId, nickname });
-    io.emit('nicknameUpdate', { id: clientId, nickname });
-    ChatController.updateNickname(connection, ChatModel, { id: clientId, nickname });
+    ChatController.create(connection, ChatModel, { id, chatMessage, nickname, timestamp });
   });
 });
 
