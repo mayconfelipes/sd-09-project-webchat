@@ -31,9 +31,8 @@ const createUser = (ListUsers, ninckname) => {
   liUserLogado.setAttribute(ATTRIBUTEDATATESTID, 'online-user');
   userUl.appendChild(liUserLogado); // Para exibir o nome do usuario logado em 1º na lista 
   ListUsers.forEach((user) => {
-    console.log(user);
     if (user !== ninckname) {
-      const liUsers = document.createElement('li');
+      const liUsers = document.createElement('li'); // Para os usuarios restantes
       liUsers.innerText = user;
       userUl.appendChild(liUsers);
    }
