@@ -1,0 +1,65 @@
+body {
+  align-content: space-around;
+  background-color: rgb(232, 252, 232);
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  padding-inline-start: 6px;
+}
+
+aside {
+  background-color: ghostwhite;
+  min-width: 150px;
+  padding: 1em 25px;
+}
+
+time {
+  color: gray;
+  font-size: 0.8em;
+}
+
+main {
+  align-items: flex-end;
+  background-color: floralwhite;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100vh;
+  justify-content: flex-end;
+  width: 50%;
+}
+
+.send-area {
+  background-color: gray;
+  padding: 0.5em 25px;
+  width: 90%;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.chat-input {
+  background-color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 1em;
+  width: 80%;
+}
+
+.new-user {
+  align-self: center;
+  background-color: rgb(238, 238, 238);
+  border-radius: 6px;
+  display: inline-block;
+  margin: 1em 0;
+  padding: 0.5em 5%;
+  text-align: center;
+}

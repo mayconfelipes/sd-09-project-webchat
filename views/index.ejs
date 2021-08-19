@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dat Chat</title>
+  <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+  <aside>
+    <span id="you"><%= nickname %></span><span> (You)</span>
+    <p id="total-users"></p>
+    <ul class="user-panel" id="users">
+    </ul>
+  </aside>
+  <main>
+    <ul class="chat" id="messages"></ul>
+    <div class="send-area">
+      <input data-testid="message-box" class="chat-input" id="chat-input" type="text" autocomplete="off"/>
+      <button data-testid="send-button" class="send-button" id="send-button">Send</button>
+    </div>
+  </main>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chat.js"></script>
+</html>

@@ -1,25 +1,36 @@
-import express from 'express';
-import http from 'http';
-import { Server } from 'socket.io';
-import path from 'path';
+const express = require('express');
+const generateRandomAnimalName = require('random-animal-name-generator');
+
+const app = express();
+const http = require('http').createServer(app);
+const path = require('path');
 
 const dirname = path.resolve();
 
-const app = express();
-const httpServer = http.createServer(app);
-const io = new Server(httpServer, {
+app.use(express.json());
+app.use(express.static(path.join(dirname, '/public')));
+
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
+const io = require('socket.io')(http, {
   cors: {
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST'],
   },
 });
 
-io.on('connection', (socket) => {
-  console.log(socket);
+const users = [];
+const messages = [];
+
+require('./messages/connection.js')(io, users);
+require('./messages/disconnect.js')(io, users);
+require('./messages/message.js')(io, users, messages);
+
+app.get('/', async (req, res) => {
+  const animal = await generateRandomAnimalName().split(' ')[1];
+  const nickname = `${animal}-anonymous`.split('', 16).join('');
+  return res.status(200).render('index', { users, nickname });
 });
 
-app.get('/', (req, res) => {
-  res.status(200).sendFile(path.join(dirname, '/views/index.html'));
-});
-
-httpServer.listen(3000, () => { console.log('ouvindo na porta 3000'); });
+http.listen(3000, () => { console.log('ouvindo na porta 3000'); });
