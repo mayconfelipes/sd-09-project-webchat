@@ -61,6 +61,10 @@
     // metodo empty - JQuery https://api.jquery.com/empty/
     socket.on('receivedNames', (names) => {
       $('.nickNames').empty();
+      console.log(names)
+      names.splice(names.indexOf(localStorage.nickname),1);
+      names.splice(0,0,localStorage.nickname)
+      console.log(names)
       for (item of names) {
         renderNickNames(item);
       }
