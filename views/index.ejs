@@ -5,14 +5,14 @@
     <link rel="stylesheet" href="styles/chat.css">
   </head>
   <body>
-    <ul id="messages"></ul>
     <button data-testid="nickname-button" id="button-user">Enviar Nickname</button>
-    <ul id="users"></ul>
     <input data-testid="nickname-box" id="input-user" type="text">
+    <ul id="users"></ul>
     <form action="">
       <input id="messageInput" autocomplete="off" data-testid="message-box" />
       <button data-testid="send-button">Send</button>
     </form>
+    <ul id="messages"></ul>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/client.js"></script>
   </body>
