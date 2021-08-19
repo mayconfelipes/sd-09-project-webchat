@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Web Chat</title>
+    <link rel="stylesheet" href="./index.css">
+  </head>
+  <body>
+    <main>
+      <div id="chat">
+        <ul id="messages"></ul>
+        <form id ="formChat" action="">
+          <input
+            id="messageInput"
+            autocomplete="off"
+            data-testid="message-box"
+          /><button data-testid="send-button">Send</button>
+        </form>
+      </div>
+      <div id="info">
+        <div id="confg">
+          <form id="changeNickName"action="">
+            <input
+              data-testid="nickname-box"
+              id="changeNickInput"
+            /><button data-testid="nickname-button">Change</button>
+          </form>
+        </div>
+        <div id="users">
+          <ul id="usersOnline"></ul>
+        </div>
+      </div>
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src='./js/chat.js'></script>
+  </body>
+</html>
