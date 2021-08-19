@@ -9,12 +9,13 @@ module.exports = (http) => {
     cors: { origin: 'http://localhost:3000', methods: ['GET', 'POST', 'PUT', 'DELETE'] } });
     io.on('connection', (socket) => {
       console.log('Alguém se conectou');
-      // listar histórico
       socket.emit('listAllMessages', arrayMessages);
-      socket.emit('listAllUsers', arrayUsers);
-      socket.on('disconnect', () => {
-        console.log('Alguém saiu');
+      socket.on('saveNickname', (nickname) => {
+        if (!arrayUsers.includes(nickname)) { arrayUsers.push(nickname); }
+        io.emit('listAllUsers', arrayUsers);
       });
+      socket.emit('listAllUsers', arrayUsers);
+      socket.on('disconnect', () => console.log('Alguém saiu'));
       socket.on('message', ({ chatMessage, nickname }) => {
         const message = `${getDataHora()} - ${nickname}: ${chatMessage}`;
         arrayMessages.push(message);

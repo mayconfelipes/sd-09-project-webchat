@@ -50,7 +50,7 @@
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      socket.emit('message', { chatMessage: inputMessage.value, nickname})
+      socket.emit('message', { chatMessage: inputMessage.value, nickname })
       inputMessage.value='';
       return false;
   })
@@ -61,7 +61,7 @@
   })
   socket.on('message', ({message}) => createMessage(message));
   // recebendo como parâmetro o name e repassando para variavel nickname
-  socket.on('createNickname', (name) => { nickname = name });
+  socket.emit('saveNickname', nickname);
   // escutando listAllUsers e criando a lista de usuários
   socket.on('listAllUsers', (users) => {
     createUser(users, nickname);
