@@ -10,7 +10,7 @@
 
 <body>
   <header>
-    <h1>TESTE</h1>
+    <h1>Trybe Chat</h1>
     <p>Bem vindo, <span id="onlineUser" data-testid='online-user'></span></p>
   </header>
 
@@ -25,7 +25,11 @@
     <button id='sendMessageButton' data-testid='send-button'>Enviar</button>
   </form>
 
-  <ul id='messages'></ul>
+  <ul id='messages'>
+    <% messageHistory.forEach((message) => {%>
+    <li data-testid='message'><%= message %></li>
+    <% }); %>
+  </ul>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
@@ -52,6 +56,9 @@
     socket.on('connect', () => {
       generateRandomNick()
       setNickname();
+
+      const nickname = localStorage.getItem('nickname');
+      socket.emit(nickname);
     });
 
     const createMessage = (message) => {
@@ -104,6 +111,7 @@
     socket.on('serverMessage', (mensagem) => createMessage(mensagem));
 
     window.onbeforeunload = function (event) {
+      const nickname = localStorage.getItem('nickname');
       socket.disconnect();
     };
   </script>
