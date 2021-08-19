@@ -1,7 +1,6 @@
 const socket = window.io();
 
 let userNick = '';
-let onlineUsers = [];
 
 const messageBtn = document.querySelector('#messageBtn');
 const messageInput = document.querySelector('#messageInput');
@@ -26,25 +25,13 @@ const createNick = ({ nick }) => {
     return null;
   };
 
-  const listUsers = ({ users, noUser = false }) => {
-    onlineUsers = users;
-  
-    if (noUser) userNick = '';
+  const listUsers = ({ users }) => {
     usersContainer.innerHTML = '';
-    
-    if (userNick) {
-      const liMyUser = document.createElement('li');
-      liMyUser.setAttribute(DATA_TEST_ID, 'online-user');
-      liMyUser.innerText = userNick;
-      usersContainer.appendChild(liMyUser);
-    }
-    onlineUsers.forEach((u) => {
-      if (u.nickname !== userNick) {
-        const liUser = document.createElement('li');
-        liUser.setAttribute(DATA_TEST_ID, 'online-user');
-        liUser.innerText = u.nickname;
-        usersContainer.appendChild(liUser);
-      }
+    users.forEach((u) => {
+      const liUser = document.createElement('li');
+      liUser.setAttribute(DATA_TEST_ID, 'online-user');
+      liUser.innerText = u.nickname;
+      usersContainer.appendChild(liUser);
     });
     return null;
   };
@@ -52,16 +39,16 @@ const createNick = ({ nick }) => {
   const updateNick = ({ nick }) => {
     userNick = nick;
     const userId = checkUserExists();
-    if (!userId) createNick(nick);
     userId.innerHTML = nick;
     nickInput.value = '';
     return null;
   };
-  
+
   nickBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    socket.emit('updateNick', { newNick: nickInput.value });
-    updateNick({ nick: nickInput.value });
+    const newNick = nickInput.value;
+    socket.emit('updateNick', { newNick });
+    updateNick({ nick: newNick });
   });
 
   messageBtn.addEventListener('click', (e) => {
