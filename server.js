@@ -23,9 +23,15 @@ const io = require('socket.io')(http, {
 const users = [];
 const messages = [];
 
+const changeNickname = ({ oldNickname, newNickname }) => {
+  const i = users.findIndex((user) => user.nickname === oldNickname);
+  users[i].nickname = newNickname;
+};
+
 require('./messages/connection.js')(io, users);
 require('./messages/disconnect.js')(io, users);
 require('./messages/message.js')(io, users, messages);
+require('./messages/nickname.js')(io, changeNickname);
 
 app.get('/', async (req, res) => {
   const animal = await generateRandomAnimalName().split(' ')[1];

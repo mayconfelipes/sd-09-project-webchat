@@ -13,6 +13,7 @@ ul {
 
 aside {
   background-color: ghostwhite;
+  border-right: 1px solid lightgray;
   min-width: 150px;
   padding: 1em 25px;
 }
@@ -33,10 +34,22 @@ main {
   width: 50%;
 }
 
+input {
+  background-color: white;
+  border: none;
+  border-radius: 25px;
+  height: 1.25em;
+  padding: 1em;
+}
+
 .send-area {
-  background-color: gray;
+  align-items: center;
+  background-color: lightgray;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
   padding: 0.5em 25px;
-  width: 90%;
+  width: 100%;
 }
 
 .chat {
@@ -46,20 +59,42 @@ main {
   width: 100%;
 }
 
+.chat > li {
+  border-radius: 6px;
+}
+
 .chat-input {
-  background-color: white;
-  border: none;
-  border-radius: 25px;
-  padding: 1em;
-  width: 80%;
+  resize: none;
+  width: 70%;
+}
+
+.send-button {
+  background-color: unset;
+  border-radius: 50%;
+  box-sizing: border-box;
+  height: 50px;
+  margin: 5px 0;
+  padding: 0;
+  visibility: visible;
+  width: 50px;
 }
 
 .new-user {
   align-self: center;
   background-color: rgb(238, 238, 238);
-  border-radius: 6px;
-  display: inline-block;
   margin: 1em 0;
   padding: 0.5em 5%;
   text-align: center;
+}
+
+.message {
+  align-self: flex-start;
+  background-color: rgb(209, 243, 209);
+  margin-left: 25px;
+  margin-top: 1em;
+  padding: 0.5em;
+}
+
+.message time {
+  display: inherit;
 }

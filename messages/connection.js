@@ -4,5 +4,8 @@ module.exports = (io, users) => {
       users.push({ nickname, id: socket.id });
       io.emit('connected', { newUser: nickname, users });
     });
+    socket.on('connected', () => {
+      socket.emit('connected', { users });
+    });
 });
 };

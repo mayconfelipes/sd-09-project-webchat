@@ -10,6 +10,9 @@
 <body>
   <aside>
     <span id="you"><%= nickname %></span><span> (You)</span>
+    <br>
+    <input class="nickname-box" id="nickname-box" type="text" data-testid="nickname-box">
+    <button id="nickname-button" data-testid="nickname-button">change nickname</button>
     <p id="total-users"></p>
     <ul class="user-panel" id="users">
     </ul>
@@ -17,8 +20,17 @@
   <main>
     <ul class="chat" id="messages"></ul>
     <div class="send-area">
-      <input data-testid="message-box" class="chat-input" id="chat-input" type="text" autocomplete="off"/>
-      <button data-testid="send-button" class="send-button" id="send-button">Send</button>
+      <input
+        autofocus
+        data-testid="message-box"
+        class="chat-input"
+        id="chat-input"
+        type="text"
+        autocomplete="off"
+      >
+      <button data-testid="send-button" class="send-button" id="send-button">
+        <img alt="send message" src="/images/send-button.svg" width="100%">
+      </button>
     </div>
   </main>
 </body>
