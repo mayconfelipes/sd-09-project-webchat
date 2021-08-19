@@ -5,7 +5,6 @@ const cors = require('cors');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
-
 const {
   fromDb,
   insertOne,
@@ -13,6 +12,9 @@ const {
 // const { promiseImpl } = require('ejs');
 
 const PORT = 3000;
+const time = new Date();
+const timeLocal = time.toLocaleString('pt-BR').replace(' ', '/').split('/').join('-');
+const online = [];
 
 app.use(cors());
 
@@ -31,17 +33,21 @@ io.on('connection', async (socket) => {
   const message = await fromDb();
   // gerando nick para o req2
   const geranick = (id) => {
-    if (id) { socket.emit('newnick', id.slice(0, 16)); } return false;
+    online.push(id.slice(0, 16));
+    if (id) { io.emit('newnick', online); } return 'connected';
   };  
   geranick(socket.id);
+  console.log('online', online);
   // enviando historico de mensagens ao front.
-  console.log('se', message);
+  
   socket.emit('previousmessage', message);
- 
+
+  socket.on('nickchanged', ({ old, neo }) => {
+    socket.broadcast.emit('changenick', { neo, old }); 
+});
+
   // esperando evento message in
   socket.on('message', ({ chatMessage, nickname }) => { 
-    const time = new Date();
-    const timeLocal = time.toLocaleString('pt-BR').replace(' ', '/').split('/').join('-');
     const payload = `${timeLocal} - ${nickname}: ${chatMessage}`;
     const objmess = { timestamp: timeLocal, nickname, message: chatMessage };
     insertOne(objmess);

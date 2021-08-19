@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Projeto WebChat</title>
- <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>-->
+ 
  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -33,6 +33,7 @@
   const messagebox = document.getElementById('mess');
   const inputMess = document.getElementById('input-message');
   const btnSalvar = document.getElementById('salva-nick');
+  const inputNick = document.getElementById('input-nick');
   
   
   const  renderMessage = (mess) => {
@@ -50,13 +51,24 @@
   
   socket.on('message', (message)=>{renderMessage(message)})
   
-  socket.on('newnick', (nick)=>{
+  socket.on('newnick', (online)=>{
+    online.forEach((elem)=>{
     const ne = document.createElement('div');
-    ne.innerText = nick;
-    nicks.appendChild(ne);
-  })
+    ne.innerText = elem;
+    nicks.appendChild(ne);})
+  });
+  socket.on('changenick', ({neo, old}) => {
+    nicks.childNodes.forEach((e) => { if(e.innerText === old){ e.innerText = neo } }   
+    ); 
+  });
   
-  btnSalvar.addEventListener('click', (e)=>{e.preventDefault()})
+  btnSalvar.addEventListener('click', (e)=>{
+    e.preventDefault();
+    nicks.childNodes.forEach(
+      (e)=>{ if(e.innerText === socket.id.slice(0,16)){e.innerText = inputNick.value} }
+    );
+    socket.emit('nickchanged', { neo: inputNick.value, old: socket.id.slice(0,16) });
+  })
 
   frm.addEventListener( 'submit', (e)=> {
     e.preventDefault();
