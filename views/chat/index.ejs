@@ -11,11 +11,18 @@
 <body>
   <header>
     <h1>TESTE</h1>
+    <p>Bem vindo, <span id="onlineUser" data-testid='online-user'></span></p>
   </header>
 
+
+  <form id='nicknameForm'>
+    <input type="text" id="nicknameInput" data-testid="nickname-box">
+    <button id='nicknameButton' data-testid="nickname-button">Alterar apelido</button>
+  </form>
+
   <form id='messageForm'>
-    <input type="message" id="messageInput">
-    <button id='sendMessageButton'>Enviar</button>
+    <input type="message" id="messageInput" data-testid='message-box'>
+    <button id='sendMessageButton' data-testid='send-button'>Enviar</button>
   </form>
 
   <ul id='messages'></ul>
@@ -24,31 +31,77 @@
   <script>
     const socket = io();
 
-    let nickname = '';
-
-    const button = document.querySelector('#sendMessageButton');
     const form = document.querySelector('#messageForm');
     const message = document.querySelector('#messageInput');
+
+    const generateRandomNick = () => {
+      const lengt = 16;
+      const randomNick = `user${socket.id}`
+
+      localStorage.setItem('nickname', randomNick.slice(0, 16));
+    }
+
+    const setNickname = () => {
+      const messagesUl = document.querySelector('#userList');
+      const onlineUser = document.querySelector('#onlineUser')
+      const nickname = localStorage.getItem('nickname');
+
+      onlineUser.innerText = nickname;
+    }
+
+    socket.on('connect', () => {
+      generateRandomNick()
+      setNickname();
+    });
 
     const createMessage = (message) => {
       const messagesUl = document.querySelector('#messages');
 
       const li = document.createElement('li');
-
+      li.setAttribute('data-testid', 'message');
       li.innerText = message;
       messagesUl.appendChild(li);
     };
 
-    form.addEventListener('submit', (e) => {
+
+    const nicknameForm = document.querySelector('#nicknameForm');
+    const nicknameInput = document.querySelector('#nicknameInput');
+
+    nicknameForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      socket.emit('message', { chatMessage: message.value , nickname });
+      const newNickname = nicknameInput.value;
+
+      const nickname = localStorage.getItem('nickname');
+
+      socket.emit('changeNickname', {
+        nickname,
+        newNickname,
+      });
+
+      localStorage.setItem('nickname', newNickname);
+
+      setNickname();
+
+      nicknameInput.value = '';
+
+      return false;
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nickname = localStorage.getItem('nickname');
+      socket.emit('message', {
+        chatMessage: message.value,
+        nickname
+      });
       message.value = '';
 
       return false;
     });
 
     socket.on('message', (mensagem) => createMessage(mensagem));
+    socket.on('serverMessage ', (mensagem) => createMessage(mensagem));
 
     window.onbeforeunload = function (event) {
       socket.disconnect();
