@@ -1,4 +1,10 @@
-module.exports = (io) => io.on('connection', (socket) => {
+const chatModel = require('../models/chatModel');
+
+const newConnection = (socket) => {
+  socket.emit('wellcome', 'Cheguei');
+};
+
+const message = (socket, io) => {
   socket.on('message', ({ chatMessage, nickname }) => {
     const fullDate = new Date();
     const day = fullDate.getDate();
@@ -8,15 +14,32 @@ module.exports = (io) => io.on('connection', (socket) => {
     const hours = fullDate.getHours();
     const minutes = fullDate.getMinutes();
 
-    const usrMsg = `
-      ${day}-${month}-${year} ${hours}:${minutes} ${nickname}: ${chatMessage}
-    `;
+    const timestamp = `${day}-${month}-${year} ${hours}:${minutes}`;
+
+    const usrMsg = `${timestamp} ${nickname}: ${chatMessage}`;
+
+      chatModel.saveMsgs({ message: chatMessage, nickname, timestamp });
+
     io.emit('message', usrMsg);
   });
+};
 
-  socket.emit('wellcome', 'Cheguei');
-
-  socket.on('changeName', () => {
-    socket.emit('changeName', 'Nome alterado com sucesso :)');
+const msgHistory = (socket) => {
+  socket.on('msgHistory', async () => {
+    const getMesgs = await chatModel.getMesgs();
+    socket.emit('getMesgs', getMesgs);
   });
+};
+
+const changeName = (socket, io) => {
+  socket.on('changeName', () => {
+    io.emit('changeName', 'Nome alterado com sucesso :)');
+  });
+};
+
+module.exports = (io) => io.on('connection', (socket) => {
+  newConnection(socket);
+  message(socket, io);
+  msgHistory(socket);
+  changeName(socket, io);
 });

@@ -6,7 +6,8 @@ const newName = document.querySelector('#newName');
 const changeName = document.querySelector('#changeName');
 
 let newNick = '';
-const allUsersConnected = [];
+
+socket.emit('msgHistory');
 
 const createRandomName = (length) => {
   let result = '';
@@ -23,13 +24,6 @@ const connectedUsers = () => {
   const usersList = document.querySelector('#usersList');
 
   if (!newNick) newNick = createRandomName(16);
-
-  allUsersConnected.push({
-    userId: socket.id,
-    nickname: newNick,
-    chatMessage: [],
-  });
-  console.log(allUsersConnected);
 
   const li = document.createElement('li');
   li.innerText = newNick;
@@ -49,7 +43,7 @@ changeName.addEventListener('click', (event) => {
     chatMessage: inputMessage.value,
   });
 
-  inputMessage.value = '';
+  newName.value = '';
   return false;
 });
 
@@ -75,3 +69,10 @@ const createMessage = (message) => {
 };
 
 socket.on('message', (mensagem) => createMessage(mensagem));
+
+socket.on('getMesgs', (mesgs) => {
+  mesgs.forEach(({ message, nickname, timestamp }) => {
+    const msg = `${timestamp} ${nickname}: ${message}`;
+    createMessage(msg);
+  });
+});
