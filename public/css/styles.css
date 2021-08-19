@@ -50,8 +50,8 @@
 }
 
 .containerUsers {
-  border-radius: 10px;
   background-color: white;
+  border-radius: 10px;
   flex: 1;
   padding: 30px;
 }
