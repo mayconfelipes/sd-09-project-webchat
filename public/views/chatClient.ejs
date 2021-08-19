@@ -12,33 +12,33 @@
 </head>
 <body>
 
-  <div id="content">
-    <div id="content-users">
+  <div class="content">
+    <div class="content-users">
 
-      <form id="form-users" action="">
-      <input data-testid="nickname-box" id="input-users" autocomplete="off" placeholder="Alterar nickname" required />
-      <button data-testid="nickname-button" id="btn-users">Salvar</button>
+      <form class="form-users" action="">
+      <input data-testid="nickname-box" class="input-users" autocomplete="off" placeholder="Alterar nickname" required />
+      <button data-testid="nickname-button" class="btn-users">Salvar</button>
       </form>
 
-      <ul id="users"></ul>
+      <ul class="users"></ul>
 
     </div>
   
-    <ul id="messages"></ul>
+    <ul class="messages"></ul>
 
 </div>
 
-  <form id="form-messages" action="">
-    <input data-testid="message-box" id="message-input" autocomplete="off" placeholder="Digite uma nova mensagem aqui" required/>
-    <button data-testid="send-button" id="btnMessages">Enviar</button>
+  <form class="form-messages" action="">
+    <input data-testid="message-box" class="message-input" autocomplete="off" placeholder="Digite uma nova mensagem aqui" required/>
+    <button data-testid="send-button" class="btnMessages">Enviar</button>
   </form>
 
   <script>
     // escuta os eventos do chatServer
     const socket = io();
     let nickname = createNickname(16);
-    const formUsers = document.querySelector('#form-users');
-    const inputUsers = document.querySelector('#input-users');
+    const formUsers = document.querySelector('.form-users');
+    const inputUsers = document.querySelector('.input-users');
 
     formUsers.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -50,8 +50,8 @@
       return false;
     })
 
-    const formMessages = document.querySelector('#form-messages');
-    const inputMessage = document.querySelector('#message-input');
+    const formMessages = document.querySelector('.form-messages');
+    const inputMessage = document.querySelector('.message-input');
     formMessages.addEventListener('submit', (e) => {
       e.preventDefault();
       socket.emit('message', { chatMessage: inputMessage.value, nickname })

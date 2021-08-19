@@ -10,7 +10,7 @@ const createNickname = (qtdWorks) => {
 };
 
 const createMessage = (message) => {
-  const messageUl = document.querySelector('#messages');
+  const messageUl = document.querySelector('.messages');
   const li = document.createElement('li');
   li.innerText = message;
   li.setAttribute(ATTRIBUTEDATATESTID, 'message');
@@ -25,7 +25,7 @@ const getDataHora = () => {
 };
 
 const createUser = (ListUsers, ninckname) => {
-  const userUl = document.querySelector('#users');
+  const userUl = document.querySelector('.users');
   userUl.innerText = ''; // para não duplicar as informações em tela
   const liUserLogado = document.createElement('li');
   liUserLogado.innerText = ninckname;
