@@ -7,9 +7,6 @@
     <title>Web Chat</title>
 
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script>
-      const socket = io();
-    </script>
   </head>
   <body>
     <main>
@@ -21,10 +18,13 @@
           </form>
         </div>
         <div>
+          <h1 id="my-id"></h1>
           <h1 id="my-nickname"></h1>
           <ul id="online-users">
-            <% sockets.forEach(({ trimId }) => { %>
-                <li id="<%= trimId %>" data-testid="online-user"><%= trimId %></li>
+            <% clients.forEach(({ id, nickname }) => { %>
+            <li id="<%= id %>" data-testid="online-user">
+              <%= nickname || id %>
+            </li>
             <% }) %>
           </ul>
         </div>
@@ -32,7 +32,9 @@
       <section>
         <ul id="chat">
           <% messages.forEach(( { message, nickname, timestamp } ) => { %>
-            <li data-testid="message"><%= `${timestamp} - ${nickname}: ${message}` %></li>
+          <li data-testid="message">
+            <%= `${timestamp} - ${nickname}: ${message}` %>
+          </li>
           <% }) %>
         </ul>
       </section>
@@ -48,19 +50,18 @@
     </form>
 
     <script>
+      window.onbeforeunload = function(event) { socket.disconnect(); }; 
+      const socket = io();
+
       const nicknameForm = document.querySelector('#nickname-form');
-      const nicknameBox = document.querySelector('#nickname-box');
       const messageForm = document.querySelector('#message-form');
-      const messageBox = document.querySelector('#message-box');
-      const onlineUsers = document.querySelector('#online-users');
-      const myNickname = document.querySelector('#my-nickname');
-      const chat = document.querySelector('#chat');
 
       messageForm.addEventListener('submit', (event) => {
         event.preventDefault();
 
+        const nickname = document.querySelector('#my-nickname').innerText;
+        const messageBox = document.querySelector('#message-box');
         const chatMessage = messageBox.value;
-        const nickname = myNickname.innerText;
 
         messageBox.value = '';
         socket.emit('message', { chatMessage, nickname });
@@ -71,18 +72,22 @@
       nicknameForm.addEventListener('submit', (event) => {
         event.preventDefault();
 
-        const target = myNickname.innerText;
-        const newNickname = nicknameBox.value;
+        const myNickname = document.querySelector('#my-nickname');
+        const nickname = document.querySelector('#nickname-box').value;
+        const id = document.querySelector('#my-id').innerText;
 
-        socket.emit('nicknameUpdate', { target, newNickname });
-        myNickname.innerText = newNickname;
+        socket.emit('nicknameUpdate', { id, nickname });
+        myNickname.innerText = nickname;
       });
 
       socket.on('welcome', (id) => {
-        myNickname.innerText = id;
+        const myId = document.querySelector('#my-id');
+
+        myId.innerText = id;
       });
 
       socket.on('login', (id) => {
+        const onlineUsers = document.querySelector('#online-users');
         const li = document.createElement('li');
 
         li.innerText = id;
@@ -92,6 +97,7 @@
       });
 
       socket.on('message', (message) => {
+        const chat = document.querySelector('#chat');
         const li = document.createElement('li');
 
         li.innerText = message;
@@ -99,18 +105,24 @@
         chat.appendChild(li);
       });
 
-      socket.on('nicknameUpdate', ({ target, newNickname }) => {
-        const elementToBeUpdated = document.querySelector(`#${target}`);
+      socket.on('nicknameUpdate', ({ id, nickname }) => {
+        const elementToBeUpdated = document.querySelector(
+          `#${id}`
+        );
 
-        elementToBeUpdated.innerText = newNickname;
+        console.log(id, '**************')
+        const nicknameBox = document.querySelector('#nickname-box');
+
+        elementToBeUpdated.innerText = nickname;
         nicknameBox.value = '';
       });
 
       socket.on('logout', (id) => {
-        const li = document.querySelector(`#${id}`)
+        const onlineUsers = document.querySelector('#online-users');
+        const li = document.querySelector(`#${id}`);
 
-        onlineUsers.removeChild(li)
-      })
+        onlineUsers.removeChild(li);
+      });
     </script>
   </body>
 </html>

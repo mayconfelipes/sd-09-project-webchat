@@ -16,7 +16,7 @@ const connection = require('./models/connection');
 const ChatController = require('./controllers/Chat');
 const ChatModel = require('./models/Chat');
 
-const sockets = [];
+const clients = [];
 const serializeId = (id) => {
   const trimId = id.slice(0, 16);
 
@@ -43,38 +43,49 @@ app.use(
 );
 
 io.on('connection', (socket) => {
-  const trimId = serializeId(socket.id);
-  const socketWithTrimId = { ...socket, trimId };
+  const id = serializeId(socket.id);
+  const client = {
+    id,
+    nickname: '',
+  };
 
-  sockets.push(socketWithTrimId);
-  console.log(sockets.length);
-  socket.emit('welcome', trimId);
-  io.emit('login', trimId);
+  clients.push(client);
+
+  socket.emit('welcome', id);
+  io.emit('login', id);
   
   socket.on('disconnect', () => {
-    sockets.splice(sockets.indexOf(socketWithTrimId), 1);
-    io.emit('logout', trimId);
+    const clientToBeRemoved = clients.findIndex((cli) => cli.id === id);
+    clients.splice(clientToBeRemoved, 1);
+
+    io.emit('logout', id);
   });
 
   socket.on('message', ({ chatMessage, nickname }) => {
     const timestamp = moment().format('DD-MM-yyyy LTS');
 
-    ChatController.create(
-      connection, ChatModel, { chatMessage, nickname, timestamp },
-    );
+    io.emit('message', `${timestamp} - ${nickname || id}: ${chatMessage}`);
 
-    io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
+    ChatController.create(
+      connection, ChatModel, { id, chatMessage, nickname, timestamp },
+    );
   });
 
-  socket.on('nicknameUpdate', ({ target, newNickname }) => {
-    io.emit('nicknameUpdate', { target, newNickname });
+  socket.on('nicknameUpdate', ({ id: clientId, nickname }) => {
+    const clientToBeUpdated = clients.findIndex((cli) => cli.id === id);
+
+    clients.splice(clientToBeUpdated, 1);
+
+    clients.push({ id: clientId, nickname });
+    io.emit('nicknameUpdate', { id: clientId, nickname });
+    ChatController.updateNickname(connection, ChatModel, { id: clientId, nickname });
   });
 });
 
 app.get('/', async (_req, res) => {
   const messages = await ChatController.findAll(connection, ChatModel);
 
-  return res.render('chat', { sockets, messages });
+  return res.render('chat', { clients, messages });
 });
 
 app.get('/chat', async (_req, res) => {
