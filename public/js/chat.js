@@ -32,4 +32,9 @@ const insertNickName = (nickName) => {
 };
 
 socket.on('message', (message) => createMessage(message));
-socket.on('welcome', (nickName) => insertNickName(nickName));
+
+socket.on('welcome', ({ nickname, messages }) => {
+  insertNickName(nickname);
+  messages.forEach((message) =>
+    createMessage(`${message.timestamp} - ${message.nickname}: ${message.message}`));
+});
