@@ -23,10 +23,10 @@ function ioWebchat(io) {
   });
       
   socket.on('disconnect', () => {
-    const newOnlineList = onlineUsers.filter((u) => u.userId !== userId);
-    io.emit('disconnectUser', { users: newOnlineList });
+    const userIndex = onlineUsers.findIndex((u) => u.userId === userId);
+    onlineUsers.splice(userIndex, 1); io.emit('disconnectUser', { users: onlineUsers });
   });
-  });   
+});   
 }
 
 module.exports = ioWebchat;
