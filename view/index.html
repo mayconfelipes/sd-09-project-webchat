@@ -5,10 +5,17 @@
     <link rel="stylesheet" href="./style.css">
   </head>
   <body>
+    <form class="nickname-form" action="">
+      <input class="input-nickname" data-testid="nickname-box">
+      <button class="nickname-btn" data-testid="nickname-button">Save</button>
+    </form>
+    <ul class="user-list"></ul>
     <ul class="messages"></ul>
     <form class="form" action="">
-      <input class="input" autocomplete="off" /><button>Send</button>
+      <input class="input-chat" data-testid="message-box" autocomplete="off" />
+      <button class="send-btn" data-testid="send-button">Send</button>
     </form>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
