@@ -11,6 +11,12 @@ const usersContainer = document.querySelector('#usersContainer');
 const DATA_TEST_ID = 'data-testid';
 
 const checkUserExists = () => document.querySelector('#myUser');
+const createUserLi = (userNickname) => {
+  const liUser = document.createElement('li');
+  liUser.setAttribute(DATA_TEST_ID, 'online-user');
+  liUser.innerText = userNickname;
+  usersContainer.appendChild(liUser);
+};
 
 const createNick = ({ nick }) => {
     const userId = checkUserExists();
@@ -25,18 +31,18 @@ const createNick = ({ nick }) => {
     return null;
   };
 
-  const listUsers = ({ users }) => {
+const listUsers = ({ users }) => {
     usersContainer.innerHTML = '';
+    createUserLi(userNick);
     users.forEach((u) => {
-      const liUser = document.createElement('li');
-      liUser.setAttribute(DATA_TEST_ID, 'online-user');
-      liUser.innerText = u.nickname;
-      usersContainer.appendChild(liUser);
+      if (u.nickname !== userNick) {
+        createUserLi(u.nickname);
+      }
     });
     return null;
   };
 
-  const updateNick = ({ nick }) => {
+const updateNick = ({ nick }) => {
     userNick = nick;
     const userId = checkUserExists();
     userId.innerHTML = nick;
@@ -44,30 +50,30 @@ const createNick = ({ nick }) => {
     return null;
   };
 
-  nickBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    const newNick = nickInput.value;
-    socket.emit('updateNick', { newNick });
-    updateNick({ nick: newNick });
-  });
+nickBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  const newNick = nickInput.value;
+  socket.emit('updateNick', { newNick });
+  updateNick({ nick: newNick });
+});
 
-  messageBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    socket.emit('message', { chatMessage: messageInput.value, nickname: userNick });
-    messageInput.value = '';
-  });
+messageBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  socket.emit('message', { chatMessage: messageInput.value, nickname: userNick });
+  messageInput.value = '';
+});
 
-  socket.on('connected', ({ nick, users }) => [createNick({ nick }), listUsers({ users })]);
-  socket.on('onlineUsers', listUsers);
-  socket.on('refreshUsers', listUsers);
+socket.on('connected', ({ nick, users }) => [createNick({ nick }), listUsers({ users })]);
+socket.on('onlineUsers', listUsers);
+socket.on('refreshUsers', listUsers);
 
-  socket.on('message', (message) => {
-    const newMessage = document.createElement('li');
-    newMessage.setAttribute(DATA_TEST_ID, 'message');
-    newMessage.innerText = message;
-    msgContainer.appendChild(newMessage);
-  });
+socket.on('message', (message) => {
+  const newMessage = document.createElement('li');
+  newMessage.setAttribute(DATA_TEST_ID, 'message');
+  newMessage.innerText = message;
+  msgContainer.appendChild(newMessage);
+});
 
-  socket.on('disconnectUser', ({ users }) => {
-    listUsers({ users, noUser: true });
-  });
+socket.on('disconnectUser', ({ users }) => {
+  listUsers({ users, noUser: true });
+});
