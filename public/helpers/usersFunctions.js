@@ -10,7 +10,6 @@ const createNickname = (qtdWorks) => {
 };
 
 const createMessage = (message) => {
-  console.log('Passei aqui', message);
   const messageUl = document.querySelector('.messages');
   const li = document.createElement('li');
   li.innerText = message;
@@ -31,7 +30,7 @@ const createUser = (ListUsers, ninckname) => {
   const liUserLogado = document.createElement('li');
   liUserLogado.innerText = ninckname;
   liUserLogado.setAttribute(ATTRIBUTEDATATESTID, 'online-user');
-  userUl.appendChild(liUserLogado); // Para exibir o nome do usuario logado em 1º na lista 
+  userUl.appendChild(liUserLogado); // Para exibir o nome do usuário logado em 1º na lista 
   
   ListUsers.forEach((user) => {
     if (user !== ninckname) {
