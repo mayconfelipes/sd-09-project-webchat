@@ -39,4 +39,5 @@ socket.on('nicknameSlice', (nickname) => {
   users.appendChild(li);
 });
 
+socket.on('messages', (messages) => messages.forEach((message) => createMessage(message)));
 socket.on('message', (message) => createMessage(message));
