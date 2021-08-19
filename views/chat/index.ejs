@@ -101,7 +101,7 @@
     });
 
     socket.on('message', (mensagem) => createMessage(mensagem));
-    socket.on('serverMessage ', (mensagem) => createMessage(mensagem));
+    socket.on('serverMessage', (mensagem) => createMessage(mensagem));
 
     window.onbeforeunload = function (event) {
       socket.disconnect();

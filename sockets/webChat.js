@@ -5,6 +5,7 @@ module.exports = (io) => {
     const currentTime = moment().format('DD-MM-yyyy LTS');
 
     socket.emit('serverMessage', 'Bem vindo ao TrybeChat');
+
     socket.broadcast.emit('serverMessage', `user${socket.id} entrou no chat`);
 
     socket.on('disconnect', () => {
