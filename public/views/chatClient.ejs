@@ -62,6 +62,10 @@
   socket.on('message', ({message}) => createMessage(message));
   // recebendo como parâmetro o name e repassando para variavel nickname
   socket.on('createNickname', (name) => { nickname = name });
+  // escutando listAllUsers e criando a lista de usuários
+  socket.on('listAllUsers', (users) => {
+    createUser(users, nickname);
+  })
   </script>
 </body>
 </html>
