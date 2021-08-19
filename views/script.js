@@ -64,7 +64,7 @@ messageBtn.addEventListener('click', (e) => {
 });
 
 socket.on('connected', ({ nick, users }) => [createNick({ nick }), listUsers({ users })]);
-socket.on('onlineUsers', listUsers);
+
 socket.on('refreshUsers', listUsers);
 
 socket.on('message', (message) => {
@@ -75,5 +75,5 @@ socket.on('message', (message) => {
 });
 
 socket.on('disconnectUser', ({ users }) => {
-  listUsers({ users, noUser: true });
+  listUsers({ users });
 });
