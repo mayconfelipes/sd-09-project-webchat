@@ -18,7 +18,7 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 app.get('/', (req, res) => {
-  res.sendFile(`${__dirname}/index.html`);
+  res.render('index');
 });
 
 http.listen(3000, () => {
