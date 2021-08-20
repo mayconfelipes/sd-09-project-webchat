@@ -8,9 +8,6 @@ let nicknameOnline;
 const saveNickname = (io, socket, nickname) => {
   if (!arrayUsers.includes(nickname)) { // validação para não duplicar dados
     arrayUsers.push({ nickname, id: socket.id });
-    // socket.emit('saveNickname', nickname); 
-    console.log('saveNickname: ', arrayUsers);
-    // nicknameOnline = nickname; // para saber que esta online
   }
   io.emit('connected', { arrayUsers, nicknameOnline: nickname });
 }; 
@@ -24,7 +21,6 @@ const alterNickname = (io, socket, { newNickname }) => {
   const index = arrayUsers.findIndex((user) => user.id === socket.id);
   if (index > -1) { // se ele trazer pelo menos uma posição
     arrayUsers[index].nickname = newNickname;
-    console.log('alterNickname', arrayUsers);
     io.emit('listAllUsers', arrayUsers); // para mandar o array atualizado 
   } 
 };
@@ -33,7 +29,6 @@ const desconectUser = (io, socket) => { // passo io aqui para poder fazer um .em
   const index = arrayUsers.findIndex((user) => user.id === socket.id);
     if (index > -1) {
       arrayUsers.splice(index, 1); // excluindo usuario que desconectou
-      console.log('desconectUser', arrayUsers);
       io.emit('listAllUsers', arrayUsers);
     }
 };
@@ -43,8 +38,6 @@ module.exports = (http) => {
     cors: { origin: 'http://localhost:3000', methods: ['GET', 'POST', 'PUT', 'DELETE'] } });
     io.on('connection', async (socket) => {
       nicknameOnline = createNickname(16);
-      console.log('Alguém se conectou: ', nicknameOnline);
-      console.log('ID: ', socket.id);
       saveNickname(io, socket, nicknameOnline);
       
       socket.emit('listAllMessages', await ChatModel.findAll());

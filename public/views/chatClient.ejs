@@ -53,7 +53,8 @@
     const inputMessage = document.querySelector('.message-input');
     formMessages.addEventListener('submit', (e) => {
       e.preventDefault();
-      socket.emit('message', { chatMessage: inputMessage.value, nickname })
+      const campoOnline = document.querySelector('#UserOnline');
+      socket.emit('message', { chatMessage: inputMessage.value, nickname: campoOnline.innerText })
       inputMessage.value='';
       return false;
   })
@@ -71,7 +72,6 @@
   })
   socket.on('connected', ({ nicknameOnline, arrayUsers })=> {
     nickname = nicknameOnline;
-    console.log('FRONT: ', socket.id);
     createUser(arrayUsers, socket.id);
   })
   </script>
