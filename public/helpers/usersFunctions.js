@@ -24,22 +24,26 @@ const getDataHora = () => {
   return `${data} ${hora}`;
 };
 
-const createUser = (ListUsers, ninckname) => {
+const createUser = (ListUsers, socketId) => {
   const userUl = document.querySelector('.users');
-  userUl.innerText = ''; // para não duplicar as informações em tela
-  const liUserLogado = document.createElement('li');
-  liUserLogado.innerText = ninckname;
-  liUserLogado.setAttribute(ATTRIBUTEDATATESTID, 'online-user');
-  userUl.appendChild(liUserLogado); // Para exibir o nome do usuário logado em 1º na lista 
-  
-  ListUsers.forEach((user) => {
-    if (user !== ninckname) {
-      const liUsers = document.createElement('li'); // Para os usuarios restantes
-      liUsers.setAttribute(ATTRIBUTEDATATESTID, 'online-user');
-      liUsers.innerText = user;
-      userUl.appendChild(liUsers);
-   }
-  });
+  const userOnline = ListUsers.filter((user) => user.id === socketId); 
+  if (userOnline.length > 0) {
+    userUl.innerText = ''; // para não duplicar as informações em tela
+    const liUserLogado = document.createElement('li');
+    liUserLogado.innerText = userOnline[0].nickname;
+    liUserLogado.id = 'UserOnline';
+    liUserLogado.setAttribute(ATTRIBUTEDATATESTID, 'online-user');
+    userUl.appendChild(liUserLogado); // Para exibir o nome do usuário logado em 1º na lista 
+
+    ListUsers.forEach((user) => {
+      if (user.id !== socketId) {
+        const liUsers = document.createElement('li'); // Para os usuarios restantes
+        liUsers.setAttribute(ATTRIBUTEDATATESTID, 'online-user');
+        liUsers.innerText = user.nickname;
+        userUl.appendChild(liUsers);
+     }
+    });
+  }
 };
 
   module.exports = {

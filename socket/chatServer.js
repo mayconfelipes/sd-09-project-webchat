@@ -1,14 +1,18 @@
 const socketIo = require('socket.io');
-const { getDataHora } = require('../public/helpers/usersFunctions');
+const { getDataHora, createNickname } = require('../public/helpers/usersFunctions');
 const ChatModel = require('../models/ChatModel');
 
 const arrayUsers = [];
+let nicknameOnline;
 
-const saveNickname = (io, nickname) => {
-  if (!arrayUsers.includes(nickname)) { 
-    arrayUsers.push(nickname); 
+const saveNickname = (io, socket, nickname) => {
+  if (!arrayUsers.includes(nickname)) { // validação para não duplicar dados
+    arrayUsers.push({ nickname, id: socket.id });
+    // socket.emit('saveNickname', nickname); 
+    console.log('saveNickname: ', arrayUsers);
+    // nicknameOnline = nickname; // para saber que esta online
   }
-  io.emit('listAllUsers', arrayUsers);
+  io.emit('connected', { arrayUsers, nicknameOnline: nickname });
 }; 
 
 const mountMessage = async (io, { chatMessage, nickname }) => { // io, aqui e para emitir informação
@@ -16,24 +20,38 @@ const mountMessage = async (io, { chatMessage, nickname }) => { // io, aqui e pa
   io.emit('message', JSON.stringify(message));
 };
 
-const alterNickname = (io, { OldNickname, newNickname }) => {
-  const index = arrayUsers.indexOf(OldNickname);
+const alterNickname = (io, socket, { newNickname }) => {
+  const index = arrayUsers.findIndex((user) => user.id === socket.id);
   if (index > -1) { // se ele trazer pelo menos uma posição
-    arrayUsers[index] = newNickname;
+    arrayUsers[index].nickname = newNickname;
+    console.log('alterNickname', arrayUsers);
     io.emit('listAllUsers', arrayUsers); // para mandar o array atualizado 
   } 
+};
+
+const desconectUser = (io, socket) => { // passo io aqui para poder fazer um .emit for exemple
+  const index = arrayUsers.findIndex((user) => user.id === socket.id);
+    if (index > -1) {
+      arrayUsers.splice(index, 1); // excluindo usuario que desconectou
+      console.log('desconectUser', arrayUsers);
+      io.emit('listAllUsers', arrayUsers);
+    }
 };
 
 module.exports = (http) => {
   const io = socketIo(http, {
     cors: { origin: 'http://localhost:3000', methods: ['GET', 'POST', 'PUT', 'DELETE'] } });
     io.on('connection', async (socket) => {
-      console.log('Alguém se conectou');
+      nicknameOnline = createNickname(16);
+      console.log('Alguém se conectou: ', nicknameOnline);
+      console.log('ID: ', socket.id);
+      saveNickname(io, socket, nicknameOnline);
+      
       socket.emit('listAllMessages', await ChatModel.findAll());
-      socket.on('saveNickname', (nickname) => saveNickname(io, nickname));
+      // socket.on('saveNickname', (nickname) => saveNickname(io, nickname));
       socket.emit('listAllUsers', arrayUsers);
-      socket.on('disconnect', () => console.log('Alguém saiu'));
+      socket.on('disconnect', () => desconectUser(io, socket));
       socket.on('message', (objectMessage) => mountMessage(io, objectMessage));
-      socket.on('alterNickname', (ObjectUser) => alterNickname(io, ObjectUser));
+      socket.on('alterNickname', (ObjectUser) => alterNickname(io, socket, ObjectUser));
     });
 };

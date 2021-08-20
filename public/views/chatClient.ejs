@@ -36,16 +36,15 @@
   <script>
     // escuta os eventos do chatServer
     const socket = io();
-    let nickname = createNickname(16);
+    let nickname = '';
     const formUsers = document.querySelector('.form-users');
     const inputUsers = document.querySelector('.input-users');
 
     formUsers.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const newNickname = inputUsers.value;
-      const OldNickname = nickname;
-      nickname = newNickname;
-      socket.emit('alterNickname', { OldNickname, newNickname });
+      e.preventDefault();    
+      socket.emit('alterNickname', {  newNickname: inputUsers.value });      
+      const campoOnline = document.querySelector('#UserOnline');
+      campoOnline.innerText = inputUsers.value;
       inputUsers.value = '';
       return false;
     })
@@ -65,10 +64,15 @@
   })
   socket.on('message', (message) => createMessage(JSON.parse(message)));
   // recebendo como parâmetro o name e repassando para variavel nickname
-  socket.emit('saveNickname', nickname);
+  socket.on('saveNickname', (name) => { nickname = name });
   // escutando listAllUsers e criando a lista de usuários
   socket.on('listAllUsers', (users) => {
-    createUser(users, nickname);
+    createUser(users, socket.id);
+  })
+  socket.on('connected', ({ nicknameOnline, arrayUsers })=> {
+    nickname = nicknameOnline;
+    console.log('FRONT: ', socket.id);
+    createUser(arrayUsers, socket.id);
   })
   </script>
 </body>
