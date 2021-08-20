@@ -30,7 +30,6 @@
 
     <script>
 
-      const socket = io('http://localhost:3000');
 
       // Referência: https://www.webtutorial.com.br/funcao-para-gerar-uma-string-aleatoria-random-com-caracteres-especificos-em-javascript/
       const generateUserName = (length) => {
@@ -43,6 +42,8 @@
       }
 
       let randomUserName = generateUserName(16);
+      const socket = io('http://localhost:3000');
+      socket.emit('userLogin', randomUserName);
 
       const userNameForm = document.querySelector('#regUserForm');
       const userNameInput = document.querySelector('#userNameInput');
@@ -58,7 +59,6 @@
       });
 
       const showUserName = (users) => {
-        console.log(users)
         const userList = document.querySelector('#users');
         userList.innerHTML = '';
         users.map((user) => {
@@ -75,14 +75,26 @@
 
       }
 
-      socket.emit('userLogin', randomUserName);
+
+      const orderUserList = (users, id) => {
+        // console.log(users);
+        // console.log(id)
+        const u = users.find((user) => user.userId === id)
+        console.log(u);
+        const ul = document.querySelector('#users');
+        const li = document.querySelector(`#${u.userId}`);
+
+        ul.prepend(li);
+      }
 
       socket.on('userLogin', (users) => {
         showUserName(users);
+        orderUserList(users, socket.id);
       });
 
       socket.on('updateUserName', (users) => {
         showUserName(users);
+        orderUserList(users, socket.id);
       });
 
       const form = document.querySelector('#messageForm');
@@ -116,6 +128,14 @@
       socket.on('message', (message, id) => {
         createMessage(message, id);
       });
+
+      socket.on('userDisconnect', (users) => {
+        showUserName(users);
+      })
+
+      window.onbeforeunload = function(event) {
+        socket.disconnect();
+      };
 
     </script>
   </body>
