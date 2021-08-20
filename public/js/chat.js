@@ -40,11 +40,18 @@ const updateUsersOnline = (usersOnline) => {
   const userList = document.querySelector('#usersOnline');
   userList.innerHTML = '';
 
+  let li = document.createElement('li');
+  li.setAttribute(dataTestid, 'online-user');
+  li.innerText = user.nickname;
+  userList.appendChild(li);
+
   usersOnline.forEach((element) => {
-    const li = document.createElement('li');
-    li.setAttribute(dataTestid, 'online-user');
-    li.innerText = element.nickname;
-    userList.appendChild(li);
+    if (element.id !== user.id) {
+      li = document.createElement('li');
+      li.setAttribute(dataTestid, 'online-user');
+      li.innerText = element.nickname;
+      userList.appendChild(li);
+    }
   });
 };
 
